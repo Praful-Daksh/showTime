@@ -19,6 +19,7 @@ body {
 .container {
     display: flex;
     width: 100vw;
+    height: 90vh;
     max-width: 1000px;
     background-color: #fff;
     box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
@@ -27,19 +28,21 @@ body {
 }
 
 
-.form-area {
+.formArea {
     flex: 1;
-    padding: 40px;
+    padding: 20px;
 }
-
+.form{
+    height: fit-content;
+}
 h2 {
-    font-size: 28px;
+    font-size: 25px;
     margin-bottom: 10px;
     color: #333;
 }
 
 h3 {
-    font-size: 18px;
+    font-size: 15px;
     margin-bottom: 30px;
     color: #777;
 }
@@ -48,9 +51,10 @@ label {
     font-size: 14px;
     font-weight: bold;
     display: block;
-    margin-bottom: 8px;
+    margin-bottom: 5px;
 }
 
+input[type="name"],
 input[type="text"],
 input[type="email"],
 input[type="password"] {
@@ -59,19 +63,19 @@ input[type="password"] {
     margin-bottom: 20px;
     border: 1px solid #ddd;
     border-radius: 4px;
-    font-size: 16px;
+    font-size: 12px;
 }
 
 button {
     width: 100%;
-    padding: 12px;
+    padding: 5px;
     background-color: #007bff;
     color: white;
     border: none;
     border-radius: 4px;
     cursor: pointer;
     font-size: 16px;
-    margin-top: 10px;
+    margin-top: 0px;
 }
 
 button:hover {
@@ -93,20 +97,20 @@ p a:hover {
 }
 
 
-.show-password {
-    margin-bottom: 20px;
+.showPassword {
+    margin-bottom:0px;
 }
 
-.show-password label {
+.showPassword label {
     font-size: 14px;
     display: inline-block;
     margin-left: 5px;
 }
+    
 
-
-.image-area {
+.imageArea {
     flex: 1;
-    background: url('../../public/media/login.jpg') center center no-repeat;
+    background: url('../media/event.jpg') center center no-repeat;
     background-size: contain;
     display: none; 
 }
@@ -117,7 +121,7 @@ p a:hover {
         flex-direction: row;
     }
 
-    .image-area {
+    .imageArea {
         display: block; 
     }
 }
@@ -127,14 +131,9 @@ p a:hover {
         flex-direction: column;
     }
 
-    .image-area {
+    .imageArea {
         height: 200px;
         background-size: contain;
         background-repeat: no-repeat;
     }
-}
-#flash-msg{
-    position: fixed;
-    top: 25px;
-    right: 25px;
 }

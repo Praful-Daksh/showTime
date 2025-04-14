@@ -26,7 +26,7 @@ const Navbar = () => {
                 </div>
                 <div className="buttons">
                     <a href="/login">Sign In</a>
-                    <a href="/login/register">Sign Up</a>
+                    <a href="/register">Sign Up</a>
                 </div>
                 <div className="icon-login">
                     <a className="fa fa-right-to-bracket" href="/login"></a>

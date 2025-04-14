@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import '../styles/Login.css'
+import style from '../styles/Login.module.css'
 
 const Login = () => {
     const [email, setEmail] = useState('');
@@ -11,12 +11,12 @@ const Login = () => {
     };
 
     return (
-        <div className="container">
-            <div className="form-area">
+        <div className={style.container}>
+            <div className={style.formArea}>
                 <h2>Are you a Host..?</h2>
                 <h3>Enter your credentials to prove that.</h3>
                 <form action="/login/verify" method="POST">
-                    <div className="form">
+                    <div className={style.form}>
                         <label htmlFor="email">Email Address</label>
                         <input
                             type="email"
@@ -37,7 +37,7 @@ const Login = () => {
                             onChange={e => setPassword(e.target.value)}
                         />
 
-                        <div className="show-password">
+                        <div className={style.showPassword}>
                             <input
                                 type="checkbox"
                                 id="showPassword"
@@ -51,9 +51,9 @@ const Login = () => {
                     </div>
                 </form>
 
-                <p>Not Registered? <a href="/login/register">Sign up</a></p>
+                <p>Not Registered? <a href="/register">Sign up</a></p>
             </div>
-            <div className="image-area"></div>
+            <div className={style.imageArea}></div>
         </div>
     );
 };

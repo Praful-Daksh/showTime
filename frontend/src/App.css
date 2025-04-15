@@ -1,0 +1,381 @@
+/* ========== Global Reset and Base ========== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Kanit", sans-serif;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+body {
+  background-color: #f7f7f7;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 20px;
+}
+
+/* ========== Shared Auth Styles (Login & Register) ========== */
+.auth-container {
+  display: flex;
+  width: 100vw;
+  max-width: 1000px;
+  background-color: #fff;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.auth-formArea {
+  flex: 1;
+}
+
+.auth-form {
+  height: fit-content;
+}
+
+.auth-formArea h2 {
+  margin-bottom: 10px;
+  color: #333;
+}
+
+.auth-formArea h3 {
+  margin-bottom: 30px;
+  color: #777;
+}
+
+.auth-formArea label {
+  font-size: 14px;
+  font-weight: bold;
+  display: block;
+}
+
+.auth-formArea input[type="text"],
+.auth-formArea input[type="name"],
+.auth-formArea input[type="email"],
+.auth-formArea input[type="password"] {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 20px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.auth-formArea button {
+  width: 100%;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.auth-formArea button:hover {
+  background-color: #0056b3;
+}
+
+.auth-formArea p {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.auth-formArea p a {
+  color: #007bff;
+}
+
+.auth-formArea p a:hover {
+  text-decoration: underline;
+}
+
+.auth-showPassword {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-bottom: 20px;
+}
+
+.auth-showPassword label {
+  font-size: 14px;
+}
+
+/* ========== Login Specific ========== */
+.login-container .auth-formArea {
+  padding: 40px;
+}
+
+.login-container h2 {
+  font-size: 28px;
+}
+
+.login-container h3 {
+  font-size: 18px;
+}
+
+.login-container input {
+  font-size: 16px;
+}
+
+.login-container button {
+  padding: 12px;
+  margin-top: 10px;
+}
+
+.login-imageArea {
+  flex: 1;
+  height: 100%;
+  background: url('../public/media/event.jpg') center center no-repeat;
+  background-size: cover;
+  display: none;
+}
+
+/* ========== Register Specific ========== */
+.register-container {
+  height: 90vh;
+}
+
+.register-container .auth-formArea {
+  padding: 20px;
+}
+
+.register-container h2 {
+  font-size: 25px;
+}
+
+.register-container h3 {
+  font-size: 15px;
+}
+
+.register-container input {
+  font-size: 12px;
+}
+
+.register-container button {
+  padding: 5px;
+  margin-top: 0;
+}
+
+.register-showPassword {
+  margin-bottom: 0;
+}
+
+.register-imageArea {
+  flex: 1;
+  background: url('../public/media/event.jpg') center center no-repeat;
+  background-size: contain;
+  display: block;
+}
+
+/* ========== Navbar Styles ========== */
+.nav-head-wrap {
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  z-index: 100;
+  background-color: rgba(61, 143, 234, 0.6);
+}
+
+nav {
+  width: 95vw;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 3vmin;
+}
+
+.nav-logo {
+  color: white;
+  font-size: 1.2rem;
+}
+
+.nav-logo span {
+  color: #cfcfcf;
+  font-weight: lighter;
+}
+
+.nav-search {
+  width: 40%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.nav-searchbar {
+  width: 100%;
+  padding: 3px 2px;
+  border-radius: 16px;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  border: 0.5px solid grey;
+  background-color: white;
+}
+
+#search {
+  width: 85%;
+  border-radius: 10px;
+  padding: 1px 3px;
+  outline: none;
+  border: none;
+  font-size: 1rem;
+}
+
+#search-form {
+  width: 100%;
+  display: flex;
+  padding: 2px;
+  justify-content: space-evenly;
+  align-items: center;
+}
+
+#search-form button {
+  width: fit-content;
+  height: fit-content;
+  margin: auto;
+}
+
+.fa-search {
+  padding-right: 12px;
+}
+
+.nav-buttons {
+  width: 20%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.nav-buttons a {
+  padding: 6px 12px;
+  border-radius: 5px 0 0 5px;
+  border: none;
+  cursor: pointer;
+  background-color: white;
+}
+
+.nav-buttons a:nth-child(even) {
+  border-radius: 0 5px 5px 0;
+  background-color: rgba(0, 0, 0, 0.3);
+  color: white;
+}
+
+.nav-icon-login {
+  display: none;
+  color: white;
+  font-size: 1.3rem;
+}
+
+/* ========== Hero Section ========== */
+#showcase {
+  width: 100vw;
+  height: 100vh;
+}
+
+video {
+  width: 100vw;
+  height: 100vh;
+  object-fit: cover;
+}
+
+.hero {
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(61, 143, 234, 0.8);
+  position: absolute;
+  top: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+}
+
+.hero .main {
+  width: 95vw;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.hero .main h1 {
+  font-size: 2.2rem;
+}
+
+.hero .main h4 {
+  font-size: 1.3rem;
+}
+
+.hero .options {
+  margin-top: 45px;
+  width: 45%;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+}
+
+.hero .options a {
+  color: black;
+  background-color: white;
+  padding: 12px 35px;
+  border-radius: 26px;
+}
+
+#book-show {
+  background-color: transparent;
+  border: 2px solid white;
+  color: white;
+}
+
+/* ========== Responsive ========== */
+@media only screen and (max-width: 600px) {
+  .nav-icon-login {
+    display: block;
+  }
+
+  .nav-buttons {
+    display: none;
+  }
+
+  .hero .options {
+    width: 90%;
+  }
+
+  .hero .options a {
+    padding: 5px 15px;
+  }
+}
+
+@media (min-width: 768px) {
+  .auth-container {
+    flex-direction: row;
+  }
+
+  .login-imageArea,
+  .register-imageArea {
+    display: block;
+  }
+}
+
+@media (max-width: 768px) {
+  .auth-container {
+    flex-direction: column;
+  }
+
+  .login-imageArea,
+  .register-imageArea {
+    height: 200px;
+    background-size: contain;
+    background-repeat: no-repeat;
+  }
+}
+
+

@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import styles from '../styles/Register.module.css'
 
 const RegisterForm = () => {
   const [formData, setFormData] = useState({
@@ -29,12 +28,12 @@ const RegisterForm = () => {
   };
 
   return (
-    <div className={styles.container}>
-      <div className={styles.formArea}>
+    <div className="auth-container register-container">
+      <div className="auth-formArea">
         <h2>Ready to Be a Host..?</h2>
         <h3>Create an account to create and work on your events.</h3>
         <form onSubmit={handleSubmit}>
-          <div className={styles.form}>
+          <div className="auth-form">
             <label htmlFor="name">Full Name</label>
             <input
               type="text"
@@ -79,7 +78,7 @@ const RegisterForm = () => {
               autoComplete="off"
             />
 
-            <div className={styles.showPassword}>
+            <div className="auth-showPassword register-showPassword">
               <input
                 type="checkbox"
                 id="showPassword"
@@ -95,7 +94,7 @@ const RegisterForm = () => {
 
         <p>Already Registered? <Link to="/login">Sign In</Link></p>
       </div>
-      <div className={styles.imageArea}></div>
+      <div className="register-imageArea"></div>
     </div>
   );
 };

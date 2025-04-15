@@ -2,13 +2,13 @@ import React from 'react'
 
 const Navbar = () => {
     return (
-        <div className="head-wrap">
+        <div className="nav-head-wrap">
             <nav>
-                <div className="logo">
+                <div className="nav-logo">
                     <h1><a href="/"><span>SHOW</span>Time</a></h1>
                 </div>
-                <div className="search">
-                    <div className="searchbar">
+                <div className="nav-search">
+                    <div className="nav-searchbar">
                         <form action="/find-show" method="POST" id="search-form">
                             <input
                                 type="search"
@@ -24,11 +24,11 @@ const Navbar = () => {
                         </form>
                     </div>
                 </div>
-                <div className="buttons">
+                <div className="nav-buttons">
                     <a href="/login">Sign In</a>
                     <a href="/register">Sign Up</a>
                 </div>
-                <div className="icon-login">
+                <div className="nav-icon-login">
                     <a className="fa fa-right-to-bracket" href="/login"></a>
                 </div>
             </nav>

@@ -24,6 +24,8 @@ body {
 /* ========== Shared Auth Styles (Login & Register) ========== */
 .auth-container {
   display: flex;
+  justify-content: center;
+  align-items: center;
   width: 100vw;
   max-width: 1000px;
   background-color: #fff;
@@ -128,15 +130,22 @@ body {
 
 .login-imageArea {
   flex: 1;
-  height: 100%;
-  background: url('../public/media/event.jpg') center center no-repeat;
+  height: 50vh;
+  width: 50vw;
+  background: url('../public/media/login.jpg') center center no-repeat;
   background-size: cover;
   display: none;
 }
 
 /* ========== Register Specific ========== */
 .register-container {
-  height: 90vh;
+    display: flex;
+    width: 100vw;
+    max-width: 1000px;
+    background-color: #fff;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    overflow: hidden;
 }
 
 .register-container .auth-formArea {
@@ -158,10 +167,6 @@ body {
 .register-container button {
   padding: 5px;
   margin-top: 0;
-}
-
-.register-showPassword {
-  margin-bottom: 0;
 }
 
 .register-imageArea {

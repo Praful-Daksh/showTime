@@ -1,17 +1,16 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/ReactToastify.css'
-import axios from 'axios'
 
 const RegisterForm = () => {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     password: '',
-    password2: ''
   });
-
+  const navigate = useNavigate();
+  const [password2, setPassword2] = useState('');
   const [showPassword, setShowPassword] = useState(false);
 
   const handleChange = (e) => {
@@ -20,18 +19,21 @@ const RegisterForm = () => {
       [e.target.name]: e.target.value
     });
   };
+  const handlePassword2 = (e) => {
+    setPassword2(e.target.value);
+  }
 
   const togglePassword = () => {
     setShowPassword(!showPassword);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (formData.name === '' || formData.email === '' || formData.password === '' || formData.password2 === '') {
       toast.error('Any of field cannot be empty! ', { position: 'top-center' })
       return;
     } else {
-      if (formData.password !== formData.password2) {
+      if (formData.password !== password2) {
         toast.error('Confirm Password is not same as password !', { position: 'top-center' });
         return;
       }
@@ -41,16 +43,24 @@ const RegisterForm = () => {
       }
     }
     try {
-      axios.post('/login/register', formData)
-        .then((response) => {
-          console.log(response.data);
-          toast.success('Registration Successfull !', { position: 'top-center' });
-          window.location.href = '/login';
-        })
-        .catch((error) => {
-          console.log(error);
-          toast.error('Registration Failed !', { position: 'top-center' });
-        });
+      const url = 'http://localhost:5000/auth/register'
+      const response = await fetch(url, {
+        method: "POST",
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(formData)
+      })
+      const data = await response.json()
+      console.log(data)
+      if (data.success) {
+        toast.success('Registration Successfull !', { position: 'top-center' })
+        setTimeout(() => {
+          navigate('/login')
+        }, 1000)
+      }else {
+        toast.error('Registration Failed !', { position: 'top-center' })
+        }
     } catch (error) {
       console.log(error);
     }
@@ -104,8 +114,8 @@ const RegisterForm = () => {
                 id="password2"
                 name="password2"
                 placeholder="Confirm your password"
-                value={formData.password2}
-                onChange={handleChange}
+                value={password2}
+                onChange={handlePassword2}
                 autoComplete="off"
               />
 

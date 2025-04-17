@@ -377,9 +377,8 @@ video {
 
   .login-imageArea,
   .register-imageArea {
-    height: 200px;
-    background-size: contain;
-    background-repeat: no-repeat;
+    display: none;
+  
   }
 }
 

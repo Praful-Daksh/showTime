@@ -1,7 +1,7 @@
 import Joi from 'joi'
 
 
-const registerValidation = (req,res,next)=>{
+export const registerValidation = (req,res,next)=>{
     const schema = Joi.object({
          name:Joi.string().required(),
          email:Joi.string().email().required(),
@@ -15,7 +15,7 @@ const registerValidation = (req,res,next)=>{
     next()
 }
 
-const LoginValidation = (req,res,next)=>{
+export const LoginValidation = (req,res,next)=>{
     const schema = Joi.object({
          email:Joi.string().email().required(),
          password:Joi.string().required()
@@ -27,4 +27,3 @@ const LoginValidation = (req,res,next)=>{
     }
     next()
 }
- export default {registerValidation,LoginValidation}

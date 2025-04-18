@@ -4,7 +4,7 @@ const dotenv = require('dotenv')
 dotenv.config();
 const bodyParse = require('body-parser')
 const cors = require('cors')
-const AuthRouter = require('./Routes/AuthRouter.js')
+const Authrouter = require('./Routes/AuthRouter')
 
 const app = express()
 const PORT = process.env.PORT || 5000
@@ -16,7 +16,7 @@ app.listen(PORT, () => {
 
 app.use(bodyParse.json())
 app.use(cors())
-app.use('/auth', AuthRouter)
+app.use('/auth', Authrouter)
 
 
 const mongoUri = process.env.mongoURI

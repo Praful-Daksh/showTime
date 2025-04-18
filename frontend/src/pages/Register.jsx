@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/ReactToastify.css'
+import { ScaleLoader } from 'react-spinners'
 
 const RegisterForm = () => {
   const [formData, setFormData] = useState({
@@ -10,6 +11,7 @@ const RegisterForm = () => {
     password: '',
   });
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false)
   const [password2, setPassword2] = useState('');
   const [showPassword, setShowPassword] = useState(false);
 
@@ -43,6 +45,7 @@ const RegisterForm = () => {
       }
     }
     try {
+      setLoading(true)
       const url = 'https://backshow.onrender.com/auth/register'
       const response = await fetch(url, {
         method: "POST",
@@ -52,15 +55,15 @@ const RegisterForm = () => {
         body: JSON.stringify(formData)
       })
       const data = await response.json()
-      console.log(data)
+      setLoading(false)
       if (data.success) {
         toast.success('Registration Successfull !', { position: 'top-center' })
         setTimeout(() => {
           navigate('/login')
         }, 1000)
-      }else {
+      } else {
         toast.error(data.message, { position: 'top-center' })
-        }
+      }
     } catch (error) {
       console.log(error);
     }
@@ -137,6 +140,11 @@ const RegisterForm = () => {
         </div>
         <div className="register-imageArea"></div>
       </div>
+      {
+        loading ?
+          <div className='overlay-loader'><ScaleLoader color='#000000' size={50} /></div>
+          : null
+      }
     </>
   );
 };

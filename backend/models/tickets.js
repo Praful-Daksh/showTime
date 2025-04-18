@@ -1,5 +1,5 @@
-import mongoose from 'mongoose';
-import Event from './events.js';
+const mongoose = require('mongoose')
+const Event = require('./events.js')
 
 const TicketSchema = new mongoose.Schema({
     limit:{
@@ -33,4 +33,4 @@ const TicketSchema = new mongoose.Schema({
     }
 });
 const Ticket = mongoose.model('Tickets',TicketSchema);
-export default Ticket;
+module.exports = Ticket;

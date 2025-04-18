@@ -1,5 +1,5 @@
-import mongoose from 'mongoose';
-import User from './Users.js';
+const mongoose = require('mongoose');
+const User  = require('./Users.js');
 
 const EventSchema = new mongoose.Schema({
     title:{
@@ -27,4 +27,4 @@ const EventSchema = new mongoose.Schema({
     }
 });
 const Event = mongoose.model('event',EventSchema);
-export default Event;
+module.exports = Event;

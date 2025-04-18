@@ -1,7 +1,6 @@
-import Joi from 'joi'
+const Joi =require('joi')
 
-
-export const registerValidation = (req,res,next)=>{
+ const registerValidation = (req,res,next)=>{
     const schema = Joi.object({
          name:Joi.string().required(),
          email:Joi.string().email().required(),
@@ -14,8 +13,7 @@ export const registerValidation = (req,res,next)=>{
     }
     next()
 }
-
-export const LoginValidation = (req,res,next)=>{
+const LoginValidation = (req,res,next)=>{
     const schema = Joi.object({
          email:Joi.string().email().required(),
          password:Joi.string().required()
@@ -27,3 +25,4 @@ export const LoginValidation = (req,res,next)=>{
     }
     next()
 }
+module.exports= {registerValidation,LoginValidation}

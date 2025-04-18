@@ -4,7 +4,7 @@ const dotenv = require('dotenv')
 dotenv.config();
 const bodyParse = require('body-parser')
 const cors = require('cors')
-const Authrouter = require('./Routes/AuthRouter')
+const Authrouter = require('./routes/AuthRouter')
 
 const app = express()
 const PORT = process.env.PORT || 5000

@@ -54,7 +54,7 @@ const Login = () => {
 
 
     return (
-        <>
+        <div className='bodyWrap'>
             <ToastContainer />
             <div className="auth-container login-container">
                 <div className="auth-formArea">
@@ -108,7 +108,7 @@ const Login = () => {
                     <div className='overlay-loader'><ScaleLoader color='#000000' size={50} /></div>
                     : null
             }
-        </>
+        </div>
     );
 };
 

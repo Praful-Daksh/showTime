@@ -70,7 +70,7 @@ const RegisterForm = () => {
   };
 
   return (
-    <>
+    <div className="bodyWrap">
       <ToastContainer />
       <div className="register-container">
         <div className="auth-formArea">
@@ -145,7 +145,7 @@ const RegisterForm = () => {
           <div className='overlay-loader'><ScaleLoader color='#000000' size={50} /></div>
           : null
       }
-    </>
+    </div>
   );
 };
 

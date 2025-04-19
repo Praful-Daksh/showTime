@@ -15,7 +15,9 @@ app.listen(PORT, () => {
 
 
 app.use(bodyParse.json())
-app.use(cors())
+app.use(cors({
+    origin:'https://show-time-coral.vercel.app'
+}))
 app.use('/auth', Authrouter)
 
 

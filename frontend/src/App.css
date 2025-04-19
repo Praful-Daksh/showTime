@@ -9,16 +9,18 @@
   font-family: "Kanit", sans-serif;
 }
 
-a {
-  text-decoration: none;
+a,
+a:visited,
+a:active {
+  text-decoration: inherit;
   color: inherit;
 }
 
 
-.bodyWrap{
+.bodyWrap {
   height: 100vh;
   width: 100vw;
-  overflow:hidden;
+  overflow: hidden;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -142,13 +144,13 @@ a {
 
 /* ========== Register Specific ========== */
 .register-container {
-    display: flex;
-    width: 100vw;
-    max-width: 1000px;
-    background-color: #fff;
-    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
-    border-radius: 10px;
-    overflow: hidden;
+  display: flex;
+  width: 100vw;
+  max-width: 1000px;
+  background-color: #fff;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  overflow: hidden;
 }
 
 .register-container .auth-formArea {
@@ -381,7 +383,7 @@ video {
   .login-imageArea,
   .register-imageArea {
     display: none;
-  
+
   }
 }
 
@@ -398,8 +400,58 @@ video {
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 9999; 
+  z-index: 9999;
 }
 
+.content-wrapper {
+  height: 90vh;
+  width: 100vw;
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: 10% 80%;
+}
 
+.aside {
+  height: 90vh;
+}
 
+.dash-head-wrap {
+  width: 98.5vw;
+  border: 2px solid black;
+  height: 10vh;
+}
+
+.navigation-button-container {
+  display: flex;
+  background-color: rgba(27, 133, 219, 0.671);
+  width: 350px;
+  height: 40px;
+  align-items: center;
+  justify-content: space-around;
+  border-radius: 10px;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px,
+    rgba(27, 133, 219, 0.5) 5px 10px 15px;
+  position: fixed;
+  bottom: 30px;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.navigation-button {
+  outline: 0 !important;
+  border: 0 !important;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  transition: all ease-in-out 0.3s;
+  cursor: pointer;
+}
+
+.navigation-button:hover {
+  transform: translateY(-3px);
+}

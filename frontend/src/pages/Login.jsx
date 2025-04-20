@@ -38,7 +38,7 @@ const Login = () => {
                 })
                 const data = await response.json()
                 setLoading(false)
-                if (data.sucess) {
+                if (data.success) {
                     toast.success('Login Successfull !', { position: 'top-center' })
                     setTimeout(() => {
                         navigate('/dashboard')

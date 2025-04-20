@@ -5,6 +5,7 @@ dotenv.config();
 const bodyParse = require('body-parser')
 const cors = require('cors')
 const Authrouter = require('./routes/AuthRouter')
+const DashBoardRouter  = require('./routes/DashBoardRouter')
 
 const app = express()
 const PORT = process.env.PORT || 5000
@@ -19,6 +20,7 @@ app.use(cors({
     origin:'https://show-time-coral.vercel.app'
 }))
 app.use('/auth', Authrouter)
+app.use('/dashboard',DashBoardRouter)
 
 
 const mongoUri = process.env.mongoURI

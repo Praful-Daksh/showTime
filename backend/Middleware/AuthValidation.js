@@ -25,4 +25,5 @@ const LoginValidation = (req,res,next)=>{
     }
     next()
 }
+
 module.exports= {registerValidation,LoginValidation}

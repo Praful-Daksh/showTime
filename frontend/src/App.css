@@ -345,47 +345,6 @@ video {
   color: white;
 }
 
-/* ========== Responsive ========== */
-@media only screen and (max-width: 600px) {
-  .nav-icon-login {
-    display: block;
-  }
-
-  .nav-buttons {
-    display: none;
-  }
-
-  .hero .options {
-    width: 90%;
-  }
-
-  .hero .options a {
-    padding: 5px 15px;
-  }
-}
-
-@media (min-width: 768px) {
-  .auth-container {
-    flex-direction: row;
-  }
-
-  .login-imageArea,
-  .register-imageArea {
-    display: block;
-  }
-}
-
-@media (max-width: 768px) {
-  .auth-container {
-    flex-direction: column;
-  }
-
-  .login-imageArea,
-  .register-imageArea {
-    display: none;
-
-  }
-}
 
 
 
@@ -416,9 +375,12 @@ video {
 }
 
 .dash-head-wrap {
-  width: 98.5vw;
-  border: 2px solid black;
-  height: 10vh;
+  position: fixed;
+  top: 0;
+  width: 100%;
+}
+.dash-wrapper{
+  padding-top: 50px;
 }
 
 .navigation-button-container {
@@ -454,4 +416,53 @@ video {
 
 .navigation-button:hover {
   transform: translateY(-3px);
+}
+
+
+
+
+/* ========== Responsive ========== */
+@media only screen and (max-width: 600px) {
+  .nav-icon-login {
+    display: block;
+  }
+
+  .nav-buttons {
+    display: none;
+  }
+
+  .hero .options {
+    width: 90%;
+  }
+
+  .hero .options a {
+    padding: 5px 15px;
+  }
+}
+
+@media (min-width: 768px) {
+  .auth-container {
+    flex-direction: row;
+  }
+
+  .login-imageArea,
+  .register-imageArea {
+    display: block;
+  }
+}
+
+
+@media (max-width: 768px) {
+  .auth-container {
+    flex-direction: column;
+  }
+.navigation-button-container{
+  display: none;
+}
+
+  .login-imageArea,
+  .register-imageArea {
+    display: none;
+
+  }
 }

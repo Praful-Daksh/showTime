@@ -4,7 +4,7 @@ import Header from '../Components/Header';
 
 const Dashboard = () => {
   return (
-    <>
+    <div className='dash-wrapper'>
       <Header />
       <div className="flex flex-col lg:flex-row min-h-screen">
         <div className="flex-1 p-4">
@@ -59,7 +59,7 @@ const Dashboard = () => {
         </div>
       </div>
       <Navigation/>
-    </>
+    </div>
   );
 };
 

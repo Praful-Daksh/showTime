@@ -1,8 +1,33 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Navigation from '../Components/Navigation';
 import Header from '../Components/Header';
+import { ScaleLoader } from 'react-spinners'
 
 const Dashboard = () => {
+  const [loading, setLoading] = useState(false)
+  const [data, setData] = useState(null)
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true)
+      const url = 'https://backshow.onrender.com/dashboard/home'
+      const response = await fetch('http://localhost:5000/dashboard/home',{
+        method: "GET",
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+      const data = await response.json()
+      setData(data)
+      setLoading(false)
+      }
+      fetchData()
+      console.log(data)
+  }, [])
+
+
+
+
   return (
     <div className='dash-wrapper'>
       <Header />
@@ -18,7 +43,7 @@ const Dashboard = () => {
               </div>
             </div>
             <div className="w-full sm:w-1/2 lg:w-1/4 px-2 mb-4">
-              <div className="bg-white shadow-sm rounded-lg border">  
+              <div className="bg-white shadow-sm rounded-lg border">
                 <div className="p-4 text-center">
                   <h3 className="text-2xl font-semibold">0</h3>
                   <p className="text-gray-600">Tickets Sold</p>
@@ -58,7 +83,12 @@ const Dashboard = () => {
           </div>
         </div>
       </div>
-      <Navigation/>
+      <Navigation />
+      {
+        loading ?
+          <div className='overlay-loader'><ScaleLoader color='#000000' size={50} /></div>
+          : null
+      }
     </div>
   );
 };

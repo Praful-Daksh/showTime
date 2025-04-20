@@ -4,7 +4,6 @@ const createEventValidation = (req,res,next)=>{
     const schema = Joi.object({
         title:Joi.string().required(),
         date:Joi.date().required(),
-        user:Joi.string().id().required(),
         city:Joi.string().required(),
         venue:Joi.string().required(),
         access:Joi.string().required(),
@@ -17,5 +16,6 @@ const createEventValidation = (req,res,next)=>{
     }
     next()
 }
+
 
 module.exports = createEventValidation

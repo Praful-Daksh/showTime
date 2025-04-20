@@ -39,6 +39,7 @@ const Login = () => {
                 const data = await response.json()
                 setLoading(false)
                 if (data.success) {
+                    localStorage.setItem('authToken',data.token)
                     toast.success('Login Successfull !', { position: 'top-center' })
                     setTimeout(() => {
                         navigate('/dashboard')

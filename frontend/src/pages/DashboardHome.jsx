@@ -9,32 +9,32 @@ const Dashboard = () => {
   const [loading, setLoading] = useState(false)
   const [data, setData] = useState(null)
   const navigate = useNavigate();
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setLoading(true);
-        const url = 'https://backshow.onrender.com/dashboard/home'
-        const response = await fetch(url, {
-          method: "GET",
-          headers: {
-            'Authorization': localStorage.getItem('authToken')
-          }
-        });
-        const data = await response.json();
-        console.log(data)
-        setLoading(false);
-        if (data.success) {
-          toast.success('Login Successfull !', { position: 'top-center' })
-          setData(data.upcomingEvents);
-        } else {
-          toast.error(data.message || 'Login failed. Please try again.', { position: 'top-center' })
-          setData(null);
-          navigate('/login')
+  const fetchData = async () => {
+    try {
+      setLoading(true);
+      const url = 'https://backshow.onrender.com/dashboard/home'
+      const response = await fetch(url, {
+        method: "GET",
+        headers: {
+          'Authorization': localStorage.getItem('authToken')
         }
-      } catch (err) {
-        console.error("Error fetching data:", err);
+      });
+      const data = await response.json();
+      console.log(data)
+      setLoading(false);
+      if (data.success) {
+        toast.success('Login Successfull !', { position: 'top-center' })
+        setData(data.upcomingEvents);
+      } else {
+        toast.error(data.message || 'Login failed. Please try again.', { position: 'top-center' })
+        setData(null);
+        navigate('/login')
       }
+    } catch (err) {
+      console.error("Error fetching data:", err);
     }
+  }
+  useEffect(() => {
     fetchData();
   }, [navigate])
 

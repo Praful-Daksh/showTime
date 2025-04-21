@@ -2,28 +2,41 @@ import React, { useState, useEffect } from 'react';
 import Navigation from '../Components/Navigation';
 import Header from '../Components/Header';
 import { ScaleLoader } from 'react-spinners'
+import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
 
 const Dashboard = () => {
   const [loading, setLoading] = useState(false)
   const [data, setData] = useState(null)
-
+  const navigate = useNavigate();
   useEffect(() => {
     const fetchData = async () => {
-      setLoading(true)
-      const url = 'https://backshow.onrender.com/dashboard/home'
-      const response = await fetch('http://localhost:5000/dashboard/home',{
-        method: "GET",
-        headers: {
-          'Content-Type': 'application/json'
+      try {
+        setLoading(true);
+        const url = 'https://backshow.onrender.com/dashboard/home'
+        const response = await fetch(url, {
+          method: "GET",
+          headers: {
+            'Authorization': localStorage.getItem('authToken')
+          }
+        });
+        const data = await response.json();
+        console.log(data)
+        setLoading(false);
+        if (data.success) {
+          toast.success('Login Successfull !', { position: 'top-center' })
+          setData(data.upcomingEvents);
+        } else {
+          toast.error(data.message || 'Login failed. Please try again.', { position: 'top-center' })
+          setData(null);
+          navigate('/login')
         }
-      })
-      const data = await response.json()
-      setData(data)
-      setLoading(false)
+      } catch (err) {
+        console.error("Error fetching data:", err);
       }
-      fetchData()
-      console.log(data)
-  }, [])
+    }
+    fetchData();
+  }, [navigate])
 
 
 

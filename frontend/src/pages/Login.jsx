@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ToastContainer, toast } from 'react-toastify'
-import 'react-toastify/ReactToastify.css'
+import { toast } from 'react-toastify'
 import { ScaleLoader } from 'react-spinners'
 
 const Login = () => {
@@ -42,7 +41,7 @@ const Login = () => {
                     localStorage.setItem('authToken',data.token)
                     toast.success('Login Successfull !', { position: 'top-center' })
                     setTimeout(() => {
-                        navigate('/dashboard')
+                        navigate('/dashboard/home')
                     }, 1000)
                 } else {
                     toast.error(data.message, { position: 'top-center' })
@@ -56,7 +55,6 @@ const Login = () => {
 
     return (
         <div className='bodyWrap'>
-            <ToastContainer />
             <div className="auth-container login-container">
                 <div className="auth-formArea">
                     <h2>Are you a Host..?</h2>

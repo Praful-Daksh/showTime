@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { ToastContainer, toast } from 'react-toastify'
-import 'react-toastify/ReactToastify.css'
+import {  toast } from 'react-toastify'
 import { ScaleLoader } from 'react-spinners'
 
 const RegisterForm = () => {
@@ -71,7 +70,6 @@ const RegisterForm = () => {
 
   return (
     <div className="bodyWrap">
-      <ToastContainer />
       <div className="register-container">
         <div className="auth-formArea">
           <h2>Ready to Be a Host..?</h2>

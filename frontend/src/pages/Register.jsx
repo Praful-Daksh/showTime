@@ -46,6 +46,8 @@ const RegisterForm = () => {
     try {
       setLoading(true)
       const url = 'https://backshow.onrender.com/auth/register'
+      const url2 = 'http://localhost:5000/auth/register'
+
       const response = await fetch(url, {
         method: "POST",
         headers: {
@@ -64,7 +66,8 @@ const RegisterForm = () => {
         toast.error(data.message, { position: 'top-center' })
       }
     } catch (error) {
-      console.log(error);
+      setLoading(false)
+      toast.error('Something went wrong, Try again later',{position:'top-right'})
     }
   };
 

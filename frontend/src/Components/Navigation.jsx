@@ -27,7 +27,7 @@ const Sidebar = () => {
           <Ticket size={20} />
         </button>
       </Link>
-      <Link to={'/dashboard/Profile'}>
+      <Link to={'/dashboard/user/profile'}>
         <button className="navigation-button">
           <UserRound size={20} />
         </button>

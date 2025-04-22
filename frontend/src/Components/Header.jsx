@@ -22,11 +22,11 @@ const Header = () => {
         {isOpen && (
           <div className="absolute right-4 top-16 w-40 bg-white text-black rounded shadow-md z-50">
             <ul className="flex flex-col py-2">
-              <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer"><Link>Home</Link></li>
-              <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer"><Link>All Events</Link></li>
-              <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer"><Link>Create Event</Link></li>
-              <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer"><Link>Publish</Link></li>
-              <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer"><Link>Profile</Link></li>
+              <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer"><Link to={'/dashboard/home'}>Home</Link></li>
+              <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer"><Link to={'/dashboard/allEvents'}>All Events</Link></li>
+              <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer"><Link to={'/dashboard/newEvent'}>Create Event</Link></li>
+              <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer"><Link to={'/dashboad/market'}>Publish</Link></li>
+              <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer"><Link to={'/dashboard/user/profile'}>Profile</Link></li>
             </ul>
           </div>
         )}

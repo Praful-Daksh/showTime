@@ -7,12 +7,13 @@ import { useNavigate } from 'react-router-dom';
 
 const Dashboard = () => {
   const [loading, setLoading] = useState(false)
-  const [data, setData] = useState(null)
+  const [userEdata, setuserEdata] = useState([])
   const navigate = useNavigate();
   const fetchData = async () => {
     try {
       setLoading(true);
       const url = 'https://backshow.onrender.com/dashboard/home'
+      const url2 = 'http://localhost:5000/dashboard/home'
       const response = await fetch(url, {
         method: "GET",
         headers: {
@@ -20,23 +21,22 @@ const Dashboard = () => {
         }
       });
       const data = await response.json();
-      console.log(data)
       setLoading(false);
       if (data.success) {
-        toast.success('Login Successfull !', { position: 'top-center' })
-        setData(data.upcomingEvents);
+        setuserEdata(data.upcomingEvents);
       } else {
         toast.error(data.message || 'Login failed. Please try again.', { position: 'top-center' })
-        setData(null);
+        setuserEdata([]);
         navigate('/login')
       }
     } catch (err) {
-      console.error("Error fetching data:", err);
+      setLoading(false);
+      toast.error('Something went wrong, Try again later', { position: 'top-right' })
     }
   }
   useEffect(() => {
     fetchData();
-  }, [navigate])
+  }, [])
 
 
 
@@ -86,12 +86,16 @@ const Dashboard = () => {
               Upcoming Events
             </div>
             <div className="p-4 space-y-2 max-h-[300px] overflow-y-auto">
-              {Array(8).fill().map((_, i) => (
-                <div key={i} className="bg-white shadow-sm rounded-md border p-4">
-                  <div className="text-m font-semibold">Concert</div>
-                  <div className="text-sm text-gray-500">23th July</div>
-                </div>
-              ))}
+              {userEdata.length > 0 ? (
+                userEdata.map((event, index) => (
+                  <div key={index} className="bg-white shadow-sm rounded-md border p-4">
+                    <div className="text-m font-semibold">{event.title}</div>
+                    <div className="text-sm text-gray-500">{new Date(event.date).toDateString()} </div>
+                  </div>
+                ))
+              ) : (
+                <div>No upcoming events</div>
+              )}
             </div>
           </div>
         </div>

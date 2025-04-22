@@ -28,6 +28,8 @@ const Login = () => {
             try {
                 setLoading(true)
                 const url = 'https://backshow.onrender.com/auth/login'
+                const url2 = 'http://localhost:5000/auth/login'
+
                 const response = await fetch(url, {
                     method: "POST",
                     headers: {
@@ -38,7 +40,7 @@ const Login = () => {
                 const data = await response.json()
                 setLoading(false)
                 if (data.success) {
-                    localStorage.setItem('authToken',data.token)
+                    localStorage.setItem('authToken', data.token)
                     toast.success('Login Successfull !', { position: 'top-center' })
                     setTimeout(() => {
                         navigate('/dashboard/home')
@@ -47,7 +49,8 @@ const Login = () => {
                     toast.error(data.message, { position: 'top-center' })
                 }
             } catch (error) {
-                console.log(error);
+                setLoading(false)
+                toast.error('Something went wrong, Try again later', { position: 'top-right' }) 
             }
         }
     };

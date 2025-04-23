@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify'
 import { ScaleLoader } from 'react-spinners'
+import {Link} from 'react-router-dom'
 
 const Login = () => {
     const navigate = useNavigate();
@@ -98,7 +99,7 @@ const Login = () => {
                         </div>
                     </form>
 
-                    <p>Not Registered? <a href="/register">Sign up</a></p>
+                    <p>Not Registered? <Link to={'/register'}>Register</Link></p>
                 </div>
 
                 <div className="login-imageArea">

@@ -1,5 +1,5 @@
 import React from 'react'
-
+import {Link} from 'react-router-dom'
 const Hero = () => {
     return (
         <section className="hero">
@@ -7,8 +7,8 @@ const Hero = () => {
                 <h1>All Event Operations At One Place.</h1>
                 <h4>Organise, Manage, Buy & Sell Tickets</h4>
                 <div className="options">
-                    <a href="/login">Organise an Event</a>
-                    <a href="/shows" id="book-show">Book a Show</a>
+                <Link to={'/login'}>Organise an Event</Link>
+                <Link to={'/shows'}>Book a Show</Link>
                 </div>
             </div>
         </section>

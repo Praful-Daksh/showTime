@@ -17,7 +17,7 @@ const Sidebar = () => {
         </button>
       </Link>
 
-      <Link to={'/dashboard/Events'}>
+      <Link to={'/dashboard/allEvents'}>
         <button className="navigation-button">
           <WalletCards size={20} />
         </button>

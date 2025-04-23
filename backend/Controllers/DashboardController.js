@@ -16,12 +16,13 @@ const createEvent = async (req, res) => {
     }
 }
 
+
 const getUpcomingEvents = async (req, res) => {
     try {
         const userId = req.user.id
         console.log(userId)
         const currentDate = new Date()
-        const upcomingEvents = await Event.find({ user: userId , date: { $gte: currentDate } })
+        const upcomingEvents = await Event.find({ user: userId })
         if(upcomingEvents.length > 0){
             return res.status(200).json({ message: 'Upcoming Events', success: true, upcomingEvents})
         }else{

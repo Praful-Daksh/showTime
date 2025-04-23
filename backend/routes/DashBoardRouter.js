@@ -5,4 +5,7 @@ const router = require('express').Router();
 
 router.get('/home',ensureAuthenticated,getUpcomingEvents)
 router.post('/newEvent',ensureAuthenticated,createEventValidation,createEvent)
+router.get('/allEvents',ensureAuthenticated,(req,res)=>{
+    return res.status(200).json({ message: 'Authenticated Succesfully', success: true})
+})
 module.exports = router;

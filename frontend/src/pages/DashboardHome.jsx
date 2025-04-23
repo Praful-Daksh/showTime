@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom';
 const Dashboard = () => {
   const [loading, setLoading] = useState(false)
   const [userEdata, setuserEdata] = useState([])
+  const [eventCount, setEventCount] = useState(0);
   const navigate = useNavigate();
   const fetchData = async () => {
     try {
@@ -24,9 +25,12 @@ const Dashboard = () => {
       setLoading(false);
       if (data.success) {
         setuserEdata(data.upcomingEvents);
+        setEventCount(data.upcomingEvents.length);
+        localStorage.setItem('userEvents',JSON.stringify(data.upcomingEvents))
       } else {
         toast.error(data.message || 'Login failed. Please try again.', { position: 'top-center' })
         setuserEdata([]);
+        setEventCount(0);
         navigate('/login')
       }
     } catch (err) {
@@ -50,7 +54,7 @@ const Dashboard = () => {
             <div className="w-full sm:w-1/2 lg:w-1/4 px-2 mb-4">
               <div className="bg-white shadow-sm rounded-lg border">
                 <div className="p-4 text-center">
-                  <h3 className="text-2xl font-semibold">10</h3>
+                  <h3 className="text-2xl font-semibold">{eventCount}</h3>
                   <p className="text-gray-600">Events</p>
                 </div>
               </div>
@@ -87,12 +91,17 @@ const Dashboard = () => {
             </div>
             <div className="p-4 space-y-2 max-h-[300px] overflow-y-auto">
               {userEdata.length > 0 ? (
-                userEdata.map((event, index) => (
-                  <div key={index} className="bg-white shadow-sm rounded-md border p-4">
-                    <div className="text-m font-semibold">{event.title}</div>
-                    <div className="text-sm text-gray-500">{new Date(event.date).toDateString()} </div>
-                  </div>
-                ))
+                userEdata.filter(event => {
+                    const eventDate = new Date(event.date);
+                    const today = new Date();
+                    today.setHours(0, 0, 0, 0); 
+                    return eventDate >= today;
+                  }).map(event => (
+                    <div key={event.id} className="bg-white shadow-sm rounded-md border p-4">
+                      <div className="text-m font-semibold">{event.title}</div>
+                      <div className="text-sm text-gray-500">{new Date(event.date).toDateString()}</div>
+                    </div>
+                  ))
               ) : (
                 <div>No upcoming events</div>
               )}

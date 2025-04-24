@@ -26,6 +26,8 @@ const Dashboard = () => {
         setEventCount(data.upcomingEvents.length);
         localStorage.setItem('userEvents', JSON.stringify(data.upcomingEvents))
       } else {
+        localStorage.removeItem('authToken')
+        localStorage.removeItem('userEvents')
         toast.error(data.message || 'Login Expired. Try Login again.', { position: 'top-center' })
         setuserEdata([]);
         setEventCount(0);
@@ -33,9 +35,9 @@ const Dashboard = () => {
       }
     } catch (err) {
       setLoading(false);
-      toast.error('Something went wrong, Try again later', { position: 'top-right' })
       localStorage.removeItem('authToken')
       localStorage.removeItem('userEvents')
+      toast.error('Something went wrong, Try again later', { position: 'top-right' })
       navigate('/login')
     }
   }

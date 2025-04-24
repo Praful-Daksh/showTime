@@ -6,7 +6,7 @@ const UserProfile = () => {
     const navigate = useNavigate();
     const logoutUser = async () => {
         localStorage.removeItem('authToken');
-        localStorage.removeItem('userEvens');
+        localStorage.removeItem('userEvents');
         navigate('/login');
         toast.success('Succesfully Logged Out !',{position:'top-center'})
     }

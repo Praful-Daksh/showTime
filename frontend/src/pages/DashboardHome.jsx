@@ -1,6 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import Navigation from '../Components/Navigation';
-import Header from '../Components/Header';
 import { ScaleLoader } from 'react-spinners'
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
@@ -26,9 +24,9 @@ const Dashboard = () => {
       if (data.success) {
         setuserEdata(data.upcomingEvents);
         setEventCount(data.upcomingEvents.length);
-        localStorage.setItem('userEvents',JSON.stringify(data.upcomingEvents))
+        localStorage.setItem('userEvents', JSON.stringify(data.upcomingEvents))
       } else {
-        toast.error(data.message || 'Login failed. Please try again.', { position: 'top-center' })
+        toast.error(data.message || 'Login Expired. Try Login again.', { position: 'top-center' })
         setuserEdata([]);
         setEventCount(0);
         navigate('/login')
@@ -36,6 +34,9 @@ const Dashboard = () => {
     } catch (err) {
       setLoading(false);
       toast.error('Something went wrong, Try again later', { position: 'top-right' })
+      localStorage.removeItem('authToken')
+      localStorage.removeItem('userEvents')
+      navigate('/login')
     }
   }
   useEffect(() => {
@@ -46,8 +47,7 @@ const Dashboard = () => {
 
 
   return (
-    <div className='dash-wrapper'>
-      <Header />
+    <>
       <div className="flex flex-col lg:flex-row min-h-screen">
         <div className="flex-1 p-4">
           <div className="flex flex-wrap -mx-2">
@@ -92,16 +92,16 @@ const Dashboard = () => {
             <div className="p-4 space-y-2 max-h-[300px] overflow-y-auto">
               {userEdata.length > 0 ? (
                 userEdata.filter(event => {
-                    const eventDate = new Date(event.date);
-                    const today = new Date();
-                    today.setHours(0, 0, 0, 0); 
-                    return eventDate >= today;
-                  }).map(event => (
-                    <div key={event.id} className="bg-white shadow-sm rounded-md border p-4">
-                      <div className="text-m font-semibold">{event.title}</div>
-                      <div className="text-sm text-gray-500">{new Date(event.date).toDateString()}</div>
-                    </div>
-                  ))
+                  const eventDate = new Date(event.date);
+                  const today = new Date();
+                  today.setHours(0, 0, 0, 0);
+                  return eventDate >= today;
+                }).map(event => (
+                  <div key={event.id} className="bg-white shadow-sm rounded-md border p-4">
+                    <div className="text-m font-semibold">{event.title}</div>
+                    <div className="text-sm text-gray-500">{new Date(event.date).toDateString()}</div>
+                  </div>
+                ))
               ) : (
                 <div>No upcoming events</div>
               )}
@@ -109,13 +109,12 @@ const Dashboard = () => {
           </div>
         </div>
       </div>
-      <Navigation />
       {
         loading ?
           <div className='overlay-loader'><ScaleLoader color='#000000' size={50} /></div>
           : null
       }
-    </div>
+    </>
   );
 };
 

@@ -5,7 +5,7 @@ const Card = ({ event }) => {
   const { id,title, venue, date } = event;
 
   return (
-    <div className="w-full sm:w-[300px] bg-white rounded-xl shadow-md overflow-hidden p-6 hover:shadow-lg transition-shadow duration-300">
+    <div className="w-full sm:w-[300px] bg-white rounded-xl shadow-md overflow-hidden p-6 hover:shadow-lg transition-shadow duration-300 border">
       <h2 className="text-xl font-semibold text-gray-900">{title}</h2>
       <p className="mt-2 text-gray-600 text-sm">{venue}</p>
       <p className="mt-2 text-gray-600 text-sm">{new Date(date).toDateString()}</p>

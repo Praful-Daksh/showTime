@@ -52,6 +52,7 @@ const Login = () => {
             } catch (error) {
                 setLoading(false)
                 toast.error('Something went wrong, Try again later', { position: 'top-right' }) 
+                navigate('/login')
             }
         }
     };

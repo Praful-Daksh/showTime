@@ -26,8 +26,8 @@ const Navbar = () => {
                     </div>
                 </div>
                 <div className="nav-buttons">
-                    <Link to={'/login'}></Link>
-                    <Link to={'/register'}></Link>
+                    <Link to={'/login'}>Sign In</Link>
+                    <Link to={'/register'}>Sign Up</Link>
                 </div>
                 <div className="nav-icon-login">
                     <a className="fa fa-right-to-bracket" href="/login"></a>

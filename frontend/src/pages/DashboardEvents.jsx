@@ -1,7 +1,5 @@
-import React, { useState , useEffect} from 'react';
-import Header from '../Components/Header';
+import React, { useState, useEffect } from 'react';
 import Card from '../Components/Card';
-import Navigation from '../Components/Navigation'
 import { ScaleLoader } from 'react-spinners';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
@@ -9,7 +7,7 @@ import { useNavigate } from 'react-router-dom';
 const DashboardEvents = () => {
     const navigate = useNavigate()
     const [loading, setLoading] = useState(false)
-    const [events,setEvents] = useState(null)
+    const [events, setEvents] = useState(null)
     const Authenticate = async () => {
         try {
             setLoading(true);
@@ -26,7 +24,7 @@ const DashboardEvents = () => {
             if (!data.success) {
                 toast.error(data.message || 'Login failed. Please try again.', { position: 'top-center' })
                 navigate('/login')
-            }else{
+            } else {
                 setEvents(JSON.parse(localStorage.getItem('userEvents')));
             }
         } catch (err) {
@@ -42,8 +40,8 @@ const DashboardEvents = () => {
 
 
     return (
-        <div className='dash-wrapper'>
-            <Header />
+        <>
+
             <div className="p-4 ">
                 {events ? (
                     <div className="flex flex-wrap gap-6 justify-center">
@@ -55,13 +53,12 @@ const DashboardEvents = () => {
                     <div className="text-center text-gray-600">No events found</div>
                 )}
             </div>
-            <Navigation />
             {
                 loading ?
                     <div className='overlay-loader'><ScaleLoader color='#000000' size={50} /></div>
                     : null
             }
-        </div>
+        </>
     );
 };
 

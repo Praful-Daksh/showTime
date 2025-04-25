@@ -4,15 +4,16 @@ const createEventValidation = (req,res,next)=>{
     const schema = Joi.object({
         title:Joi.string().required(),
         date:Joi.date().required(),
+        description:Joi.string().required(),
         city:Joi.string().required(),
         venue:Joi.string().required(),
         access:Joi.string().required(),
-        publish:Joi.boolean().required()
+        publish:Joi.boolean()
     })
     const {error} = schema.validate(req.body)
     if(error){
         return res.status(400)
-        .json({message:"Invalid data",error:error.details[0].message})
+        .json({message:"Incomplete data",error:error.details[0].message})
     }
     next()
 }

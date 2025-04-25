@@ -4,8 +4,8 @@ const mongoose = require('mongoose')
 const createEvent = async (req, res) => {
     try {
         const user = req.user.id
-        const { title, date,city, venue, access, publish } = req.body;
-        const eventModel = new Event({ title, date, user, city, venue, access, publish })
+        const { title, date,description,city, venue, access, publish } = req.body;
+        const eventModel = new Event({ title, date, user,description, city, venue, access, publish })
         const event = await eventModel.save()
         res.status(201).json({ message: 'Event Recorded Successfully', success: true }
         )

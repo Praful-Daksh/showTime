@@ -99,7 +99,7 @@ const Dashboard = () => {
                   today.setHours(0, 0, 0, 0);
                   return eventDate >= today;
                 }).map(event => (
-                  <div key={event.id} className="bg-white shadow-sm rounded-md border p-4">
+                  <div key={event.id} className="bg-white shadow-sm rounded-md border p-4 cursor-pointer" onClick={()=> navigate(`/dashboard/allEvents/${event._id}`)}> 
                     <div className="text-m font-semibold">{event.title}</div>
                     <div className="text-sm text-gray-500">{new Date(event.date).toDateString()}</div>
                   </div>

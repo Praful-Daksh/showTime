@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify'
-import { ScaleLoader } from 'react-spinners'
+import { ClimbingBoxLoader } from 'react-spinners'
 import {Link} from 'react-router-dom'
 
 const Login = () => {
@@ -109,7 +109,7 @@ const Login = () => {
 
             {
                 loading ?
-                    <div className='overlay-loader'><ScaleLoader color='#000000' size={50} /></div>
+                    <div className='overlay-loader'><ClimbingBoxLoader color='#000000' size={50} /></div>
                     : null
             }
         </div>

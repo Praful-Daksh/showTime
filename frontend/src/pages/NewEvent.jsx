@@ -34,7 +34,7 @@ const NewEvent = () => {
     console.log(finalEventData);
     try {
       setLoading(true);
-      const url = 'https://backshow.onrender.com/newEvent'
+      const url = 'https://backshow.onrender.com/dashboard/newEvent'
       const url2 = 'http://localhost:5000/dashboard/newEvent'
       const response = await fetch(url, {
         method: "POST",

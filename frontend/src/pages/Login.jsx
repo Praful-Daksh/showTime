@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify'
-import { ClimbingBoxLoader } from 'react-spinners'
+import { HashLoader } from 'react-spinners'
 import {Link} from 'react-router-dom'
 
 const Login = () => {
@@ -109,7 +109,11 @@ const Login = () => {
 
             {
                 loading ?
+<<<<<<< HEAD
                     <div className='overlay-loader'><ClimbingBoxLoader color='#000000' size={25} /></div>
+=======
+                    <div className='overlay-loader'><HashLoader color='#000000' size={50} /></div>
+>>>>>>> 9bd1c6c82b5bfcad4f0e60b77037963f1e808ada
                     : null
             }
         </div>

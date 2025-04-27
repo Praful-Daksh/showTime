@@ -13,7 +13,7 @@ const DashboardEvents = () => {
             setLoading(true);
             const url = 'https://backshow.onrender.com/dashboard/home'
             const url2 = 'http://localhost:5000/dashboard/home'
-            const response = await fetch(url2, {
+            const response = await fetch(url, {
                 method: "GET",
                 headers: {
                     'Authorization': localStorage.getItem('authToken')

@@ -7,6 +7,7 @@ import Register from './pages/Register';
 import DashboardLayout from './Layouts/DashboardLayout'; 
 import DashboardHome from './pages/DashboardHome';
 import DashboardEvents from './pages/DashboardEvents';
+import DashEvent from './pages/DashEvent';
 import UserProfile from './pages/UserProfile';
 import NewEvent from './pages/NewEvent';
 import './App.css';
@@ -26,6 +27,7 @@ function App() {
           <Route path="allEvents" element={<DashboardEvents />} />
           <Route path="user/profile" element={<UserProfile />} />
           <Route path="newEvent" element={<NewEvent />} />
+          <Route path="allEvents/:eventId" element={<DashEvent/>}/>
         </Route>
       </Routes>
     </BrowserRouter>

@@ -31,7 +31,7 @@ const Login = () => {
                 const url = 'https://backshow.onrender.com/auth/login'
                 const url2 = 'http://localhost:5000/auth/login'
 
-                const response = await fetch(url, {
+                const response = await fetch(url2, {
                     method: "POST",
                     headers: {
                         'Content-Type': 'application/json'
@@ -109,7 +109,7 @@ const Login = () => {
 
             {
                 loading ?
-                    <div className='overlay-loader'><ClimbingBoxLoader color='#000000' size={50} /></div>
+                    <div className='overlay-loader'><ClimbingBoxLoader color='#000000' size={25} /></div>
                     : null
             }
         </div>

@@ -22,7 +22,12 @@ const Dashboard = () => {
       const data = await response.json();
       setLoading(false);
       if (data.success) {
-        setuserEdata(data.upcomingEvents);
+        setuserEdata(data.upcomingEvents.filter(event => {
+          const eventDate = new Date(event.date);
+          const today = new Date();
+          today.setHours(0, 0, 0, 0); 
+          return eventDate >= today;
+        }))
         setEventCount(data.upcomingEvents.length);
         localStorage.setItem('userEvents', JSON.stringify(data.upcomingEvents))
       } else {
@@ -93,13 +98,8 @@ const Dashboard = () => {
             </div>
             <div className="p-4 space-y-2 max-h-[300px] overflow-y-auto">
               {userEdata.length > 0 ? (
-                userEdata.filter(event => {
-                  const eventDate = new Date(event.date);
-                  const today = new Date();
-                  today.setHours(0, 0, 0, 0);
-                  return eventDate >= today;
-                }).map(event => (
-                  <div key={event.id} className="bg-white shadow-sm rounded-md border p-4 cursor-pointer" onClick={()=> navigate(`/dashboard/allEvents/${event._id}`)}> 
+                userEdata.map(event => (
+                  <div key={event._id} className="bg-white shadow-sm rounded-md border p-4 cursor-pointer" onClick={()=> navigate(`/dashboard/allEvents/${event._id}`)}> 
                     <div className="text-m font-semibold">{event.title}</div>
                     <div className="text-sm text-gray-500">{new Date(event.date).toDateString()}</div>
                   </div>

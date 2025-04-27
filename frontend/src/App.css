@@ -385,7 +385,7 @@ video {
 
 .navigation-button-container {
   display: flex;
-  background-color: rgba(27, 133, 219, 0.671);
+  background-color: #3783D7;
   width: 350px;
   height: 40px;
   align-items: center;

@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const Event  = require('./event.js');
+const Event  = require('./events')
 
 const TodoSchema = new mongoose.Schema({
     task:{
@@ -12,4 +12,5 @@ const TodoSchema = new mongoose.Schema({
 });
 
 const Tasks = mongoose.model('tasks',TodoSchema);
-moudle.exports = Tasks;
+
+module.exports = Tasks;

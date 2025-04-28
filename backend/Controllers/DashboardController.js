@@ -1,5 +1,6 @@
 const Event = require('../models/events')
 const mongoose = require('mongoose')
+const Tasks = require('../models/tasks')
 
 const createEvent = async (req, res) => {
     try {
@@ -64,11 +65,73 @@ const deleteEvent = async (req, res) => {
         //     await Ticket.deleteOne({ eId: eventId });
         // }
         await Event.deleteOne({ _id: eventId });
-        // await Tasks.deleteMany({ eId: eventId });
+        await Tasks.deleteMany({ eId: eventId });
         return res.status(200).json({ message: 'Event Deleted Successfully', success: true })
     } catch (error) {
         console.error("Error deleting event: ", error);
         return res.status(500).json({ message: "Some Internal Error Occured", success: false });
     }
 }
-module.exports = { createEvent, getUpcomingEvents, updateEvent, deleteEvent };
+
+const getTasks = async (req, res) => {
+    try {
+        const eventId = req.params.id;
+        const tasks = await Tasks.find({ eId: eventId }) || [];
+        return res.status(200).json({ message: 'All tasks are -', success: true, tasks })
+    } catch (err) {
+        console.error("Error fetching tasks:", err);
+        return res.status(204).json({ message: 'NO tasks', success: false });
+    }
+}
+
+const addTask = async (req, res) => {
+    try {
+        const eventId = req.params.id;
+        const { newTask } = req.body;
+        const addedTask = new Tasks({ task: newTask, eId: eventId });
+        await addedTask.save();
+
+        return res.status(200).json({ message: 'Task Added', success: true})
+
+    } catch (err) {
+        console.log(err)
+        return res.status(500).json({ message: "Some Internal Error Occured", success: false});
+    }
+}
+
+const deleteTask = async (req, res) => {
+    try {
+        const taskId = req.params.id;
+        await Tasks.deleteOne({ _id: taskId });
+        return res.status(200).json({ message: 'Task Removed', success: true})
+    }catch(err){
+        console.log(err)
+        return res.status(500).json({ message: "Some Internal Error Occured", success: false});
+    }
+}
+
+const validateEventId = async(req,res)=>{
+    try{
+        const eventId = req.params.id;
+        const event = await Event.findById(eventId);
+        if (!event) {
+            return res.status(400).json({ message: 'Something went wrong', success: false });
+        }
+        return res.status(200).json({message:'Event found',success:true})
+    }catch(err){
+        console.log(err)
+        return res.status(500).json({ message: "Some Internal Error Occured", success: false});
+    }
+}
+
+
+module.exports = {
+    createEvent,
+    getUpcomingEvents,
+    updateEvent,
+    deleteEvent,
+    getTasks,
+    addTask,
+    deleteTask,
+    validateEventId
+};

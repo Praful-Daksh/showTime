@@ -1,19 +1,22 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 
-const RefreshHandler = ({setLoggedIn}) => {
-    const location = useLocation();
-    const navigate = useNavigate();
+const RefreshHandler = ({ setLoggedIn }) => {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const [isToken, setIsToken] = useState(false)
 
-    useEffect(()=>{
-        if(localStorage.getItem('authToken')){
-            setLoggedIn(true)
-            if(location.pathname === '/' || location.pathname === '/login' || location.pathname === '/register'){
-                navigate('/dashboard/home')
-            }
-
-        }
-    },[location,navigate,setLoggedIn])
+  useEffect(() => {
+    if (localStorage.getItem('authToken')) {
+      setIsToken(true)
+      if (location.pathname === '/' || location.pathname === '/register') {
+        navigate('/', { state: { isAuth: isToken } })
+      }
+      else if (location.pathname === '/login') {
+        navigate('/dashboard/home')
+      }
+    }
+  }, [location, navigate, isToken])
   return (
     null
   )

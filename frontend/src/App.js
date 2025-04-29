@@ -10,6 +10,7 @@ import DashboardEvents from './pages/DashboardEvents';
 import DashEvent from './pages/DashEvent';
 import UserProfile from './pages/UserProfile';
 import NewEvent from './pages/NewEvent';
+import NotFoundPage from './Components/NotFoundPage'
 import './App.css';
 
 function App() {
@@ -29,6 +30,7 @@ function App() {
           <Route path="newEvent" element={<NewEvent />} />
           <Route path="allEvents/:eventId" element={<DashEvent/>}/>
         </Route>
+        <Route path='*' element={<NotFoundPage/>} />
       </Routes>
     </BrowserRouter>
   );

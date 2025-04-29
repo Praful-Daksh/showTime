@@ -8,7 +8,9 @@
   box-sizing: border-box;
   font-family: "Kanit", sans-serif;
 }
-
+body{
+  overflow-x: hidden;
+}
 a,
 a:visited,
 a:active {
@@ -19,13 +21,15 @@ a:active {
 
 .bodyWrap {
   height: 100vh;
-  width: 100vw;
+  width: 100%;
   overflow: hidden;
   display: flex;
   justify-content: center;
   align-items: center;
 }
-
+.homePageWrap{
+  overflow-x: hidden;
+}
 /* ========== Shared Auth Styles (Login & Register) ========== */
 .auth-container {
   display: flex;
@@ -190,7 +194,7 @@ a:active {
   position: fixed;
   top: 0;
   z-index: 100;
-  background-color: rgba(61, 143, 234, 0.6);
+  background-color: rgba(61, 143, 234, 0.8);
 }
 
 nav {
@@ -298,7 +302,7 @@ video {
 .hero {
   width: 100vw;
   height: 100vh;
-  background-color: rgba(61, 143, 234, 0.8);
+  background-color: rgba(61, 143, 234,0.2);
   position: absolute;
   top: 0;
   display: flex;

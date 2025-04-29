@@ -1,7 +1,7 @@
 import React from 'react'
-import {Link } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 
-const Navbar = () => {
+const Navbar = ({ isAuth }) => {
     return (
         <div className="nav-head-wrap">
             <nav>
@@ -25,10 +25,15 @@ const Navbar = () => {
                         </form>
                     </div>
                 </div>
-                <div className="nav-buttons">
-                    <Link to={'/login'}>Sign In</Link>
-                    <Link to={'/register'}>Sign Up</Link>
-                </div>
+                {!isAuth ?
+                    <div className="nav-buttons">
+                        <Link to={'/login'}>Sign In</Link>
+                        <Link to={'/register'}>Sign Up</Link>
+                    </div> :
+                    <div className="nav-buttons">
+                        <Link to={'/dashboard/home'}>Dashboard</Link>
+                    </div>
+                }
                 <div className="nav-icon-login">
                     <a className="fa fa-right-to-bracket" href="/login"></a>
                 </div>

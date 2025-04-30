@@ -10,6 +10,7 @@ import DashboardEvents from './pages/DashboardEvents';
 import DashEvent from './pages/DashEvent';
 import UserProfile from './pages/UserProfile';
 import NewEvent from './pages/NewEvent';
+import PublishTicket from './pages/PublishTicket';
 import NotFoundPage from './Components/NotFoundPage'
 import './App.css';
 
@@ -29,6 +30,7 @@ function App() {
           <Route path="user/profile" element={<UserProfile />} />
           <Route path="newEvent" element={<NewEvent />} />
           <Route path="allEvents/:eventId" element={<DashEvent/>}/>
+          <Route path="tickets/publish/:eventId" element={<PublishTicket/>}/>
         </Route>
         <Route path='*' element={<NotFoundPage/>} />
       </Routes>

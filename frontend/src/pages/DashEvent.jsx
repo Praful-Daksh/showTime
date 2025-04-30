@@ -107,7 +107,7 @@ const DashEvent = () => {
           try {
             const url = `https://backshow.onrender.com/dashboard/allEvents/tasks/${eventId}`;
             const url2 = `http://localhost:5000/dashboard/allEvents/tasks/${eventId}` 
-            const response = await fetch(url2, {
+            const response = await fetch(url, {
               method: "GET",
               headers: {
                 'Content-Type': 'application/json',
@@ -243,7 +243,7 @@ const DashEvent = () => {
                 <h3 className="text-xl font-semibold text-gray-800 mb-2">🎟️ Publish Tickets</h3>
                 <p className="text-sm text-gray-600 mb-4">Set up ticket types, pricing, and availability for this event.</p>
                 <button
-                  onClick={() => navigate(`/dashboard/tickets/${eventId}`)}
+                  onClick={() => navigate(`/dashboard/tickets/publish/${eventId}`)}
                   className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-md transition"
                 >
                   Publish Tickets

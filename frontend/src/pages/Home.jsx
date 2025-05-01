@@ -16,7 +16,7 @@ const Home = () => {
                     <Navbar isAuth={isAuth} />
 
                     <section id="showcase" className="relative w-full h-[70vh] overflow-hidden">
-                        <video autoPlay muted loop className="w-full h-full object-cover">
+                        <video autoPlay muted playsInline loop className="w-full h-full object-cover">
                             <source src="/media/showcaseVid.mp4" type="video/mp4" />
                             Your browser does not support the video tag.
                         </video>

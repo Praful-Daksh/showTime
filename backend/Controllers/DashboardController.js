@@ -1,6 +1,7 @@
 const Event = require('../models/events')
 const mongoose = require('mongoose')
 const Tasks = require('../models/tasks')
+const Ticket = require('../models/tickets')
 
 const createEvent = async (req, res) => {
     try {
@@ -61,9 +62,9 @@ const deleteEvent = async (req, res) => {
             req.flash("error_msg", "Event not found");
             return res.status(500).json({ message: "Some Internal Error Occured", success: false });
         }
-        // if (event.publish) {
-        //     await Ticket.deleteOne({ eId: eventId });
-        // }
+        if (event.publish) {
+            await Ticket.deleteOne({ eId: eventId });
+        }
         await Event.deleteOne({ _id: eventId });
         await Tasks.deleteMany({ eId: eventId });
         return res.status(200).json({ message: 'Event Deleted Successfully', success: true })
@@ -124,6 +125,26 @@ const validateEventId = async(req,res)=>{
     }
 }
 
+const publishTicket = async (req, res) => {
+    try {
+        const eventId = req.params.id;
+        const {ticketData,eventData } = req.body;
+        const event = await Event.findById(eventId);
+        if (!event) {
+            return res.status(400).json({ message: 'Something went wrong', success: false });
+        }
+        if (event.publish) {
+            return res.status(400).json({ message: 'Ticket already published', success: false });
+        }
+        const ticket = new Ticket({ ...ticketData, eId: eventId , showCity: eventData.city, showVenue: eventData.venue, showDate: eventData.date });
+        await ticket.save();
+        await Event.updateOne({ _id: eventId }, { $set: { publish: true } });
+        return res.status(200).json({ message: 'Ticket Published', success: true })
+    } catch (err) {
+        console.log(err)
+        return res.status(500).json({ message: "Some Internal Error Occured", success: false });
+    }
+}
 
 module.exports = {
     createEvent,
@@ -133,5 +154,6 @@ module.exports = {
     getTasks,
     addTask,
     deleteTask,
-    validateEventId
+    validateEventId,
+    publishTicket
 };

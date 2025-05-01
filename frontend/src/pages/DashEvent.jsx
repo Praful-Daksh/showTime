@@ -162,7 +162,6 @@ const DashEvent = () => {
         setLoading(false)
         if (data.success) {
           toast.success(data.message, { position: 'top-left' });
-          Authenticate();
         }
       } catch (err) {
         setLoading(false);
@@ -352,7 +351,7 @@ const DashEvent = () => {
       </div>
 
       {loading && (
-        <div className="fixed inset-0 bg-black bg-opacity-20 flex items-center justify-center z-50">
+        <div className="overlay-loader">
           <ScaleLoader color="#2563EB" />
         </div>
       )}

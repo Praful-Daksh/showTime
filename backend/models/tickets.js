@@ -2,14 +2,14 @@ const mongoose = require('mongoose')
 const Event = require('./events.js')
 
 const TicketSchema = new mongoose.Schema({
-    limit:{
-        type:Number
+    ticketName:{
+        type:String
     },
     price:{
         type:Number
     },
-    validity:{
-        type:Date
+    quantity:{
+        type:Number
     },
     eId:{
         type:mongoose.Schema.Types.ObjectId,
@@ -30,7 +30,24 @@ const TicketSchema = new mongoose.Schema({
     sold:{
         type:Number,
         default:0
-    }
+    },
+    ticketTypes:{
+        type:Array,
+        default:[]
+    },
+    lastDate:{
+        type:Date
+    },
+    vipPrice:{
+        type:Number
+    },
+    vipQuantity:{
+        type:Number
+    },
+    vipSold:{
+        type:Number,
+        default:0
+    },
 });
 const Ticket = mongoose.model('Tickets',TicketSchema);
 module.exports = Ticket;

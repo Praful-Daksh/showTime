@@ -7,9 +7,13 @@ const {
     getTasks,
     addTask,
     deleteTask,
-    validateEventId
+    validateEventId,
+    publishTicket
 } = require('../Controllers/DashboardController')
-const createEventValidation = require('../Middleware/DashboardValidation')
+const {
+    createEventValidation,
+    publishEventValidation
+} = require('../Middleware/DashboardValidation')
 const router = require('express').Router();
 
 router.get('/home', ensureAuthenticated, getUpcomingEvents)
@@ -18,6 +22,7 @@ router.patch('/allEvents/update/:id', ensureAuthenticated, createEventValidation
 router.delete('/allEvents/delete/:id', ensureAuthenticated, deleteEvent)
 router.get('/allEvents/tasks/:id', ensureAuthenticated, getTasks)
 router.post('/allEvents/tasks/add/:id', ensureAuthenticated, addTask)
-router.delete('/allEvents/tasks/delete/:id',ensureAuthenticated,deleteTask)
-router.get('/allEvents/verify/:id',ensureAuthenticated,validateEventId)
+router.delete('/allEvents/tasks/delete/:id', ensureAuthenticated, deleteTask)
+router.get('/allEvents/verify/:id', ensureAuthenticated, validateEventId)
+router.post('/publishTicket/:id', ensureAuthenticated, publishEventValidation, publishTicket)
 module.exports = router;

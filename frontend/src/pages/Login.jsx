@@ -31,7 +31,7 @@ const Login = () => {
                 const url = 'https://backshow.onrender.com/auth/login'
                 const url2 = 'http://localhost:5000/auth/login'
 
-                const response = await fetch(url, {
+                const response = await fetch(url2, {
                     method: "POST",
                     headers: {
                         'Content-Type': 'application/json'

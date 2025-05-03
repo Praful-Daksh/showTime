@@ -77,7 +77,7 @@ const PublishTicket = () => {
             console.log(ticketData)
             const url = `https://backshow.onrender.com/dashboard/publishTicket/${eventId}`
             const url2 = `http://localhost:5000/dashboard/publishTicket/${eventId}`
-            const response = fetch(url2, {
+            const response = fetch(url, {
                 method: "POST",
                 headers: {
                     'Authorization': localStorage.getItem('authToken'),

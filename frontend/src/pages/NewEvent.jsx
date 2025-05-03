@@ -36,7 +36,7 @@ const NewEvent = () => {
       setLoading(true);
       const url = 'https://backshow.onrender.com/dashboard/newEvent'
       const url2 = 'http://localhost:5000/dashboard/newEvent'
-      const response = await fetch(url2, {
+      const response = await fetch(url, {
         method: "POST",
         headers: {
           'Authorization': localStorage.getItem('authToken'),

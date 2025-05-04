@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import Avatar from 'react-avatar'
+import Avatar from '@mui/material/Avatar';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { HashLoader } from 'react-spinners'
@@ -10,6 +10,21 @@ const UserProfile = () => {
     const [loading, setLoading] = useState(false);
     const [userData, setUserData] = useState(null);
     const [newPassword, setNewPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
+
+    const handleChange = (e) => {
+        setUserData({
+            ...userData,
+            [e.target.name]: e.target.value
+        });
+    }
+    const handlePasswordChange = (e) => {
+        if (e.target.name === 'new-password') {
+            setNewPassword(e.target.value);
+        } else if (e.target.name === 'confirm-password') {
+            setConfirmPassword(e.target.value);
+        }
+    };
 
     const handleLogout = () => {
         localStorage.removeItem('authToken');
@@ -17,6 +32,50 @@ const UserProfile = () => {
         navigate('/login');
         toast.success('Logged out successfully', { position: 'top-center' });
     };
+
+    const handleUpdate = async () => {
+        if (newPassword !== '') {
+            if (newPassword.length < 8) {
+                toast.error('Password must be at least 8 characters long', { position: 'top-center' });
+                return;
+            }
+            else if (newPassword !== confirmPassword) {
+                toast.error('Passwords do not match', { position: 'top-center' });
+                return;
+            }
+        }
+        try {
+            setLoading(true);
+            const url = 'https://backshow.onrender.com/auth/updateUser'
+            const url2 = 'http://localhost:5000/auth/updateUser'
+            const response = await fetch(url, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': localStorage.getItem('authToken')
+                },
+                body: JSON.stringify({
+                    name: userData.name,
+                    password: newPassword
+                })
+            });
+            const data = await response.json();
+            setLoading(false);
+            if (data.success) {
+                toast.success('Profile updated successfully', { position: 'top-center' });
+                setUserData(data.user);
+            } else {
+                toast.error(data.message, { position: 'top-center' });
+            }
+        } catch (error) {
+            setLoading(false);
+            console.error(error);
+            toast.error('Failed to update profile, Try again later', { position: 'top-center' });
+        }
+        setNewPassword('');
+        setConfirmPassword('');
+    };
+
 
     useEffect(() => {
         setLoading(true)
@@ -28,27 +87,34 @@ const UserProfile = () => {
             return
         }
         const fetchUserData = async () => {
-            try {
-                const url = 'https://backshow.onrender.com/auth/user'
-                const url2 = 'http://localhost:5000/auth/user'
-                const response = await fetch(url, {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': localStorage.getItem('authToken')
-                    }
-                });
-                const data = await response.json();
-                if (data.success) {
-                    setUserData(data.user);
-                } else {
-                    toast.error(data.message, { position: 'top-center' });
-                }
-            } catch (error) {
-                toast.error('Failed to fetch user data, Try again Later', { position: 'top-center' });
-                navigate('/dashboard/home')
-            } finally {
+            if(localStorage.getItem('user')){
+                setUserData(JSON.parse(localStorage.getItem('user')))
                 setLoading(false)
+                return;
+            }
+            else{
+                try {
+                    const url = 'https://backshow.onrender.com/auth/getUserData'
+                    const url2 = 'http://localhost:5000/auth/getUserData'
+                    const response = await fetch(url, {
+                        method: "GET",
+                        headers: {
+                            'Authorization': token
+                        }
+                    });
+                    const data = await response.json();
+                    setLoading(false);
+                    if (data.success) {
+                        setUserData(data.user);
+                        localStorage.setItem('user', JSON.stringify(data.user))
+                    } else {
+                        toast.error(data.message, { position: 'top-center' })
+                    }
+                } catch (error) {
+                    setLoading(false);
+                    toast.error('Failed to Fetch user data, Try again later', { position: 'top-center' })
+                    navigate('/dashboard/home')
+                }
             }
         };
         fetchUserData();
@@ -61,7 +127,11 @@ const UserProfile = () => {
         <>
             <div className="max-w-sm mx-auto mt-12 p-6 bg-white rounded-lg shadow-md space-y-6">
                 <div className="flex items-center space-x-4">
-                    <Avatar name={userData?.name} size='50px' />
+                    <Avatar
+                        sx={{ width: 50, height: 50, bgcolor: '#0078d4' }}
+                    >
+                        {userData?.name ? userData.name.charAt(0).toUpperCase() : ''}
+                    </Avatar>
                     <div>
                         <h2 className="text-xl font-semibold text-gray-800">{userData?.name}</h2>
                         <p className="text-gray-500">{userData?.email}</p>
@@ -83,7 +153,7 @@ const UserProfile = () => {
                                 <input
                                     name="name"
                                     value={userData?.name}
-                                    // onChange={handleChange}
+                                    onChange={handleChange}
                                     className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm px-3 py-2 focus:ring-blue-500 focus:border-blue-500"
                                     type="text"
                                 />
@@ -94,7 +164,7 @@ const UserProfile = () => {
                                 <input
                                     name="new-password"
                                     value={newPassword}
-                                    // onChange={handleChange}
+                                    onChange={handlePasswordChange}
                                     className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm px-3 py-2 focus:ring-blue-500 focus:border-blue-500"
                                     type="password"
                                 />
@@ -104,12 +174,13 @@ const UserProfile = () => {
                                 <label className="block text-sm font-medium text-gray-700">Confirm New  Password</label>
                                 <input
                                     name="confirm-password"
-                                    // onChange={handleChange}
+                                    onChange={handlePasswordChange}
+                                    value={confirmPassword}
                                     className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm px-3 py-2 focus:ring-blue-500 focus:border-blue-500"
                                     type="password"
                                 />
                             </div>
-                            <button className='bg-blue-600 text-white px-2 py-1 rounded-md hover:bg-blue-700'>
+                            <button className='bg-blue-600 text-white px-2 py-1 rounded-md hover:bg-blue-700' onClick={handleUpdate}>
                                 Update
                             </button>
 

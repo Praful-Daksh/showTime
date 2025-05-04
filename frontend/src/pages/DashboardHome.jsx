@@ -33,7 +33,8 @@ const Dashboard = () => {
       } else {
         localStorage.removeItem('authToken')
         localStorage.removeItem('userEvents')
-        toast.error(data.message || 'Login Expired. Try Login again.', { position: 'top-center' })
+        localStorage.removeItem('user')
+        toast.success('Successfully Logged Out.', { position: 'top-center' })
         setuserEdata([]);
         setEventCount(0);
         navigate('/login')
@@ -42,6 +43,7 @@ const Dashboard = () => {
       setLoading(false);
       localStorage.removeItem('authToken')
       localStorage.removeItem('userEvents')
+      localStorage.removeItem('user')
       toast.error('Something went wrong, Try again later', { position: 'top-right' })
       navigate('/login')
     }

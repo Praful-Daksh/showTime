@@ -59,13 +59,36 @@ const getUserData = async (req, res) => {
                 .json({ message: 'User not found', success: false })
         }
         res.status(200)
-            .json({ message: "User Data", success: true,"user":{"name":user.name,"email":user.email} })
+            .json({ message: "User Data", success: true, "user": { "name": user.name, "email": user.email } })
     } catch (err) {
         res.status(500)
             .json({ message: "Internal Server Error", success: false })
     }
 }
 
+const updateUser = async (req, res) => {
+    try {
+        const id = req.user.id;
+        const { name, password } = req.body;
 
 
-module.exports = { logIn, signUp, getUserData }
+        let updateData = { name };
+
+        if (password !== '') {
+            const hashedPassword = await bcrypt.hash(password, 10);
+            updateData.password = hashedPassword;
+        }
+
+        const updatedUser = await User.findByIdAndUpdate(id, updateData, { new: true });
+
+        if (!updatedUser) {
+            return res.status(404).json({ message: "User not found", success: false });
+        }
+
+        res.status(200).json({ message: "User updated successfully", success: true , user: { name: updatedUser.name, email: updatedUser.email } });
+    } catch (err) {
+        res.status(500).json({ message: "Internal Server Error", success: false });
+    }
+}
+
+module.exports = { logIn, signUp, getUserData, updateUser }

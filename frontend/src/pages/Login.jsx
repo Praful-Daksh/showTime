@@ -41,7 +41,13 @@ const Login = () => {
                 const data = await response.json()
                 setLoading(false)
                 if (data.success) {
+                    console.log(data)
                     localStorage.setItem('authToken', data.token)
+                    const user = {
+                        name: data.name,
+                        email: data.email
+                    }
+                    localStorage.setItem('user', JSON.stringify(user))
                     toast.success('Login Successfull !', { position: 'top-center' })
                     setTimeout(() => {
                         navigate('/dashboard/home')

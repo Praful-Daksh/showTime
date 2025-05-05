@@ -57,68 +57,77 @@ const Dashboard = () => {
 
   return (
     <>
-      <div className="flex flex-col lg:flex-row min-h-screen">
-        <div className="flex-1 p-4">
-          <div className="flex flex-wrap -mx-2">
-            <div className="w-full sm:w-1/2 lg:w-1/4 px-2 mb-4">
-              <div className="bg-white shadow-sm rounded-lg border">
-                <div className="p-4 text-center">
-                  <h3 className="text-2xl font-semibold">{eventCount}</h3>
-                  <p className="text-gray-600">Events</p>
-                </div>
-              </div>
-            </div>
-            <div className="w-full sm:w-1/2 lg:w-1/4 px-2 mb-4">
-              <div className="bg-white shadow-sm rounded-lg border">
-                <div className="p-4 text-center">
-                  <h3 className="text-2xl font-semibold">0</h3>
-                  <p className="text-gray-600">Tickets Sold</p>
-                </div>
-              </div>
-            </div>
-            <div className="w-full sm:w-1/2 lg:w-1/4 px-2 mb-4">
-              <div className="bg-white shadow-sm rounded-lg border">
-                <div className="p-4 text-center">
-                  <h3 className="text-2xl font-semibold">$0</h3>
-                  <p className="text-gray-600">Total Revenue</p>
-                </div>
-              </div>
-            </div>
-            <div className="w-full sm:w-1/2 lg:w-1/4 px-2 mb-4">
-              <div className="bg-white shadow-sm rounded-lg border">
-                <div className="p-4 text-center">
-                  <h3 className="text-2xl font-semibold">$0</h3>
-                  <p className="text-gray-600">Total Revenue</p>
-                </div>
-              </div>
+  <div className="flex flex-col lg:flex-row min-h-screen">
+    <div className="flex-1 p-4 mx-auto max-w-7xl w-full">
+      <div className="flex flex-wrap -mx-2">
+        <div className="w-full sm:w-1/2 lg:w-1/4 px-2 mb-4">
+          <div className="bg-white shadow-sm rounded-lg border">
+            <div className="p-3 text-center">
+              <h3 className="text-2xl font-semibold">{eventCount}</h3>
+              <p className="text-gray-600 text-sm">Events</p>
             </div>
           </div>
-
-          <div className="bg-white shadow-sm rounded-lg mt-4 border">
-            <div className="border-b px-4 py-2 font-semibold text-gray-700">
-              Upcoming Events
+        </div>
+        <div className="w-full sm:w-1/2 lg:w-1/4 px-2 mb-4">
+          <div className="bg-white shadow-sm rounded-lg border">
+            <div className="p-3 text-center">
+              <h3 className="text-2xl font-semibold">0</h3>
+              <p className="text-gray-600 text-sm">Tickets Sold</p>
             </div>
-            <div className="p-4 space-y-2 max-h-[300px] overflow-y-auto">
-              {userEdata.length > 0 ? (
-                userEdata.map(event => (
-                  <div key={event._id} className="bg-white shadow-sm rounded-md border p-4 cursor-pointer" onClick={()=> navigate(`/dashboard/allEvents/${event._id}`)}> 
-                    <div className="text-m font-semibold">{event.title}</div>
-                    <div className="text-sm text-gray-500">{new Date(event.date).toDateString()}</div>
-                  </div>
-                ))
-              ) : (
-                <div>No upcoming events</div>
-              )}
+          </div>
+        </div>
+        <div className="w-full sm:w-1/2 lg:w-1/4 px-2 mb-4">
+          <div className="bg-white shadow-sm rounded-lg border">
+            <div className="p-3 text-center">
+              <h3 className="text-2xl font-semibold">$0</h3>
+              <p className="text-gray-600 text-sm">Total Revenue</p>
+            </div>
+          </div>
+        </div>
+        <div className="w-full sm:w-1/2 lg:w-1/4 px-2 mb-4">
+          <div className="bg-white shadow-sm rounded-lg border">
+            <div className="p-3 text-center">
+              <h3 className="text-2xl font-semibold">$0</h3>
+              <p className="text-gray-600 text-sm">Total Revenue</p>
             </div>
           </div>
         </div>
       </div>
-      {
-        loading ?
-          <div className='overlay-loader'><HashLoader color='#000000' size={50} /></div>
-          : null
-      }
-    </>
+
+      <div className="bg-white shadow-sm rounded-lg mt-4 border">
+        <div className="border-b px-4 py-2 font-semibold text-gray-700 flex items-center justify-between">
+          Upcoming Events
+          <span className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-full">{userEdata.length}</span>
+        </div>
+        <div className="p-3 space-y-2 max-h-[300px] overflow-y-auto scrollbar-thin">
+          {userEdata.length > 0 ? (
+            userEdata.map(event => (
+              <div 
+                key={event._id} 
+                className="bg-white shadow-sm rounded-md border p-3 cursor-pointer hover:bg-gray-50" 
+                onClick={()=> navigate(`/dashboard/allEvents/${event._id}`)}
+              > 
+                <div className="text-m font-semibold">{event.title}</div>
+                <div className="text-sm text-gray-500">{new Date(event.date).toDateString()}</div>
+              </div>
+            ))
+          ) : (
+            <div className="text-center text-gray-500 py-2">No upcoming events</div>
+          )}
+        </div>
+      </div>
+    </div>
+  </div>
+  {
+    loading ?
+      <div className='overlay-loader'>
+        <HashLoader color='#000000' size={50} />
+        </div>
+      : null
+  }
+</>
+
+  
   );
 };
 

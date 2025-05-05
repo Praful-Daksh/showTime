@@ -14,7 +14,6 @@ const Home = () => {
             <div className='homePageWrap'>
                 <div className="bodyWrap">
                     <Navbar isAuth={isAuth} />
-
                     <section id="showcase" className="relative w-full h-[70vh] overflow-hidden">
                         <video autoPlay muted playsInline loop className="w-full h-full object-cover">
                             <source src="/media/showcaseVid.mp4" type="video/mp4" />

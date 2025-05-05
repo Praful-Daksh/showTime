@@ -4,7 +4,7 @@ import RefreshHandler from './RefreshHandler';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import Register from './pages/Register';
-import DashboardLayout from './Layouts/DashboardLayout'; 
+import DashboardLayout from './Layouts/DashboardLayout';
 import DashboardHome from './pages/DashboardHome';
 import DashboardEvents from './pages/DashboardEvents';
 import DashEvent from './pages/DashEvent';
@@ -13,6 +13,7 @@ import NewEvent from './pages/NewEvent';
 import PublishTicket from './pages/PublishTicket';
 import NotFoundPage from './Components/NotFoundPage'
 import './App.css';
+import ExploreEvents from './pages/ExploreEvents';
 
 function App() {
   const [isLoggedIn, setLoggedIn] = useState(false);
@@ -29,10 +30,11 @@ function App() {
           <Route path="allEvents" element={<DashboardEvents />} />
           <Route path="user/profile" element={<UserProfile />} />
           <Route path="newEvent" element={<NewEvent />} />
-          <Route path="allEvents/:eventId" element={<DashEvent/>}/>
-          <Route path="tickets/publish/:eventId" element={<PublishTicket/>}/>
+          <Route path="allEvents/:eventId" element={<DashEvent />} />
+          <Route path="tickets/publish/:eventId" element={<PublishTicket />} />
         </Route>
-        <Route path='*' element={<NotFoundPage/>} />
+        <Route path='/explore/events' element={<ExploreEvents />} />
+        <Route path='*' element={<NotFoundPage />} />
       </Routes>
     </BrowserRouter>
   );

@@ -8,7 +8,7 @@ const Hero = () => {
                 <h4>Organise, Manage, Buy & Sell Tickets</h4>
                 <div className="options">
                 <Link to={'/login'}>Organise an Event</Link>
-                <Link to={'/shows'}>Book a Show</Link>
+                <Link to={'/explore/events'}>Book a Show</Link>
                 </div>
             </div>
         </section>

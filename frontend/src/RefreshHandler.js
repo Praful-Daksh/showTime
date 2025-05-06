@@ -10,7 +10,7 @@ const RefreshHandler = ({ setLoggedIn }) => {
     if (localStorage.getItem('authToken')) {
       setIsToken(true)
       if (location.pathname === '/' || location.pathname === '/register') {
-        navigate('/', { state: { isAuth: isToken } })
+        navigate('/dashboard/home', { state: { isAuth: isToken } })
       }
       else if (location.pathname === '/login') {
         navigate('/dashboard/home')

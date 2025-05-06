@@ -2,13 +2,18 @@ import React from 'react'
 import SearchBar from '../Components/SearchBar'
 import Navbar from '../Components/Navbar'
 import { useState, useEffect } from 'react'
+import { useLocation } from 'react-router-dom'
+import Navigation from '../Components/Navigation'
+import { HashLoader } from 'react-spinners'
+import { toast } from 'react-toastify'
 
 const ExploreEvents = () => {
-
+  const location = useLocation()
   const [events, setEvents] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
-
+  const [loading, setLoading] = useState(false);
+  const isAuth = location.state?.isAuth || false
   useEffect(() => {
     const mockEvents = [
       {
@@ -80,6 +85,34 @@ const ExploreEvents = () => {
     ];
 
     setEvents(mockEvents);
+
+
+    // Simulate fetching data from an API
+    const fetchShows = async () => {
+      try {
+        setLoading(true);
+        const url = 'https://backshow.onrender.com/Tickets/allTickets'
+        const url2 = 'http://localhost:5000/Tickets/allTickets'
+        const response = await fetch(url, {
+          method: "GET",
+        });
+        const data = await response.json();
+        setLoading(false);
+        if(data.success){
+          console.log(data.Tickets)
+          toast.success('Events fetched successfully', { position: 'top-right' })
+        }else{
+          toast.error('No shows found', { position: 'top-right' })
+        }
+      } catch (err) {
+        setLoading(false);
+        toast.error('Something went wrong', { position: 'top-right' })
+        console.log(err);
+      }
+    }
+    fetchShows();
+
+
   }, []);
 
   const filteredEvents = events.filter(event => {
@@ -95,7 +128,7 @@ const ExploreEvents = () => {
 
   return (
     <>
-      <Navbar isAuth={false} />
+      <Navbar />
       <div className="flex flex-col min-h-screen" style={{ marginTop: '10vh' }}>
         {/* Search Section */}
         <div className="bg-white shadow-md py-4">
@@ -129,11 +162,10 @@ const ExploreEvents = () => {
             </div>
           </div>
 
-          {/* Upcoming Events */}
+          {/*  Events */}
           <div className="mb-8">
             <div className="flex justify-between items-center mb-4">
-              <h2 className="text-xl font-semibold">Upcoming Events</h2>
-              <a href="#" className="text-blue-500 hover:underline text-sm">View All</a>
+              <h2 className="text-xl font-semibold">Explore</h2>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -171,51 +203,18 @@ const ExploreEvents = () => {
               ))}
             </div>
           </div>
-
-          {/* Popular Events */}
-          <div>
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-xl font-semibold">Popular</h2>
-              <a href="#" className="text-blue-500 hover:underline text-sm">View All</a>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {filteredEvents.slice(3, 6).map(event => (
-                <div key={event.id} className="event-card bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg border border-gray-100">
-                  <div className="h-48 overflow-hidden relative">
-                    <span className="absolute top-2 left-2 bg-blue-500 text-white px-2 py-1 rounded-md text-xs font-medium">
-                      {event.category}
-                    </span>
-                    <img
-                      src={event.image}
-                      alt={event.title}
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                  <div className="p-4">
-                    <h3 className="text-lg font-medium mb-1">{event.title}</h3>
-                    <div className="text-gray-600 text-sm mb-2">
-                      <div className="flex items-center mb-1">
-                        <i className="fas fa-calendar-alt mr-2"></i> {event.date} · {event.time}
-                      </div>
-                      <div className="flex items-center">
-                        <i className="fas fa-map-marker-alt mr-2"></i> {event.location}
-                      </div>
-                    </div>
-                    <p className="text-gray-600 text-sm mb-4">{event.description}</p>
-                    <div className="flex justify-between items-center">
-                      <span className="text-blue-500 font-bold">{event.price}</span>
-                      <button className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md text-sm font-medium transition">
-                        Get Tickets
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
         </main>
       </div >
+      {isAuth ? (
+        <Navigation />
+      ) : null}
+      {
+        loading ?
+          <div className='overlay-loader'>
+            <HashLoader color='#000000' size={50} />
+          </div>
+          : null
+      }
     </>
   )
 }

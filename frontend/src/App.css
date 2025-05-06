@@ -193,8 +193,8 @@ a:active {
   align-items: center;
   position: fixed;
   top: 0;
-  z-index: 10000;
-  background-color: rgba(61, 143, 234, 0.8);
+  z-index: 10;
+  background-color: #3783D7;
 }
 
 nav {
@@ -207,14 +207,9 @@ nav {
 
 .nav-logo {
   color: white;
-  font-size: 1.2rem;
+  font-size: 1.3rem;
+  font-weight: bold;
 }
-
-.nav-logo span {
-  color: #cfcfcf;
-  font-weight: lighter;
-}
-
 .nav-search {
   width: 40%;
   display: flex;

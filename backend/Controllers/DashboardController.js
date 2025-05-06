@@ -136,7 +136,7 @@ const publishTicket = async (req, res) => {
         if (event.publish) {
             return res.status(400).json({ message: 'Ticket already published', success: false });
         }
-        const ticket = new Ticket({ ...ticketData, eId: eventId , showCity: eventData.city, showVenue: eventData.venue, showDate: eventData.date });
+        const ticket = new Ticket({ ...ticketData, eId: eventId , showCity: eventData.city, showVenue: eventData.venue, showDate: eventData.date , description: eventData.description });
         await ticket.save();
         await Event.updateOne({ _id: eventId }, { $set: { publish: true } });
         return res.status(200).json({ message: 'Ticket Published', success: true })

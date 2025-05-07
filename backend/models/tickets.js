@@ -51,6 +51,9 @@ const TicketSchema = new mongoose.Schema({
     description:{
         type:String
     },
+    category:{
+        type:String
+    }
 });
 const Ticket = mongoose.model('Tickets',TicketSchema);
 module.exports = Ticket;

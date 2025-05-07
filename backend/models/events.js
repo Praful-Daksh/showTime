@@ -27,6 +27,9 @@ const EventSchema = new mongoose.Schema({
     publish:{
         type:Boolean,
         default:false,
+    },
+    category:{
+        type:String
     }
 });
 const Event = mongoose.model('event',EventSchema);

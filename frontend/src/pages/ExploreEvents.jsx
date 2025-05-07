@@ -150,7 +150,7 @@ const ExploreEvents = () => {
           <div className="mb-8">
             <h2 className="text-xl font-semibold mb-4">Explore by Category</h2>
             <div className="flex flex-wrap gap-2">
-              {['All', 'Music', 'Sports', 'Arts', 'Food', 'Technology', 'Theater'].map(category => (
+              {['All', 'Music', 'Sports', 'Arts', 'Food', 'Technology', 'Theater' ,'Comedy','Festival','Conference','Workshop','Exhibtion','Other'].map(category => (
                 <button
                   key={category}
                   className={`px-4 py-2 rounded-full text-sm font-medium ${category === 'All' ? 'bg-blue-500 text-white' : 'bg-gray-100 text-gray-800 hover:bg-gray-200'

@@ -379,7 +379,7 @@ video {
   width: 100%;
 }
 .dash-wrapper{
-  padding-top: 50px;
+  padding-block: 70px;
 }
 
 /* .navigation-button-container {

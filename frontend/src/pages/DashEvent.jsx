@@ -2,12 +2,13 @@ import React, { useState, useEffect } from "react";
 import { ScaleLoader } from "react-spinners";
 import { toast } from "react-toastify";
 import { useNavigate, useParams } from "react-router-dom";
+import swal from 'sweetalert2'
+import withReactContent from 'sweetalert2-react-content'
 
 const DashEvent = () => {
   const params = useParams();
   const eventId = params.eventId;
   const navigate = useNavigate();
-
   const allEventDetails = JSON.parse(localStorage.getItem('userEvents')) || [];
   const eventDetails = allEventDetails.find(event => event._id === eventId);
   const [eventData, setEventData] = useState({
@@ -17,11 +18,15 @@ const DashEvent = () => {
     city: eventDetails?.city || '',
     access: eventDetails?.access || 'Public',
     date: eventDetails?.date || '',
+    category: eventDetails?.category || ''
   });
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(false);
   const [newTask, setNewTask] = useState('');
   const [isAuthenticated, setIsAuthenticated] = useState(false);  // Track auth status
+
+
+
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -30,6 +35,27 @@ const DashEvent = () => {
       [name]: value
     }));
   };
+
+
+
+  const showConfirmAlert = () => {
+    withReactContent(swal).fire({
+      title: 'Are you sure to delete This Event?',
+      text: "All tasks and published tickets of this event will be deleted too.",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'I am Sure!'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        deleteEvent()
+      }
+    }
+    )
+  }
+
+
 
   const updateEvent = async (e) => {
     e.preventDefault();
@@ -103,10 +129,10 @@ const DashEvent = () => {
         });
         const data = await response.json()
         if (data.success) {
-          setIsAuthenticated(true); 
+          setIsAuthenticated(true);
           try {
             const url = `https://backshow.onrender.com/dashboard/allEvents/tasks/${eventId}`;
-            const url2 = `http://localhost:5000/dashboard/allEvents/tasks/${eventId}` 
+            const url2 = `http://localhost:5000/dashboard/allEvents/tasks/${eventId}`
             const response = await fetch(url, {
               method: "GET",
               headers: {
@@ -247,6 +273,7 @@ const DashEvent = () => {
                 >
                   Publish Tickets
                 </button>
+                <p>⚠ Once Event is Published you cannot update event details.</p>
               </>
             )}
 
@@ -254,7 +281,7 @@ const DashEvent = () => {
               <h3 className="text-xl font-semibold text-red-800 mb-2">🚨 Danger Zone</h3>
               <p className="text-sm text-gray-600 mb-4">If you delete this event, it will be permanently removed from the system. This action cannot be undone.</p>
               <button
-                onClick={deleteEvent}
+                onClick={showConfirmAlert}
                 className="w-full bg-red-600 hover:bg-red-700 text-white py-2 rounded-md transition"
               >
                 Delete Event
@@ -265,7 +292,11 @@ const DashEvent = () => {
 
         <div className="bg-white shadow-lg rounded-xl p-8 w-full md:w-2/3 order-1 md:order-2">
           <h2 className="text-2xl font-bold text-gray-800 mb-4">Edit Event Details</h2>
-          <p className="text-gray-600 mb-6">Modify event information. Date can't be changed.</p>
+          {eventDetails.publish ?
+            <p className="text-yellow-600 mb-6">Event is Published, You can't Change any details below.</p>
+            :
+            <p className="text-gray-600 mb-6">Modify event information. Date can't be changed.</p>
+          }
 
           <form className="space-y-6" onSubmit={updateEvent}>
             <div>
@@ -277,6 +308,7 @@ const DashEvent = () => {
                 value={eventData.title}
                 onChange={handleChange}
                 required
+                disabled={eventDetails.publish}
               />
             </div>
 
@@ -289,6 +321,7 @@ const DashEvent = () => {
                 value={eventData.description}
                 onChange={handleChange}
                 required
+                disabled={eventDetails.publish}
               />
             </div>
 
@@ -301,6 +334,7 @@ const DashEvent = () => {
                 value={eventData.venue}
                 onChange={handleChange}
                 required
+                disabled={eventDetails.publish}
               />
             </div>
 
@@ -313,16 +347,44 @@ const DashEvent = () => {
                 value={eventData.city}
                 onChange={handleChange}
                 required
+                disabled={eventDetails.publish}
               />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700">Category</label>
+              <select
+                type="text"
+                placeholder="Enter Category"
+                className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+                name="category"
+                value={eventData.category}
+                onChange={handleChange}
+                required
+                disabled={eventData.category}
+              >
+                <option value="Music">Music</option>
+                <option value="Sports">Sports</option>
+                <option value="Arts">Arts</option>
+                <option value="Food">Food</option>
+                <option value="Technology">Technology</option>
+                <option value="Theater">Theater</option>
+                <option value="Comedy">Comedy</option>
+                <option value="Festival">Festival</option>
+                <option value="Conference">Conference</option>
+                <option value="Workshop">Workshop</option>
+                <option value="Exhibition">Exhibition</option>
+                <option value="Other">Other</option>
+              </select>
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700">Category</label>
+              <label className="block text-sm font-medium text-gray-700">Evnet Type</label>
               <select
                 className="mt-1 block w-full border border-gray-300 rounded-lg p-3"
                 name="access"
                 value={eventData.access}
                 onChange={handleChange}
+                disabled={eventDetails.publish}
                 required
               >
                 <option value="Public">Public</option>
@@ -336,13 +398,14 @@ const DashEvent = () => {
                 type="text"
                 className="mt-1 block w-full border border-gray-300 rounded-lg p-3 bg-gray-100 cursor-not-allowed"
                 value={new Date(eventData.date).toLocaleString()}
-                readOnly
+                disabled={true}
               />
             </div>
 
             <button
               type="submit"
               className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-3 rounded-lg hover:opacity-90 transition"
+              disabled={eventDetails.publish}
             >
               Save Changes
             </button>

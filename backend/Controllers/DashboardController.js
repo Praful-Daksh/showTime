@@ -6,8 +6,8 @@ const Ticket = require('../models/tickets')
 const createEvent = async (req, res) => {
     try {
         const user = req.user.id
-        const { title, date, description, city, venue, access, publish } = req.body;
-        const eventModel = new Event({ title, date, user, description, city, venue, access, publish })
+        const { title, date, description, city, venue, access, publish ,category} = req.body;
+        const eventModel = new Event({ title, date, user, description, city, venue, access, publish , category })
         const event = await eventModel.save()
         res.status(201).json({ message: 'Event Recorded Successfully', success: true }
         )
@@ -39,9 +39,9 @@ const getUpcomingEvents = async (req, res) => {
 
 const updateEvent = async (req, res) => {
     const { id } = req.params;
-    const { title, description, venue, city, access, date, user } = req.body;
+    const { title, description, venue, city, access, date, user , category } = req.body;
     try {
-        const updatedEvent = await Event.findByIdAndUpdate(id, { title, description, venue, city, access, date, user }, { new: true });
+        const updatedEvent = await Event.findByIdAndUpdate(id, { title, description, venue, city, access, date, user , category }, { new: true });
         if (!updatedEvent) {
             return res.status(500).json({ message: "Some Internal Error Occured", success: false });
         }
@@ -136,7 +136,7 @@ const publishTicket = async (req, res) => {
         if (event.publish) {
             return res.status(400).json({ message: 'Ticket already published', success: false });
         }
-        const ticket = new Ticket({ ...ticketData, eId: eventId , showCity: eventData.city, showVenue: eventData.venue, showDate: eventData.date , description: eventData.description });
+        const ticket = new Ticket({ ...ticketData, eId: eventId , showCity: eventData.city, showVenue: eventData.venue, showDate: eventData.date , description: eventData.description , category:eventData.category });
         await ticket.save();
         await Event.updateOne({ _id: eventId }, { $set: { publish: true } });
         return res.status(200).json({ message: 'Ticket Published', success: true })

@@ -96,7 +96,7 @@ const UserProfile = () => {
                 try {
                     const url = 'https://backshow.onrender.com/auth/getUserData'
                     const url2 = 'http://localhost:5000/auth/getUserData'
-                    const response = await fetch(url2, {
+                    const response = await fetch(url, {
                         method: "GET",
                         headers: {
                             'Authorization': token

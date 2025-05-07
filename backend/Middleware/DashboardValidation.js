@@ -8,6 +8,7 @@ const createEventValidation = (req, res, next) => {
         city: Joi.string().required(),
         venue: Joi.string().required(),
         access: Joi.string().required(),
+        category: Joi.string().required(),
         publish: Joi.boolean()
     })
     const { error } = schema.validate(req.body)
@@ -36,6 +37,7 @@ const publishEventValidation = (req, res, next) => {
             city: Joi.string().required(),
             venue: Joi.string().required(),
             access: Joi.string().required(),
+            category: Joi.string().required(),
             publish: Joi.boolean()
         }).unknown(true)
     })

@@ -13,7 +13,8 @@ const NewEvent = () => {
     description: '',
     venue: '',
     city: '',
-    access: ''
+    access: '',
+    category: ''
   });
   const [loading, setLoading] = useState(false)
   const handleChange = (e) => {
@@ -40,7 +41,7 @@ const NewEvent = () => {
         method: "POST",
         headers: {
           'Authorization': localStorage.getItem('authToken'),
-          'Content-Type':'application/JSON'
+          'Content-Type': 'application/JSON'
         },
         body: JSON.stringify(finalEventData)
       })
@@ -149,6 +150,31 @@ const NewEvent = () => {
 
             <div>
               <label className="block text-sm font-medium text-gray-700">Category</label>
+              <select
+                type="text"
+                placeholder="Enter Category"
+                className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+                name="category"
+                value={eventData.category}
+                onChange={handleChange}
+                required>
+                <option value="Music">Music</option>
+                <option value="Sports">Sports</option>
+                <option value="Arts">Arts</option>
+                <option value="Food">Food</option>
+                <option value="Technology">Technology</option>
+                <option value="Theater">Theater</option>
+                <option value="Comedy">Comedy</option>
+                <option value="Festival">Festival</option>
+                <option value="Conference">Conference</option>
+                <option value="Workshop">Workshop</option>
+                <option value="Exhibition">Exhibition</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700">Event Type</label>
               <select
                 className="mt-1 block w-full border border-gray-300 rounded-md p-2"
                 name="access"

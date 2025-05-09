@@ -131,7 +131,7 @@ const ExploreEvents = () => {
 
       {loading && (
         <div className="overlay-loader">
-          <HashLoader color="#000000" size={50} />
+          <HashLoader color="#000000" size={25} />
         </div>
       )}
     </>

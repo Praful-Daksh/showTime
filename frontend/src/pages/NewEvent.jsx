@@ -204,7 +204,7 @@ const NewEvent = () => {
       </div>
       {
         loading ?
-          <div className='overlay-loader'><ScaleLoader color='#000000' size={50} /></div>
+          <div className='overlay-loader'><ScaleLoader color='#000000' size={25} /></div>
           : null
       }
     </>

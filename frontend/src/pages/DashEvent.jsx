@@ -402,7 +402,7 @@ const DashEvent = () => {
 
       {loading && (
         <div className="overlay-loader">
-          <ScaleLoader color="#2563EB" />
+          <ScaleLoader color="#2563EB" size={25}/>
         </div>
       )}
     </>

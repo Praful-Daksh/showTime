@@ -14,7 +14,7 @@ const ExploreEvents = () => {
   const [loading, setLoading] = useState(false);
   const isAuth = location.state?.isAuth || false;
   const url2 = process.env.REACT_APP_localUrl;
-  const url = process.env.REACT_APP_mainUrl;
+  const url = 'https://backshow.onrender.com';
 
   useEffect(() => {
     const fetchShows = async () => {

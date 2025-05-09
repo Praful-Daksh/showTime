@@ -25,7 +25,7 @@ const DashEvent = () => {
   const [newTask, setNewTask] = useState('');
   const [isAuthenticated, setIsAuthenticated] = useState(false);  // Track auth status
 
-  const url = process.env.REACT_APP_mainUrl;
+  const url = 'https://backshow.onrender.com';
   const url2 = process.env.REACT_APP_localUrl;
 
 

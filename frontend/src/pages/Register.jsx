@@ -45,7 +45,7 @@ const RegisterForm = () => {
     }
     try {
       setLoading(true)
-      const url = process.env.REACT_APP_mainUrl;
+      const url = 'https://backshow.onrender.com';
       const url2 = process.env.REACT_APP_localUrl;
 
       const response = await fetch(`${url}/auth/register`, {

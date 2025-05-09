@@ -24,7 +24,7 @@ const NewEvent = () => {
       [name]: value
     }));
   };
-  const url = process.env.REACT_APP_mainUrl;
+  const url = 'https://backshow.onrender.com';
   const url2 = process.env.REACT_APP_localUrl;
 
   const recordEvent = async (e) => {

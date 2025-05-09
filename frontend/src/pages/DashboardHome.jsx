@@ -11,8 +11,8 @@ const Dashboard = () => {
   const fetchData = async () => {
     try {
       setLoading(true);
-      const url = `${process.env.REACT_APP_mainUrl}/dashboard/home`;
-      const url2 = `${process.env.REACT_APP_localUrl}/dashboard/home`;
+      const url = `https://backshow.onrender.com/dashboard/home`;
+      const url2 = `http://localhost:5000/dashboard/home`;
       const response = await fetch(url, {
         method: "GET",
         headers: {

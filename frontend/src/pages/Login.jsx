@@ -10,7 +10,7 @@ const Login = () => {
         email: '',
         password: ''
     });
-    const url = process.env.REACT_APP_REACT_APP_mainUrl;
+    const url = 'https://backshow.onrender.com';
     const url2 = process.env.REACT_APP_localUrl;
     const [loading, setLoading] = useState(false)
     const [showPassword, setShowPassword] = useState(false);

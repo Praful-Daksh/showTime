@@ -11,7 +11,7 @@ const UserProfile = () => {
     const [userData, setUserData] = useState(null);
     const [newPassword, setNewPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
-    const url = process.env.REACT_APP_mainUrl;
+    const url = 'https://backshow.onrender.com';
     const url2 = process.env.REACT_APP_localUrl;
 
     const handleChange = (e) => {

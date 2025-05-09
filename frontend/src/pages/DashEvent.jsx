@@ -25,7 +25,8 @@ const DashEvent = () => {
   const [newTask, setNewTask] = useState('');
   const [isAuthenticated, setIsAuthenticated] = useState(false);  // Track auth status
 
-
+  const url = process.env.REACT_APP_mainUrl;
+  const url2 = process.env.REACT_APP_localUrl;
 
 
   const handleChange = (e) => {
@@ -61,10 +62,7 @@ const DashEvent = () => {
     e.preventDefault();
     try {
       setLoading(true);
-      const url = `https://backshow.onrender.com/dashboard/allEvents/update/${eventId}`;
-      const url2 = `http://localhost:5000/dashboard/allEvents/update/${eventId}`
-
-      const response = await fetch(url, {
+      const response = await fetch(`${url}/dashboard/allEvents/update/${eventId}`, {
         method: "PATCH",
         headers: {
           'Content-Type': 'application/json',
@@ -89,9 +87,7 @@ const DashEvent = () => {
   const deleteEvent = async () => {
     try {
       setLoading(true);
-      const url = `https://backshow.onrender.com/dashboard/allEvents/delete/${eventId}`;
-      const url2 = `http://localhost:5000/dashboard/allEvents/delete/${eventId}`
-      const response = await fetch(url, {
+      const response = await fetch(`${url}/dashboard/allEvents/delete/${eventId}`, {
         method: "DELETE",
         headers: {
           'Authorization': localStorage.getItem('authToken')
@@ -119,9 +115,7 @@ const DashEvent = () => {
     } else {
       try {
         setLoading(true);
-        const url = `https://backshow.onrender.com/dashboard/allEvents/verify/${eventId}`;
-        const url2 = `http://localhost:5000/dashboard/allEvents/verify/${eventId}`
-        const response = await fetch(url, {
+        const response = await fetch(`${url}/dashboard/allEvents/verify/${eventId}`, {
           method: "GET",
           headers: {
             'Authorization': localStorage.getItem('authToken')
@@ -131,9 +125,7 @@ const DashEvent = () => {
         if (data.success) {
           setIsAuthenticated(true);
           try {
-            const url = `https://backshow.onrender.com/dashboard/allEvents/tasks/${eventId}`;
-            const url2 = `http://localhost:5000/dashboard/allEvents/tasks/${eventId}`
-            const response = await fetch(url, {
+            const response = await fetch(`${url}/dashboard/allEvents/tasks/${eventId}`, {
               method: "GET",
               headers: {
                 'Content-Type': 'application/json',
@@ -144,7 +136,6 @@ const DashEvent = () => {
             setLoading(false)
             if (data.success) {
               setTasks(data.tasks);
-              console.log(data.tasks)
             } else {
               toast.error(data.message, { position: 'top-center' });
               setTasks([]);
@@ -174,9 +165,7 @@ const DashEvent = () => {
     if (newTask !== '')
       try {
         setLoading(true)
-        const url = `https://backshow.onrender.com/dashboard/allEvents/tasks/add/${eventId}`;
-        const url2 = `http://localhost:5000/dashboard/allEvents/tasks/add/${eventId}`
-        const response = await fetch(url, {
+        const response = await fetch(`${url}/dashboard/allEvents/tasks/add/${eventId}`, {
           method: "POST",
           headers: {
             'Content-Type': 'application/json',
@@ -199,9 +188,7 @@ const DashEvent = () => {
   const removeTask = async (taskId) => {
     try {
       setLoading(true);
-      const url = `https://backshow.onrender.com/dashboard/allEvents/delete/${taskId}`;
-      const url2 = `http://localhost:5000/dashboard/allEvents/tasks/delete/${taskId}`
-      const response = await fetch(url, {
+      const response = await fetch(`${url}/dashboard/allEvents/tasks/delete/${eventId}`, {
         method: "DELETE",
         headers: {
           'Authorization': localStorage.getItem('authToken')

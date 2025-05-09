@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import {  toast } from 'react-toastify'
+import { toast } from 'react-toastify'
 import { ScaleLoader } from 'react-spinners'
 
 const RegisterForm = () => {
@@ -45,10 +45,10 @@ const RegisterForm = () => {
     }
     try {
       setLoading(true)
-      const url = 'https://backshow.onrender.com/auth/register'
-      const url2 = 'http://localhost:5000/auth/register'
+      const url = process.env.REACT_APP_mainUrl;
+      const url2 = process.env.REACT_APP_localUrl;
 
-      const response = await fetch(url, {
+      const response = await fetch(`${url}/auth/register`, {
         method: "POST",
         headers: {
           'Content-Type': 'application/json'
@@ -67,7 +67,7 @@ const RegisterForm = () => {
       }
     } catch (error) {
       setLoading(false)
-      toast.error('Something went wrong, Try again later',{position:'top-right'})
+      toast.error('Something went wrong, Try again later', { position: 'top-right' })
     }
   };
 

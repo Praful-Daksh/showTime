@@ -11,6 +11,8 @@ const UserProfile = () => {
     const [userData, setUserData] = useState(null);
     const [newPassword, setNewPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
+    const url = process.env.REACT_APP_mainUrl;
+    const url2 = process.env.REACT_APP_localUrl;
 
     const handleChange = (e) => {
         setUserData({
@@ -46,9 +48,7 @@ const UserProfile = () => {
         }
         try {
             setLoading(true);
-            const url = 'https://backshow.onrender.com/auth/updateUser'
-            const url2 = 'http://localhost:5000/auth/updateUser'
-            const response = await fetch(url, {
+            const response = await fetch(`${url}/auth/updateUser`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -87,16 +87,14 @@ const UserProfile = () => {
             return
         }
         const fetchUserData = async () => {
-            if(localStorage.getItem('user')){
+            if (localStorage.getItem('user')) {
                 setUserData(JSON.parse(localStorage.getItem('user')))
                 setLoading(false)
                 return;
             }
-            else{
+            else {
                 try {
-                    const url = 'https://backshow.onrender.com/auth/getUserData'
-                    const url2 = 'http://localhost:5000/auth/getUserData'
-                    const response = await fetch(url, {
+                    const response = await fetch(`${url2}/auth/getUserData`, {
                         method: "GET",
                         headers: {
                             'Authorization': token

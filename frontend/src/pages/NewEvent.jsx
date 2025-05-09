@@ -24,6 +24,8 @@ const NewEvent = () => {
       [name]: value
     }));
   };
+  const url = process.env.REACT_APP_mainUrl;
+  const url2 = process.env.REACT_APP_localUrl;
 
   const recordEvent = async (e) => {
     e.preventDefault();
@@ -32,12 +34,16 @@ const NewEvent = () => {
       ...eventData,
       date: combinedDateTime
     };
-    console.log(finalEventData);
+    const eventDate = new Date(combinedDateTime);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    if(eventDate < today) {
+      toast.error('Event date cannot be in the past', { position: 'top-center' })
+      return;
+    }
     try {
       setLoading(true);
-      const url = 'https://backshow.onrender.com/dashboard/newEvent'
-      const url2 = 'http://localhost:5000/dashboard/newEvent'
-      const response = await fetch(url, {
+      const response = await fetch(`${url}/dashboard/newEvent`, {
         method: "POST",
         headers: {
           'Authorization': localStorage.getItem('authToken'),

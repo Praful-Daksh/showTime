@@ -21,6 +21,9 @@ const PublishTicket = () => {
     });
     const [loading, setLoading] = useState(false);
     const [dataValid, setDataValid] = useState(false);
+    const url = process.env.REACT_APP_mainUrl;
+    const url2 = process.env.REACT_APP_localUrl;
+
 
     useEffect(() => {
         const isValid = () => {
@@ -30,7 +33,7 @@ const PublishTicket = () => {
                 ticketData.price !== 0 &&
                 ticketData.quantity !== 0) {
                 if (ticketData.ticketTypes.includes('VIP')) {
-                    if (ticketData.vipPrice !== 0 && ticketData.vipQuantity !== 0 ) {
+                    if (ticketData.vipPrice !== 0 && ticketData.vipQuantity !== 0) {
                         return true;
                     } else {
                         return false;
@@ -75,9 +78,7 @@ const PublishTicket = () => {
         try {
             setLoading(true);
             console.log(ticketData)
-            const url = `https://backshow.onrender.com/dashboard/publishTicket/${eventId}`
-            const url2 = `http://localhost:5000/dashboard/publishTicket/${eventId}`
-            const response = fetch(url, {
+            const response = fetch(`${url}/dashboard/publishTicket/${eventId}`, {
                 method: "POST",
                 headers: {
                     'Authorization': localStorage.getItem('authToken'),

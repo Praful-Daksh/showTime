@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify'
 import { HashLoader } from 'react-spinners'
-import {Link} from 'react-router-dom'
+import { Link } from 'react-router-dom'
 
 const Login = () => {
     const navigate = useNavigate();
@@ -10,6 +10,8 @@ const Login = () => {
         email: '',
         password: ''
     });
+    const url = process.env.REACT_APP_REACT_APP_mainUrl;
+    const url2 = process.env.REACT_APP_localUrl;
     const [loading, setLoading] = useState(false)
     const [showPassword, setShowPassword] = useState(false);
     const handleChange = (e) => {
@@ -18,6 +20,7 @@ const Login = () => {
             [e.target.name]: e.target.value
         });
     };
+
     const handlePasswordToggle = () => {
         setShowPassword(prev => !prev);
     };
@@ -28,10 +31,7 @@ const Login = () => {
         } else {
             try {
                 setLoading(true)
-                const url = 'https://backshow.onrender.com/auth/login'
-                const url2 = 'http://localhost:5000/auth/login'
-
-                const response = await fetch(url, {
+                const response = await fetch(`${url}/auth/login`, {
                     method: "POST",
                     headers: {
                         'Content-Type': 'application/json'
@@ -41,7 +41,6 @@ const Login = () => {
                 const data = await response.json()
                 setLoading(false)
                 if (data.success) {
-                    console.log(data)
                     localStorage.setItem('authToken', data.token)
                     const user = {
                         name: data.name,
@@ -57,7 +56,7 @@ const Login = () => {
                 }
             } catch (error) {
                 setLoading(false)
-                toast.error('Something went wrong, Try again later', { position: 'top-right' }) 
+                toast.error('Something went wrong, Try again later', { position: 'top-right' })
                 navigate('/login')
             }
         }

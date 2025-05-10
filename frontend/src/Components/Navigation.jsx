@@ -29,9 +29,9 @@ const Navigation = () => {
             <span className="text-xs mt-1">All Events</span>
           </Link>
 
-          <Link to={'/dashboard/Publish'} className='flex flex-col items-center text-black-500 hover:text-blue-500'>
+          <Link to={'/dashboard/Published'} className='flex flex-col items-center text-black-500 hover:text-blue-500'>
             <Ticket size={25} className='fas fa-user text-xl' />
-            <span className="text-xs mt-1">Tickets</span>
+            <span className="text-xs mt-1">Marketing</span>
           </Link>
           <button className='flex flex-col items-center text-black-500 hover:text-blue-500 ' onClick={goToExplore} >
             <Compass size={25} className='fas fa-user text-xl' />

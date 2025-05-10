@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { ScaleLoader } from "react-spinners";
 import { toast } from "react-toastify";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams , Link } from "react-router-dom";
 import swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 
@@ -25,10 +25,11 @@ const DashEvent = () => {
   const [newTask, setNewTask] = useState('');
   const [isAuthenticated, setIsAuthenticated] = useState(false);  // Track auth status
 
-  const url = 'https://backshow.onrender.com';
-  const url2 = process.env.REACT_APP_localUrl;
-
-
+  const api = {
+    local: 'http://localhost:5000',
+    production: 'https://backshow.onrender.com'
+  };
+  const url = api.production;
   const handleChange = (e) => {
     const { name, value } = e.target;
     setEventData((prevData) => ({
@@ -280,7 +281,7 @@ const DashEvent = () => {
         <div className="bg-white shadow-lg rounded-xl p-8 w-full md:w-2/3 order-1 md:order-2">
           <h2 className="text-2xl font-bold text-gray-800 mb-4">Edit Event Details</h2>
           {eventDetails.publish ?
-            <p className="text-yellow-600 mb-6">Event is Published, You can't Change any details below.</p>
+            <p className="text-yellow-600 mb-6">Event is Published, You can't Change any details below. Got to <Link to={'/dashboard/Published'} className="font-bold text-blue-600">Marketing</Link> Section to manage more.</p>
             :
             <p className="text-gray-600 mb-6">Modify event information. Date can't be changed.</p>
           }
@@ -402,7 +403,7 @@ const DashEvent = () => {
 
       {loading && (
         <div className="overlay-loader">
-          <ScaleLoader color="#2563EB" size={25}/>
+          <ScaleLoader color="#2563EB" size={25} />
         </div>
       )}
     </>

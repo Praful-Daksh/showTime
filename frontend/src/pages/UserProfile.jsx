@@ -11,9 +11,11 @@ const UserProfile = () => {
     const [userData, setUserData] = useState(null);
     const [newPassword, setNewPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
-    const url = 'https://backshow.onrender.com';
-    const url2 = process.env.REACT_APP_localUrl;
-
+    const api = {
+        local: 'http://localhost:5000',
+        production: 'https://backshow.onrender.com'
+    };
+    const url = api.production;
     const handleChange = (e) => {
         setUserData({
             ...userData,
@@ -94,7 +96,7 @@ const UserProfile = () => {
             }
             else {
                 try {
-                    const response = await fetch(`${url2}/auth/getUserData`, {
+                    const response = await fetch(`${url}/auth/getUserData`, {
                         method: "GET",
                         headers: {
                             'Authorization': token

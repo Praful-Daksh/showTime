@@ -6,7 +6,6 @@ import SeoMeta from '../Components/seoMeta.jsx';
 
 const Home = () => {
     const location = useLocation();
-    const { isAuth } = location.state || false;
 
     return (
         <>

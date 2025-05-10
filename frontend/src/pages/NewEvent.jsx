@@ -24,8 +24,12 @@ const NewEvent = () => {
       [name]: value
     }));
   };
-  const url = 'https://backshow.onrender.com';
-  const url2 = process.env.REACT_APP_localUrl;
+  const api = {
+    local: 'http://localhost:5000',
+    production: 'https://backshow.onrender.com'
+  };
+  const url = api.production;
+
 
   const recordEvent = async (e) => {
     e.preventDefault();
@@ -37,7 +41,7 @@ const NewEvent = () => {
     const eventDate = new Date(combinedDateTime);
     const today = new Date();
     today.setHours(0, 0, 0, 0);
-    if(eventDate < today) {
+    if (eventDate < today) {
       toast.error('Event date cannot be in the past', { position: 'top-center' })
       return;
     }

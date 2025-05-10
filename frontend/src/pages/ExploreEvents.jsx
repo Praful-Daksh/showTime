@@ -13,8 +13,12 @@ const ExploreEvents = () => {
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [loading, setLoading] = useState(false);
   const isAuth = location.state?.isAuth || false;
-  const url2 = process.env.REACT_APP_localUrl;
-  const url = 'https://backshow.onrender.com';
+  const api = {
+    local: 'http://localhost:5000',
+    production: 'https://backshow.onrender.com'
+  };
+  const url = api.production;
+
 
   useEffect(() => {
     const fetchShows = async () => {
@@ -115,7 +119,7 @@ const ExploreEvents = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {filteredShows.length > 0 ? (
                 filteredShows.map((show) => (
-                  <ShowCard show={show} key={show._id}/>
+                  <ShowCard show={show} key={show._id} />
                 ))
               ) : (
                 <div className="flex justify-center items-center h-48 bg-gray-100 rounded-lg shadow-md">

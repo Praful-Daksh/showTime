@@ -13,6 +13,11 @@ const RegisterForm = () => {
   const [loading, setLoading] = useState(false)
   const [password2, setPassword2] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const api = {
+    local: 'http://localhost:5000',
+    production: 'https://backshow.onrender.com'
+  };
+  const url = api.production;
 
   const handleChange = (e) => {
     setFormData({
@@ -45,9 +50,6 @@ const RegisterForm = () => {
     }
     try {
       setLoading(true)
-      const url = 'https://backshow.onrender.com';
-      const url2 = process.env.REACT_APP_localUrl;
-
       const response = await fetch(`${url}/auth/register`, {
         method: "POST",
         headers: {

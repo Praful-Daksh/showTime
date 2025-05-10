@@ -8,12 +8,15 @@ const Dashboard = () => {
   const [userEdata, setuserEdata] = useState([])
   const [eventCount, setEventCount] = useState(0);
   const navigate = useNavigate();
+    const api = {
+        local: 'http://localhost:5000',
+        production: 'https://backshow.onrender.com'
+    };
+    const url = api.production;
   const fetchData = async () => {
     try {
       setLoading(true);
-      const url = `https://backshow.onrender.com/dashboard/home`;
-      const url2 = `http://localhost:5000/dashboard/home`;
-      const response = await fetch(url, {
+      const response = await fetch(`${url}/dashboard/home`, {
         method: "GET",
         headers: {
           'Authorization': localStorage.getItem('authToken')
@@ -34,7 +37,7 @@ const Dashboard = () => {
         localStorage.removeItem('authToken')
         localStorage.removeItem('userEvents')
         localStorage.removeItem('user')
-        toast.error('Login To Continue', { position: 'bottom-center' })
+        toast.warn('Login To Continue', { position: 'top-center' })
         setuserEdata([]);
         setEventCount(0);
         navigate('/login')

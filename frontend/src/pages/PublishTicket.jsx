@@ -21,8 +21,12 @@ const PublishTicket = () => {
     });
     const [loading, setLoading] = useState(false);
     const [dataValid, setDataValid] = useState(false);
-    const url = 'https://backshow.onrender.com';
-    const url2 = process.env.REACT_APP_localUrl;
+    const api = {
+        local: 'http://localhost:5000',
+        production: 'https://backshow.onrender.com'
+    };
+    const url = api.production;
+
 
 
     useEffect(() => {

@@ -5,6 +5,7 @@ import Navigation from '../Components/Navigation';
 import { HashLoader } from 'react-spinners';
 import { toast } from 'react-toastify';
 import ShowCard from '../Components/Show';
+import api from '../Partials/api';
 
 const ExploreEvents = () => {
   const location = useLocation();
@@ -13,10 +14,6 @@ const ExploreEvents = () => {
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [loading, setLoading] = useState(false);
   const isAuth = location.state?.isAuth || false;
-  const api = {
-    local: 'http://localhost:5000',
-    production: 'https://backshow.onrender.com'
-  };
   const url = api.production;
 
 

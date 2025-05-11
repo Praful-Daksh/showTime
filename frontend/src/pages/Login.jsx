@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify'
 import { HashLoader } from 'react-spinners'
 import { Link } from 'react-router-dom'
+import api from '../Partials/api';
 
 const Login = () => {
     const navigate = useNavigate();
@@ -10,10 +11,6 @@ const Login = () => {
         email: '',
         password: ''
     });
-    const api = {
-        local: 'http://localhost:5000',
-        production: 'https://backshow.onrender.com'
-    };
     const url = api.production;
 
     const [loading, setLoading] = useState(false)

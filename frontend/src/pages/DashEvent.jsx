@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 import { useNavigate, useParams , Link } from "react-router-dom";
 import swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
+import api from '../Partials/api';
 
 const DashEvent = () => {
   const params = useParams();
@@ -23,12 +24,7 @@ const DashEvent = () => {
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(false);
   const [newTask, setNewTask] = useState('');
-  const [isAuthenticated, setIsAuthenticated] = useState(false);  // Track auth status
-
-  const api = {
-    local: 'http://localhost:5000',
-    production: 'https://backshow.onrender.com'
-  };
+  const [isAuthenticated, setIsAuthenticated] = useState(false); 
   const url = api.production;
   const handleChange = (e) => {
     const { name, value } = e.target;

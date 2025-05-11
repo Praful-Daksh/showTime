@@ -2,16 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { HashLoader } from 'react-spinners'
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
+import api from '../Partials/api';
 
 const Dashboard = () => {
   const [loading, setLoading] = useState(false)
   const [userEdata, setuserEdata] = useState([])
   const [eventCount, setEventCount] = useState(0);
   const navigate = useNavigate();
-    const api = {
-        local: 'http://localhost:5000',
-        production: 'https://backshow.onrender.com'
-    };
     const url = api.production;
   const fetchData = async () => {
     try {

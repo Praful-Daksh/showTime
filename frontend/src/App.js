@@ -12,6 +12,7 @@ import UserProfile from './pages/UserProfile';
 import NewEvent from './pages/NewEvent';
 import PublishTicket from './pages/PublishTicket';
 import NotFoundPage from './Components/NotFoundPage'
+import Marketing from './pages/Marketing';
 import './App.css';
 import ExploreEvents from './pages/ExploreEvents';
 
@@ -32,6 +33,7 @@ function App() {
           <Route path="newEvent" element={<NewEvent />} />
           <Route path="allEvents/:eventId" element={<DashEvent />} />
           <Route path="tickets/publish/:eventId" element={<PublishTicket />} />
+          <Route path="Published" element={<Marketing />} />
         </Route>
         <Route path='/explore/events' element={<ExploreEvents />} />
         <Route path='*' element={<NotFoundPage />} />

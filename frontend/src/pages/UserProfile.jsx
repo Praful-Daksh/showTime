@@ -3,6 +3,7 @@ import Avatar from '@mui/material/Avatar';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { HashLoader } from 'react-spinners'
+import api from '../Partials/api';
 
 const UserProfile = () => {
     const navigate = useNavigate();
@@ -11,10 +12,6 @@ const UserProfile = () => {
     const [userData, setUserData] = useState(null);
     const [newPassword, setNewPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
-    const api = {
-        local: 'http://localhost:5000',
-        production: 'https://backshow.onrender.com'
-    };
     const url = api.production;
     const handleChange = (e) => {
         setUserData({

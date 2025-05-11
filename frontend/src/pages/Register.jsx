@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify'
 import { ScaleLoader } from 'react-spinners'
+import api from '../Partials/api';
 
 const RegisterForm = () => {
   const [formData, setFormData] = useState({
@@ -13,10 +14,6 @@ const RegisterForm = () => {
   const [loading, setLoading] = useState(false)
   const [password2, setPassword2] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const api = {
-    local: 'http://localhost:5000',
-    production: 'https://backshow.onrender.com'
-  };
   const url = api.production;
 
   const handleChange = (e) => {

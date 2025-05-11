@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { useNavigate, useParams } from 'react-router-dom';
 import { HashLoader } from 'react-spinners';
-
+import api from '../Partials/api';
 const TICKET_TYPES = ['Standard', 'VIP'];
 
 const PublishTicket = () => {
@@ -21,10 +21,7 @@ const PublishTicket = () => {
     });
     const [loading, setLoading] = useState(false);
     const [dataValid, setDataValid] = useState(false);
-    const api = {
-        local: 'http://localhost:5000',
-        production: 'https://backshow.onrender.com'
-    };
+
     const url = api.production;
 
 

@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import showImages from '../Assets/showImages';
+import showImages from '../Partials/showImages';
 
 
 const Show = ({ show }) => {

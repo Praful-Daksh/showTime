@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React, { useState , useEffect } from "react";
 import { ScaleLoader } from "react-spinners";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
-
+import api from '../Partials/api';
 
 const NewEvent = () => {
   const navigate = useNavigate()
@@ -24,12 +24,16 @@ const NewEvent = () => {
       [name]: value
     }));
   };
-  const api = {
-    local: 'http://localhost:5000',
-    production: 'https://backshow.onrender.com'
-  };
   const url = api.production;
-
+  const Authenticate = async () => {
+    if (!localStorage.getItem('authToken')) {
+      navigate('/login');
+      toast.error('You are not Logged In', { position: 'top-center' })
+    }
+  }
+  useEffect(() => {
+    Authenticate();
+  }, [])
 
   const recordEvent = async (e) => {
     e.preventDefault();

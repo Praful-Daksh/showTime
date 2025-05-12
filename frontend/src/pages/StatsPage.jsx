@@ -1,14 +1,12 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import {
-    Tooltip, ResponsiveContainer,
-    PieChart, Pie, Cell
-} from 'recharts';
+import { Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 import api from '../Partials/api';
-import {toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 
 const EventAnalytics = () => {
-    
+    const [loading, setLoading] = React.useState(false);
+
     const eventData = {
         name: "Birthday Party",
         date: "Wed Jul 30 2025",
@@ -35,85 +33,66 @@ const EventAnalytics = () => {
     const COLORS = ['#0088FE', '#00C49F', '#FFBB28'];
     const availableTickets = eventData.totalCapacity - eventData.ticketsSold;
     const showId = useParams().id;
-
-    const url = api.production;
     const navigate = useNavigate();
+    const eventId = useParams().eventId;
+    const [event, setEvent] = useState(null);
+    const [totalRevenue, setTotalRevenue] = useState(0);
 
     const fetchShowDetails = async () => {
-       try {
-         setLoading(true);
-         const response = await fetch(`${url}/dashboard/published/${showId}`, {
-           method: 'GET',
-         });
-         const data = await response.json();
-         setLoading(false);
-         if (data.success) {
-           console.log(data);
-           toast.success('Show details fetched successfully', { position: 'top-right' });
-         } else {
-           toast.error('Invalid Id', { position: 'top-right' });
-           navigate('/dashboard/home');
-         }
-       } catch (err) {
-         setLoading(false);
-         toast.error('Something went wrong', { position: 'top-right' });
-         navigate('/dashboard/home');
-         console.log(err);
-       }
-     };
-   
-     useEffect(() => {
-       fetchShowDetails();
-     }, []);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        try {
+            setLoading(true);
+            const response = await fetch(`${api.production}/dashboard/published/events/${eventId}`, {
+                method: 'GET',
+                headers: {
+                    'Authorization': localStorage.getItem('authToken')
+                }
+            });
+            const data = await response.json();
+            setLoading(false);
+            if (data.success) {
+                setEvent(data.ticket);
+                setTotalRevenue((data.ticket.sold * data.ticket.price) + (data.ticket.vipSold * data.ticket.vipPrice));
+            } else {
+                toast.error(data.message, { position: 'top-right' });
+            }
+        } catch (err) {
+            setLoading(false);
+            toast.error('Something went wrong', { position: 'top-right' });
+            navigate('/dashboard/home');
+            console.log(err);
+        }
+    };
+    useEffect(() => {
+        fetchShowDetails();
+    }, []);
 
 
     return (
         <div className=" bg-gray-50 p-5 mt-0">
             {/* Event Header */}
             <div className="mb-6 text-center">
-                <h1 className="text-2xl font-bold text-gray-800">{eventData.name} - Analytics</h1>
-                <p className="text-sm text-gray-600">{eventData.date} | {eventData.venue}</p>
+                <h1 className="text-2xl font-bold text-gray-800">{event?.ticketName} - Analytics</h1>
+                <p className="text-sm text-gray-600">{new Date(event?.showDate).toDateString()}| {event?.showVenue}, {event?.showCity}</p>
             </div>
 
             {/* Stats Cards */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
                 <div className="bg-white rounded-xl shadow p-4 bg-gradient-to-br from-white to-blue-50">
                     <h3 className="text-sm font-medium text-gray-600 mb-1">Total Revenue</h3>
-                    <p className="text-2xl font-bold text-gray-800">₹{eventData.totalRevenue.toLocaleString()}</p>
-                    <p className="text-xs text-gray-500">Avg per ticket: ₹{Math.round(eventData.totalRevenue / eventData.ticketsSold).toLocaleString()}</p>
+                    <p className="text-2xl font-bold text-gray-800">₹{totalRevenue}</p>
+                    <p className="text-xs text-gray-500">Avg per ticket: ₹{(totalRevenue / (event?.sold + event?.vipSold))}</p>
                 </div>
 
                 <div className="bg-white rounded-xl shadow p-4 bg-gradient-to-br from-white to-green-50">
                     <h3 className="text-sm font-medium text-gray-600 mb-1">Tickets Sold</h3>
-                    <p className="text-2xl font-bold text-gray-800">{eventData.ticketsSold}</p>
-                    <p className="text-xs text-gray-500">{Math.round((eventData.ticketsSold / eventData.totalCapacity) * 100)}% of capacity</p>
+                    <p className="text-2xl font-bold text-gray-800">{event?.sold + event?.vipSold}</p>
+                    <p className="text-xs text-gray-500">{Math.round(((event?.sold + event?.vipSold) / event?.quantity) * 100)}% of capacity</p>
                 </div>
 
                 <div className="bg-white rounded-xl shadow p-4 bg-gradient-to-br from-white to-amber-50">
                     <h3 className="text-sm font-medium text-gray-600 mb-1">Remaining Tickets</h3>
-                    <p className="text-2xl font-bold text-gray-800">{availableTickets}</p>
-                    <p className="text-xs text-gray-500">Potential revenue: ₹{(availableTickets * eventData.ticketPrice).toLocaleString()}</p>
+                    <p className="text-2xl font-bold text-gray-800">{(event?.vipQuantity + event?.quantity) - (event?.sold + event?.vipSold)}</p>
+                    <p className="text-xs text-gray-500">Potential revenue: ₹{(((event?.vipQuantity + event?.quantity) - (event?.sold + event?.vipSold)) * (event?.vipPrice + event?.price))}</p>
                 </div>
             </div>
 
@@ -125,7 +104,7 @@ const EventAnalytics = () => {
                         <ResponsiveContainer width="60%" height={200}>
                             <PieChart>
                                 <Pie
-                                    data={eventData.ticketTypes}
+                                    data={event?.ticketTypes}
                                     cx="50%"
                                     cy="50%"
                                     innerRadius={50}
@@ -135,27 +114,28 @@ const EventAnalytics = () => {
                                     dataKey="value"
                                     label
                                 >
-                                    {eventData.ticketTypes.map((entry, index) => (
-                                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                                    ))}
+                                   <Cell  fill={COLORS[0 % COLORS.length]} />
+                                   <Cell  fill={COLORS[1 % COLORS.length]} />
                                 </Pie>
                                 <Tooltip />
                             </PieChart>
                         </ResponsiveContainer>
                         <div className="ml-2">
-                            {eventData.ticketTypes.map((entry, index) => (
-                                <div className="flex items-center mb-2" key={`legend-${index}`}>
-                                    <div className="w-3 h-3 rounded mr-2" style={{ backgroundColor: COLORS[index % COLORS.length] }}></div>
-                                    <span className="text-xs text-gray-700">{entry.name}: {entry.value}</span>
-                                </div>
-                            ))}
+                            <div className="flex items-center mb-2" >
+                                <div className="w-3 h-3 rounded mr-2" style={{ backgroundColor: COLORS[0 % COLORS.length] }}></div>
+                                <span className="text-xs text-gray-700">Standard: {event?.quantity}</span>
+                            </div>
+                             <div className="flex items-center mb-2" >
+                                <div className="w-3 h-3 rounded mr-2" style={{ backgroundColor: COLORS[1 % COLORS.length] }}></div>
+                                <span className="text-xs text-gray-700">VIP: {event?.vipQuantity}</span>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
 
             {/* Sales Table */}
-            <div className="bg-white rounded-xl shadow p-4 mb-6">
+            {/* <div className="bg-white rounded-xl shadow p-4 mb-6">
                 <h3 className="text-base font-medium text-gray-800 mb-4">Daily Sales Breakdown</h3>
                 <div className="overflow-x-auto">
                     <table className="min-w-full divide-y divide-gray-200">
@@ -182,7 +162,7 @@ const EventAnalytics = () => {
                         </tbody>
                     </table>
                 </div>
-            </div>
+            </div> */}
 
             {/* Action Buttons */}
             <div className="flex justify-center space-x-4">

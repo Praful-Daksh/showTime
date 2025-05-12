@@ -22,8 +22,6 @@ const createEvent = async (req, res) => {
 const getUpcomingEvents = async (req, res) => {
     try {
         const userId = req.user.id
-        console.log(userId)
-        const currentDate = new Date()
         const upcomingEvents = await Event.find({ user: userId })
         if (upcomingEvents.length > 0) {
             return res.status(200).json({ message: 'Upcoming Events', success: true, upcomingEvents })
@@ -146,14 +144,31 @@ const publishTicket = async (req, res) => {
     }
 }
 
-const getShowDetails = async (req, res) => {
+const getPublishedEvents = async (req, res) => {
     try {
-        const showId = req.params.id;
-        const show = Ticket.findById(showId);
-        if (!show) {
-            return res.status(400).json({ message: 'Something went wrong', success: false });
+        const userId = req.user.id;
+        const events = await Event.find({ user: userId });
+        if (!events) {
+            return res.status(400).json({ message: 'No events Found', success: false });
         }
-        return res.status(200).json({ message: 'Show details fetched successfully', success: true, show })
+        const eventIds = events.map(event => event._id);
+        const publishedEvents = await Ticket.find({ eId: { $in: eventIds } });
+        if (!publishedEvents) {
+            return res.status(400).json({ message: 'No Published Events Found', success: false });
+        }
+        if (publishedEvents.length == 0) {
+            return res.status(200).json({ message: 'Published Events fetched successfully', success: true, tickets: [] });
+        }
+        const tickets = publishedEvents.map(ticket => {
+            return {
+                id: ticket._id,
+                showCity: ticket.showCity,
+                showDate: ticket.showDate,
+                showName: ticket.ticketName,
+                showVenue: ticket.showVenue
+            }
+        })
+        return res.status(200).json({ message: 'Published Events fetched successfully', success: true, tickets })
     }
     catch (err) {
         console.log(err)
@@ -162,7 +177,20 @@ const getShowDetails = async (req, res) => {
 }
 
 
-
+const getShow = async (req, res) => {
+    const eventId = req.params.eventId;
+    try {
+        const ticket = await Ticket.findById(eventId);
+        if (!ticket) {
+            return res.status(400).json({ message: 'No event Found', success: false });
+        }
+        return res.status(200).json({ message: 'Event fetched successfully', success: true, ticket })
+    }
+    catch (err) {
+        console.log(err)
+        return res.status(500).json({ message: "Some Internal Error Occured", success: false });
+    }
+}
 
 
 module.exports = {
@@ -175,5 +203,6 @@ module.exports = {
     deleteTask,
     validateEventId,
     publishTicket,
-    getShowDetails
+    getPublishedEvents,
+    getShow
 };

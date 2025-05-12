@@ -24,8 +24,6 @@ const PublishTicket = () => {
 
     const url = api.production;
 
-
-
     useEffect(() => {
         const isValid = () => {
             if (ticketData.ticketTypes.length > 0 &&

@@ -4,6 +4,7 @@ import { toast } from 'react-toastify'
 import { HashLoader } from 'react-spinners'
 import { Link } from 'react-router-dom'
 import api from '../Partials/api';
+import {ArrowLeft} from 'lucide-react'
 
 const Login = () => {
     const navigate = useNavigate();
@@ -21,10 +22,11 @@ const Login = () => {
             [e.target.name]: e.target.value
         });
     };
-
+    // show password toggle
     const handlePasswordToggle = () => {
         setShowPassword(prev => !prev);
     };
+    // handle form submit
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (loginData.email === '' || loginData.password === '') {
@@ -66,7 +68,10 @@ const Login = () => {
 
     return (
         <div className='bodyWrap'>
-            <div className="auth-container login-container">
+            <div className="auth-container login-container relative">
+                <span className="absolute top-2 right-2 bg-transparent text-black px-2 py-1 rounded-md text-xs font-medium cursor-pointer">
+                    <ArrowLeft className='inline' onClick={() => navigate('/')} /> 
+                </span>
                 <div className="auth-formArea">
                     <h2>Are you a Host..?</h2>
                     <h3>Enter your credentials to prove that.</h3>

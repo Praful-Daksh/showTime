@@ -16,30 +16,32 @@ const ExploreEvents = () => {
   const isAuth = location.state?.isAuth || false;
   const url = api.production;
 
+  // fetch shows at page load
+  const fetchShows = async () => {
+    try {
+      setLoading(true);
+      const response = await fetch(`${url}/Tickets/allTickets`, {
+        method: 'GET',
+      });
+      const data = await response.json();
+      setLoading(false);
+      if (data.success) {
+        setShows(data.Tickets);
+      } else {
+        toast.error('No shows found', { position: 'top-right' });
+      }
+    } catch (err) {
+      setLoading(false);
+      toast.error('Something went wrong', { position: 'top-right' });
+      console.log(err);
+    }
+  };
 
   useEffect(() => {
-    const fetchShows = async () => {
-      try {
-        setLoading(true);
-        const response = await fetch(`${url}/Tickets/allTickets`, {
-          method: 'GET',
-        });
-        const data = await response.json();
-        setLoading(false);
-        if (data.success) {
-          setShows(data.Tickets);
-        } else {
-          toast.error('No shows found', { position: 'top-right' });
-        }
-      } catch (err) {
-        setLoading(false);
-        toast.error('Something went wrong', { position: 'top-right' });
-        console.log(err);
-      }
-    };
     fetchShows();
   }, []);
 
+  // Filter shows based on search term and selected category
   const filteredShows = shows.filter((show) => {
     const matchesSearch =
       show.ticketName.toLowerCase().includes(searchTerm.toLowerCase()) ||

@@ -1,18 +1,14 @@
-import React from 'react';
 import Navbar from '../Components/Navbar.jsx';
 import Hero from '../Components/Hero.jsx';
-import { useLocation } from 'react-router-dom';
 import SeoMeta from '../Components/seoMeta.jsx';
 
 const Home = () => {
-    const location = useLocation();
-
     return (
         <>
             <SeoMeta />
             <div className='homePageWrap'>
                 <div className="bodyWrap">
-                    <Navbar/>
+                    <Navbar />
                     <section id="showcase" className="relative w-full h-[70vh] overflow-hidden">
                         <video autoPlay muted playsInline loop className="w-full h-full object-cover">
                             <source src="/media/showcaseVid.mp4" type="video/mp4" />

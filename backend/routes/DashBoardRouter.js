@@ -8,7 +8,8 @@ const {
     addTask,
     deleteTask,
     validateEventId,
-    publishTicket
+    publishTicket,
+    getShowDetails
 } = require('../Controllers/DashboardController')
 const {
     createEventValidation,
@@ -25,4 +26,5 @@ router.post('/allEvents/tasks/add/:id', ensureAuthenticated, addTask)
 router.delete('/allEvents/tasks/delete/:id', ensureAuthenticated, deleteTask)
 router.get('/allEvents/verify/:id', ensureAuthenticated, validateEventId)
 router.post('/publishTicket/:id', ensureAuthenticated, publishEventValidation, publishTicket)
+router.get('/published/:id', ensureAuthenticated, getShowDetails)
 module.exports = router;

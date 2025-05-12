@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { ScaleLoader } from "react-spinners";
 import { toast } from "react-toastify";
-import { useNavigate, useParams , Link } from "react-router-dom";
+import { useNavigate, useParams, Link } from "react-router-dom";
 import swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 import api from '../Partials/api';
@@ -24,7 +24,6 @@ const DashEvent = () => {
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(false);
   const [newTask, setNewTask] = useState('');
-  const [isAuthenticated, setIsAuthenticated] = useState(false); 
   const url = api.production;
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -35,7 +34,7 @@ const DashEvent = () => {
   };
 
 
-
+  //confirm alert for deleting event
   const showConfirmAlert = () => {
     withReactContent(swal).fire({
       title: 'Are you sure to delete This Event?',
@@ -54,7 +53,7 @@ const DashEvent = () => {
   }
 
 
-
+  //update event details
   const updateEvent = async (e) => {
     e.preventDefault();
     try {
@@ -81,6 +80,7 @@ const DashEvent = () => {
     }
   };
 
+  //delete event
   const deleteEvent = async () => {
     try {
       setLoading(true);
@@ -104,60 +104,35 @@ const DashEvent = () => {
     }
   };
 
-  const Authenticate = async () => {
-    const isLoggedIn = localStorage.getItem('authToken');
-    if (!isLoggedIn) {
-      navigate('/login');
-      toast.error('You are not Logged In', { position: 'top-center' });
-    } else {
-      try {
-        setLoading(true);
-        const response = await fetch(`${url}/dashboard/allEvents/verify/${eventId}`, {
-          method: "GET",
-          headers: {
-            'Authorization': localStorage.getItem('authToken')
-          }
-        });
-        const data = await response.json()
-        if (data.success) {
-          setIsAuthenticated(true);
-          try {
-            const response = await fetch(`${url}/dashboard/allEvents/tasks/${eventId}`, {
-              method: "GET",
-              headers: {
-                'Content-Type': 'application/json',
-                'Authorization': localStorage.getItem('authToken')
-              }
-            });
-            const data = await response.json()
-            setLoading(false)
-            if (data.success) {
-              setTasks(data.tasks);
-            } else {
-              toast.error(data.message, { position: 'top-center' });
-              setTasks([]);
-            }
-          } catch (err) {
-            setLoading(false);
-            toast.error("internal server error", { position: 'top-center' });
-            setTasks([]);
-          }
-        } else {
-          setLoading(false);
-          navigate('/dashboard/home');
-          toast.error('Url Error', { position: 'top-center' });
+  //get tasks at page loads
+  const getTasks = async () => {
+    try {
+      const response = await fetch(`${url}/dashboard/allEvents/tasks/${eventId}`, {
+        method: "GET",
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': localStorage.getItem('authToken')
         }
-      } catch (err) {
-        setLoading(false);
-        toast.error("Internal server error", { position: 'top-center' });
+      });
+      const data = await response.json()
+      setLoading(false)
+      if (data.success) {
+        setTasks(data.tasks);
+      } else {
+        toast.error(data.message, { position: 'top-center' });
+        setTasks([]);
       }
+    } catch (err) {
+      setLoading(false);
+      toast.error("internal server error", { position: 'top-center' });
+      setTasks([]);
     }
-  };
-
+  }
   useEffect(() => {
-    Authenticate();
+    getTasks();
   }, []);
 
+  // add task to the list
   const addTask = async () => {
     if (newTask !== '')
       try {
@@ -182,6 +157,7 @@ const DashEvent = () => {
       }
   };
 
+  //remove task from the list
   const removeTask = async (taskId) => {
     try {
       setLoading(true);
@@ -198,7 +174,7 @@ const DashEvent = () => {
       } else {
         toast.error(data.message, { position: 'top-center' });
       }
-      Authenticate();
+      getTasks();
     } catch (err) {
       console.log(err);
       toast.error("Error Removing task", { position: 'top-center' });
@@ -247,7 +223,7 @@ const DashEvent = () => {
               </div>
             </div>
 
-            {isAuthenticated && !eventDetails.publish && (
+            {!eventDetails.publish && (
               <>
                 <h3 className="text-xl font-semibold text-gray-800 mb-2">🎟️ Publish Tickets</h3>
                 <p className="text-sm text-gray-600 mb-4">Set up ticket types, pricing, and availability for this event.</p>

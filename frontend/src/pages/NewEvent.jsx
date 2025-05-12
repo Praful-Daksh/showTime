@@ -1,4 +1,4 @@
-import React, { useState , useEffect } from "react";
+import  { useState} from "react";
 import { ScaleLoader } from "react-spinners";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
@@ -24,17 +24,9 @@ const NewEvent = () => {
       [name]: value
     }));
   };
-  const url = api.production;
-  const Authenticate = async () => {
-    if (!localStorage.getItem('authToken')) {
-      navigate('/login');
-      toast.error('You are not Logged In', { position: 'top-center' })
-    }
-  }
-  useEffect(() => {
-    Authenticate();
-  }, [])
+  const url = api.production;// api url
 
+  // handle event creation
   const recordEvent = async (e) => {
     e.preventDefault();
     const combinedDateTime = new Date(`${day}T${time}:00`);

@@ -12,13 +12,16 @@ const UserProfile = () => {
     const [userData, setUserData] = useState(null);
     const [newPassword, setNewPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
-    const url = api.production;
+    const url = api.production;// api url
+
+    // handle form data change
     const handleChange = (e) => {
         setUserData({
             ...userData,
             [e.target.name]: e.target.value
         });
     }
+    // validation for password
     const handlePasswordChange = (e) => {
         if (e.target.name === 'new-password') {
             setNewPassword(e.target.value);
@@ -27,6 +30,7 @@ const UserProfile = () => {
         }
     };
 
+    // handle logout
     const handleLogout = () => {
         localStorage.removeItem('authToken');
         localStorage.removeItem('userEvents');
@@ -34,6 +38,7 @@ const UserProfile = () => {
         toast.success('Logged out successfully', { position: 'top-center' });
     };
 
+    // handle user update
     const handleUpdate = async () => {
         if (newPassword !== '') {
             if (newPassword.length < 8) {
@@ -75,45 +80,38 @@ const UserProfile = () => {
         setConfirmPassword('');
     };
 
-
-    useEffect(() => {
-        setLoading(true)
-        const token = localStorage.getItem('authToken')
-        if (!token) {
+    // Fetch user data
+    const fetchUserData = async () => {
+        if (localStorage.getItem('user')) {
+            setUserData(JSON.parse(localStorage.getItem('user')))
             setLoading(false)
-            navigate('/login')
-            toast.error('Please login to access this page', { position: 'top-center' })
-            return
+            return;
         }
-        const fetchUserData = async () => {
-            if (localStorage.getItem('user')) {
-                setUserData(JSON.parse(localStorage.getItem('user')))
-                setLoading(false)
-                return;
-            }
-            else {
-                try {
-                    const response = await fetch(`${url}/auth/getUserData`, {
-                        method: "GET",
-                        headers: {
-                            'Authorization': token
-                        }
-                    });
-                    const data = await response.json();
-                    setLoading(false);
-                    if (data.success) {
-                        setUserData(data.user);
-                        localStorage.setItem('user', JSON.stringify(data.user))
-                    } else {
-                        toast.error(data.message, { position: 'top-center' })
+        else {
+            setLoading(true);
+            try {
+                const response = await fetch(`${url}/auth/getUserData`, {
+                    method: "GET",
+                    headers: {
+                        'Authorization': localStorage.getItem('authToken')
                     }
-                } catch (error) {
-                    setLoading(false);
-                    toast.error('Failed to Fetch user data, Try again later', { position: 'top-center' })
-                    navigate('/dashboard/home')
+                });
+                const data = await response.json();
+                setLoading(false);
+                if (data.success) {
+                    setUserData(data.user);
+                    localStorage.setItem('user', JSON.stringify(data.user))
+                } else {
+                    toast.error(data.message, { position: 'top-center' })
                 }
+            } catch (error) {
+                setLoading(false);
+                toast.error('Failed to Fetch user data, Try again later', { position: 'top-center' })
+                navigate('/dashboard/home')
             }
-        };
+        }
+    };
+    useEffect(() => {
         fetchUserData();
     }, [])
 

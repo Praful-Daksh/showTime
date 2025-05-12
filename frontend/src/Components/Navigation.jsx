@@ -11,7 +11,7 @@ const Navigation = () => {
 
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 bg-white shadow-lg border-t border-black-200 navigation-button-container">
+    <div className="fixed bottom-0 left-0 z-10 right-0 bg-white shadow-lg border-t border-black-200 navigation-button-container">
       <div className="container mx-auto px-4">
         <div className="flex justify-around py-3">
           <Link to={'/dashboard/home'} className='flex flex-col items-center text-black-500 hover:text-blue-500'>

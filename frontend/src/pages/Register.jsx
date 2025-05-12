@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify'
 import { ScaleLoader } from 'react-spinners'
 import api from '../Partials/api';
+import { ArrowLeft } from 'lucide-react'
 
 const RegisterForm = () => {
   const [formData, setFormData] = useState({
@@ -16,6 +17,7 @@ const RegisterForm = () => {
   const [showPassword, setShowPassword] = useState(false);
   const url = api.production;
 
+  // handle form data change
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -25,11 +27,12 @@ const RegisterForm = () => {
   const handlePassword2 = (e) => {
     setPassword2(e.target.value);
   }
-
+  // show password toggle
   const togglePassword = () => {
     setShowPassword(!showPassword);
   };
 
+  // handle form submit
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (formData.name === '' || formData.email === '' || formData.password === '' || formData.password2 === '') {
@@ -72,7 +75,10 @@ const RegisterForm = () => {
 
   return (
     <div className="bodyWrap">
-      <div className="register-container">
+      <div className="register-container relative">
+        <span className="absolute top-2 right-2 bg-transparent text-black px-2 py-1 rounded-md text-xs font-medium cursor-pointer">
+                    <ArrowLeft className='inline' onClick={() => navigate('/')} /> 
+                </span>
         <div className="auth-formArea">
           <h2>Ready to Be a Host..?</h2>
           <h3>Create an account to create and work on your events.</h3>

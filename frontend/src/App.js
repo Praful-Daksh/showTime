@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { useState } from 'react';
 import RefreshHandler from './RefreshHandler';
+import './App.css';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import Register from './pages/Register';
@@ -13,8 +14,8 @@ import NewEvent from './pages/NewEvent';
 import PublishTicket from './pages/PublishTicket';
 import NotFoundPage from './Components/NotFoundPage'
 import Marketing from './pages/Marketing';
-import './App.css';
 import ExploreEvents from './pages/ExploreEvents';
+import StatsPage from './pages/StatsPage';
 
 function App() {
   const [isLoggedIn, setLoggedIn] = useState(false);
@@ -34,6 +35,7 @@ function App() {
           <Route path="allEvents/:eventId" element={<DashEvent />} />
           <Route path="tickets/publish/:eventId" element={<PublishTicket />} />
           <Route path="Published" element={<Marketing />} />
+          <Route path="Published/:eventId" element={<StatsPage />} />
         </Route>
         <Route path='/explore/events' element={<ExploreEvents />} />
         <Route path='*' element={<NotFoundPage />} />

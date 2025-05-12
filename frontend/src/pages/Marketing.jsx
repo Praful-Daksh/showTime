@@ -1,25 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import { useState , useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { toast } from 'react-toastify';
-import { useNavigate } from 'react-router-dom';
-
 
 const Marketing = () => {
-    const navigate = useNavigate()
     const [events, setEvents] = useState(null)
-    const Authenticate = async () => {
-        const isLoggedIn = localStorage.getItem('authToken');
-        if (!isLoggedIn) {
-            navigate('/login');
-            toast.error('You are not Logged In', { position: 'top-center' })
-        } else {
+    useEffect(() => {
+        if (localStorage.getItem('userEvents')) {
             setEvents(JSON.parse(localStorage.getItem('userEvents')));
         }
-    }
-    useEffect(() => {
-        Authenticate();
-    }, [])
-
+    }, []);
     return (
         <>
             <div className="p-4 ">

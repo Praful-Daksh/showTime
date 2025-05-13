@@ -188,7 +188,7 @@ const getShow = async (req, res) => {
     }
     catch (err) {
         console.log(err)
-        return res.status(500).json({ message: "Some Internal Error Occured", success: false });
+        return res.status(500).json({ message: "It's Our Bad", success: false });
     }
 }
 

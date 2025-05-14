@@ -6,6 +6,7 @@ import { HashLoader } from 'react-spinners';
 import { toast } from 'react-toastify';
 import ShowCard from '../Components/Show';
 import api from '../Partials/api';
+import Header from '../Components/Header';
 
 const ExploreEvents = () => {
   const location = useLocation();
@@ -15,6 +16,20 @@ const ExploreEvents = () => {
   const [loading, setLoading] = useState(false);
   const isAuth = location.state?.isAuth || false;
   const url = api.production;
+
+  // conditionally render the navbar based on the device
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+
 
   // fetch shows at page load
   const fetchShows = async () => {
@@ -57,7 +72,8 @@ const ExploreEvents = () => {
 
   return (
     <>
-      <Navbar />
+      {isMobile && isAuth ? <Header /> : <Navbar />} 
+
       <div className="flex flex-col min-h-screen" style={{ marginTop: '10vh' }}>
         {/* Search Section */}
         <div className="bg-white shadow-md py-4">

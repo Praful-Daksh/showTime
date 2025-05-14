@@ -5,6 +5,7 @@ import { useLocation } from 'react-router-dom'
 const Navbar = () => {
     const location = useLocation()
     const isHome = location.pathname === '/';
+    const isAuth = localStorage.getItem('authToken') ? true : false;
 
     return (
         <>
@@ -13,9 +14,9 @@ const Navbar = () => {
                     <div className="nav-logo">
                         <h1><Link to={'/'}>SHOWTime</Link></h1>
                     </div>
-                    {isHome ?
+                    {(isHome || !isAuth) ?
                         <>
-                            <div className="nav-search">
+                            {isHome && (<div className="nav-search">
                                 <div className="nav-searchbar">
                                     <form action="/find-show" method="POST" id="search-form">
                                         <input
@@ -31,7 +32,7 @@ const Navbar = () => {
                                         </button>
                                     </form>
                                 </div>
-                            </div>
+                            </div>)}
                             <div className="nav-buttons">
                                 <Link to={'/login'}>Sign In</Link>
                                 <Link to={'/register'}>Sign Up</Link>
@@ -39,9 +40,9 @@ const Navbar = () => {
                         </>
                         : null}
 
-                    <div className="nav-icon-login">
+                    {!isAuth && (<div className="nav-icon-login">
                         <a className="fa fa-right-to-bracket" href="/login"></a>
-                    </div>
+                    </div>)}
                 </nav>
             </div>
         </>

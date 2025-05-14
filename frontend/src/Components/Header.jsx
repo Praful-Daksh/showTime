@@ -25,7 +25,7 @@ const Header = () => {
               <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer"><Link to={'/dashboard/home'}>Home</Link></li>
               <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer"><Link to={'/dashboard/allEvents'}>All Events</Link></li>
               <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer"><Link to={'/dashboard/newEvent'}>Create Event</Link></li>
-              <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer"><Link to={'/dashboad/market'}>Publish</Link></li>
+              <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer"><Link to={'/dashboad/Published'}>Published</Link></li>
               <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer"><Link to={'/explore/events'}>Explore Events</Link></li>
               <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer"><Link to={'/dashboard/user/profile'}>Profile</Link></li>
             </ul>

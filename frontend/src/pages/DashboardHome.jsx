@@ -80,7 +80,7 @@ const Dashboard = () => {
               <div className="bg-white shadow-sm rounded-lg border">
                 <div className="p-3 text-center">
                   <h3 className="text-2xl font-semibold">$0</h3>
-                  <p className="text-gray-600 text-sm">Total Revenue</p>
+                  <p className="text-gray-600 text-sm">Total Revenue (VIP)</p>
                 </div>
               </div>
             </div>
@@ -88,7 +88,7 @@ const Dashboard = () => {
               <div className="bg-white shadow-sm rounded-lg border">
                 <div className="p-3 text-center">
                   <h3 className="text-2xl font-semibold">$0</h3>
-                  <p className="text-gray-600 text-sm">Total Revenue</p>
+                  <p className="text-gray-600 text-sm">Total Revenue (Standarad)</p>
                 </div>
               </div>
             </div>

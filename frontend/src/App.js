@@ -16,6 +16,7 @@ import NotFoundPage from './Components/NotFoundPage'
 import Marketing from './pages/Marketing';
 import ExploreEvents from './pages/ExploreEvents';
 import StatsPage from './pages/StatsPage';
+import Checkout from './pages/Checkout';
 
 function App() {
   const [isLoggedIn, setLoggedIn] = useState(false);
@@ -38,6 +39,7 @@ function App() {
           <Route path="Published/:eventId" element={<StatsPage />} />
         </Route>
         <Route path='/explore/events' element={<ExploreEvents />} />
+        <Route path='/checkout/:eventId' element={<Checkout />} />
         <Route path='*' element={<NotFoundPage />} />
       </Routes>
     </BrowserRouter>

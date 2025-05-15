@@ -37,9 +37,9 @@ function App() {
           <Route path="tickets/publish/:eventId" element={<PublishTicket />} />
           <Route path="Published" element={<Marketing />} />
           <Route path="Published/:eventId" element={<StatsPage />} />
+          <Route path="show/checkout/:showId" element={<Checkout />} />
         </Route>
         <Route path='/explore/events' element={<ExploreEvents />} />
-        <Route path='/checkout/:eventId' element={<Checkout />} />
         <Route path='*' element={<NotFoundPage />} />
       </Routes>
     </BrowserRouter>

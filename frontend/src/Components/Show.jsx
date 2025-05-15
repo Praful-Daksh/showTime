@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { Link } from 'react-router-dom';
 import showImages from '../Partials/showImages';
 
 
@@ -13,7 +14,7 @@ const Show = ({ show }) => {
     return (
         <>
             <div
-                key={show._id}
+                key={show.id}
                 className="event-card bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg border border-gray-100"
             >
                 <div className="h-48 overflow-hidden relative">
@@ -49,9 +50,7 @@ const Show = ({ show }) => {
                     </p>
                     <div className="flex justify-between items-center">
                         <span className="text-blue-500 font-bold">₹{show.price}</span>
-                        <button className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md text-sm font-medium transition">
-                            Get Tickets
-                        </button>
+                        <Link to={`/dashboard/show/checkout/${show.id}`} className='bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md text-sm font-medium transition' >Get Tickets</Link>
                     </div>
                 </div>
             </div>

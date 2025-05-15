@@ -9,12 +9,12 @@ const DashboardLayout = () => {
         const isLoggedIn = localStorage.getItem('authToken');
         if (!isLoggedIn) {
             navigate('/login');
-            toast.error('You are not Logged In', { position: 'top-center' })
+            toast.error('Login to Continue.', { position: 'top-center' })
         }
     }
     useEffect(() => {
         Authenticate();
-    },[])
+    }, [])
     return (
         <div className='dash-wrapper'>
             <Header />

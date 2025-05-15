@@ -41,7 +41,7 @@ const ExploreEvents = () => {
       const data = await response.json();
       setLoading(false);
       if (data.success) {
-        setShows(data.Tickets);
+        setShows(data.shows);
       } else {
         toast.error('No shows found', { position: 'top-right' });
       }
@@ -134,7 +134,7 @@ const ExploreEvents = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {filteredShows.length > 0 ? (
                 filteredShows.map((show) => (
-                  <ShowCard show={show} key={show._id} />
+                  <ShowCard show={show} key={show.id} />
                 ))
               ) : (
                 <div className="flex justify-center items-center h-48 bg-gray-100 rounded-lg shadow-md">

@@ -193,6 +193,31 @@ const getShow = async (req, res) => {
 }
 
 
+const getTicket = async (req,res) => {
+    const showId = req.params.showId;
+    try {
+        const ticket = await Ticket.findById(showId);
+        if (!ticket) {
+            return res.status(400).json({ message: 'No events Found', success: false });
+        }
+        return res.status(200).json({ message: 'Show fetched successfully', success: true, show:{
+            id: ticket._id,
+            name: ticket.ticketName,
+            date: ticket.showDate,
+            available: ticket.quantity,
+            vipAvailable: ticket.vipQuantity,
+            price: ticket.price,
+            vipPrice: ticket.vipPrice,
+            types: ticket.ticketTypes
+        } })
+    }
+    catch (err) {
+        console.log(err)
+        return res.status(500).json({ message: "Some Internal Error Occured", success: false });
+    }
+}
+
+
 module.exports = {
     createEvent,
     getUpcomingEvents,
@@ -204,5 +229,6 @@ module.exports = {
     validateEventId,
     publishTicket,
     getPublishedEvents,
-    getShow
+    getShow,
+    getTicket
 };

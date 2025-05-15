@@ -10,7 +10,8 @@ const {
     validateEventId,
     publishTicket,
     getPublishedEvents,
-    getShow
+    getShow,
+    getTicket
 } = require('../Controllers/DashboardController')
 const {
     createEventValidation,
@@ -19,14 +20,21 @@ const {
 const router = require('express').Router();
 
 router.get('/home', ensureAuthenticated, getUpcomingEvents)
-router.post('/newEvent', ensureAuthenticated, createEventValidation, createEvent)
-router.patch('/allEvents/update/:id', ensureAuthenticated, createEventValidation, updateEvent)
-router.delete('/allEvents/delete/:id', ensureAuthenticated, deleteEvent)
 router.get('/allEvents/tasks/:id', ensureAuthenticated, getTasks)
-router.post('/allEvents/tasks/add/:id', ensureAuthenticated, addTask)
-router.delete('/allEvents/tasks/delete/:id', ensureAuthenticated, deleteTask)
 router.get('/allEvents/verify/:id', ensureAuthenticated, validateEventId)
-router.post('/publishTicket/:id', ensureAuthenticated, publishEventValidation, publishTicket)
 router.get('/published/events', ensureAuthenticated, getPublishedEvents)
 router.get('/published/events/:eventId', ensureAuthenticated, getShow)
+router.get('/checkout/:showId',ensureAuthenticated,getTicket)
+
+
+router.post('/allEvents/tasks/add/:id', ensureAuthenticated, addTask)
+router.post('/publishTicket/:id', ensureAuthenticated, publishEventValidation, publishTicket)
+router.post('/newEvent', ensureAuthenticated, createEventValidation, createEvent)
+
+
+router.delete('/allEvents/delete/:id', ensureAuthenticated, deleteEvent)
+router.delete('/allEvents/tasks/delete/:id', ensureAuthenticated, deleteTask)
+
+
+router.patch('/allEvents/update/:id', ensureAuthenticated, createEventValidation, updateEvent)
 module.exports = router;

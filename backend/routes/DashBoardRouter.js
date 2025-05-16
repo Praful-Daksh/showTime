@@ -24,7 +24,10 @@ router.get('/allEvents/tasks/:id', ensureAuthenticated, getTasks)
 router.get('/allEvents/verify/:id', ensureAuthenticated, validateEventId)
 router.get('/published/events', ensureAuthenticated, getPublishedEvents)
 router.get('/published/events/:eventId', ensureAuthenticated, getShow)
-router.get('/checkout/:showId',ensureAuthenticated,getTicket)
+router.get('/checkout/:showId', ensureAuthenticated, getTicket)
+router.get('/', ensureAuthenticated, (req, res) => {
+    return res.json({ message: 'User Authentication Successfull', success: true });
+})
 
 
 router.post('/allEvents/tasks/add/:id', ensureAuthenticated, addTask)

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, use } from 'react';
 import Navbar from '../Components/Navbar';
 import { useParams, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
@@ -11,6 +11,7 @@ const Checkout = () => {
     const [displayPrice, setdisplayPrice] = useState(0);
     const [vipPrice, setVipPrice] = useState(0);
     const [totalAmount, setTotalAmount] = useState(0);
+    const [gstAmount,setGstAmount] = useState(0);
     const [ticketDetails, setTicketDetails] = useState(null);
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
@@ -33,7 +34,6 @@ const Checkout = () => {
                 setdisplayPrice(data.show.price);
                 setVipPrice(data.show.vipPrice);
             } else {
-                toast.error('Something went wrong, try again later', { position: 'top-right' });
                 navigate('/dashboard/home');
             }
         } catch (err) {
@@ -49,8 +49,10 @@ const Checkout = () => {
     }, []);
 
     useEffect(() => {
-        const total = classicQuantity * displayPrice + vipQuantity * vipPrice + 49;
+        const gst = (classicQuantity * displayPrice + vipQuantity * vipPrice) * 0.18;
+        const total = (classicQuantity * displayPrice + vipQuantity * vipPrice) + gst;
         setTotalAmount(total);
+        setGstAmount(gst);
     }, [classicQuantity, vipQuantity, displayPrice, vipPrice]);
 
     const handleClassicChange = (e) => {
@@ -64,8 +66,9 @@ const Checkout = () => {
     const handleSubmit = (e) => {
         e.preventDefault();
         console.log(`Classic: ${classicQuantity}, VIP: ${vipQuantity}, Total: ₹${totalAmount}`);
-        // Add your checkout logic here
     };
+
+    const isCheckoutDisabled = classicQuantity === 0 && vipQuantity === 0;
 
     return (
         <>
@@ -81,7 +84,7 @@ const Checkout = () => {
                         <div className="mb-6">
                             <form onSubmit={handleSubmit} className="mt-4">
                                 {
-                                    ticketDetails?.ticketTypes?.length > 0 ? (
+                                    ticketDetails?.types?.length > 1 ? (
                                         <>
                                             {/* Classic Ticket */}
                                             <div className="mb-4">
@@ -131,6 +134,7 @@ const Checkout = () => {
 
                                 <button
                                     type="submit"
+                                    disabled={isCheckoutDisabled}
                                     className="hidden md:block w-full bg-blue-500 hover:bg-blue-600 text-white py-3 px-4 rounded transition-colors"
                                 >
                                     Check out
@@ -145,13 +149,14 @@ const Checkout = () => {
                             <h4 className="font-medium text-lg mb-2">Order summary</h4>
                             {classicQuantity > 0 && <p className="text-gray-700">{classicQuantity} x Classic - ₹{classicQuantity * displayPrice}</p>}
                             {vipQuantity > 0 && <p className="text-gray-700">{vipQuantity} x VIP - ₹{vipQuantity * vipPrice}</p>}
-                            <p className="text-gray-700">Platform Fees - ₹49</p>
+                            <p className="text-gray-700">+ GST 18% - {gstAmount}</p>
                             <hr className="my-3 border-gray-200" />
                             <h4 className="font-medium text-lg">Total: ₹{totalAmount}</h4>
                         </div>
 
                         <button
-                            onClick={handleSubmit}
+                            type='submit'
+                            disabled={isCheckoutDisabled}
                             className="md:hidden w-full bg-blue-500 hover:bg-blue-600 text-white py-3 px-4 rounded mt-4 transition-colors"
                         >
                             Check out

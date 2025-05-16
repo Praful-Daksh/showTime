@@ -10,6 +10,7 @@ const Dashboard = () => {
   const [eventCount, setEventCount] = useState(0);
   const navigate = useNavigate();
     const url = api.production;
+    
   const fetchData = async () => {
     try {
       setLoading(true);

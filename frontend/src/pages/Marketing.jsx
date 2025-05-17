@@ -23,7 +23,6 @@
                 setLoading(false);
                 if (data.success) {
                     setEvents(data.tickets);
-                    console.log(data.tickets);
                 } else {
                     toast.error(data.message, { position: 'top-right' });
                 }

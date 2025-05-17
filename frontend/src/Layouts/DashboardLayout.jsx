@@ -1,22 +1,25 @@
-import { Outlet } from 'react-router-dom';
+import { Outlet, useNavigate } from 'react-router-dom';
 import Header from '../Components/Header';
-import Navigation from '../Components/Navigation';
-import { useAuth } from '../Partials/AuthContext'; 
-import { HashLoader } from 'react-spinners';
-
+import Navigation from '../Components/Navigation'
+import { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
 const DashboardLayout = () => {
-    const { isLogged, loading } = useAuth();
-
-    if (loading) {
-        return (
-            <div className='overlay-loader'>
-                <HashLoader color='#000000' size={50} />
-            </div>
-        );
+    const navigate = useNavigate();
+    const [isLoggedIn, setLoggedIn] = useState(false);
+    const Authenticate = async () => {
+        if (!localStorage.getItem('authToken')) {
+            navigate('/login');
+            toast.error('Login to Continue.', { position: 'top-center' })
+            setLoggedIn(false)
+        } else {
+            setLoggedIn(true);
+        }
     }
-
+    useEffect(() => {
+        Authenticate();
+    }, [])
     return (
-        isLogged && (
+        isLoggedIn && (
             <div className='dash-wrapper'>
                 <Header />
                 <Navigation />

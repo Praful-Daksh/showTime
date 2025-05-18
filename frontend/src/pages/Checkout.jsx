@@ -11,7 +11,7 @@ const Checkout = () => {
     const [displayPrice, setdisplayPrice] = useState(0);
     const [vipPrice, setVipPrice] = useState(0);
     const [totalAmount, setTotalAmount] = useState(0);
-    const [gstAmount,setGstAmount] = useState(0);
+    const [gstAmount, setGstAmount] = useState(0);
     const [ticketDetails, setTicketDetails] = useState(null);
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
@@ -63,9 +63,57 @@ const Checkout = () => {
         setVipQuantity(parseInt(e.target.value));
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log(`Classic: ${classicQuantity}, VIP: ${vipQuantity}, Total: ₹${totalAmount}`);
+
+        try {
+            const res = await fetch(`${url}/payment/orders`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    // 'Authorization': localStorage.getItem('authToken')
+                },
+                body: JSON.stringify({ amount: totalAmount })
+            });
+
+            const data = await res.json();
+
+            if (!data.success) {
+                toast.error("Failed to initiate payment", { position: 'top-right' });
+                return;
+            }
+
+            const { order } = data;
+
+            const options = {
+                key: 'qjoi6iFSvnZJflDmBevBRUgC', // Use env or hardcode for test
+                amount: order.amount,
+                currency: "INR",
+                name: "ShowTime",
+                description: "Ticket Payment",
+                image: "/logo.png",
+                order_id: order.id,
+                handler: async function (response) {
+                    // Handle success, send response.razorpay_payment_id to backend for verification
+                    toast.success("Payment Successful!", { position: 'top-right' });
+                    navigate('/dashboard/confirmation');
+                },
+                prefill: {
+                    name: "Customer",
+                    email: "customer@example.com",
+                    contact: "9999999999"
+                },
+                theme: {
+                    color: "#3399cc"
+                }
+            };
+
+            const rzp = new window.Razorpay(options);
+            rzp.open();
+        } catch (error) {
+            console.error("Payment initiation error:", error);
+            toast.error("Something went wrong", { position: 'top-right' });
+        }
     };
 
     const isCheckoutDisabled = classicQuantity === 0 && vipQuantity === 0;
@@ -157,6 +205,7 @@ const Checkout = () => {
                         <button
                             type='submit'
                             disabled={isCheckoutDisabled}
+                            onClick={handleSubmit}
                             className="md:hidden w-full bg-blue-500 hover:bg-blue-600 text-white py-3 px-4 rounded mt-4 transition-colors"
                         >
                             Check out

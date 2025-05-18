@@ -7,6 +7,7 @@ const cors = require('cors')
 const Authrouter = require('./routes/AuthRouter')
 const DashBoardRouter = require('./routes/DashBoardRouter')
 const TicketRouter = require('./routes/TicketRouter')
+const PaymentRouter = require('./routes/PaymentRouter') 
 
 const app = express()
 const PORT = process.env.PORT || 5000
@@ -15,14 +16,16 @@ app.listen(PORT, () => {
     console.log(`server started at ${PORT}`)
 })
 
-
 app.use(bodyParse.json())
 app.use(cors({
     origin:'https://show-time-six.vercel.app'
 }))
+
+
+app.use('/payment',PaymentRouter)
 app.use('/auth', Authrouter)
 app.use('/dashboard', DashBoardRouter)
-app.use('/tickets',TicketRouter)
+app.use('/tickets', TicketRouter)
 
 
 const mongoUri = process.env.mongoURI

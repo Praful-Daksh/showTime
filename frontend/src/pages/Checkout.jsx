@@ -17,6 +17,7 @@ const Checkout = () => {
     const navigate = useNavigate();
     const params = useParams();
     const url = api.production;
+    const user = JSON.parse(localStorage.getItem('user'))
 
     const fetchShows = async () => {
         try {
@@ -51,7 +52,7 @@ const Checkout = () => {
     useEffect(() => {
         const gst = (classicQuantity * displayPrice + vipQuantity * vipPrice) * 0.18;
         const total = (classicQuantity * displayPrice + vipQuantity * vipPrice) + gst;
-        setTotalAmount(total);
+        setTotalAmount(Math.floor(total + 1));
         setGstAmount(gst);
     }, [classicQuantity, vipQuantity, displayPrice, vipPrice]);
 
@@ -71,7 +72,6 @@ const Checkout = () => {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    // 'Authorization': localStorage.getItem('authToken')
                 },
                 body: JSON.stringify({ amount: totalAmount })
             });
@@ -86,31 +86,27 @@ const Checkout = () => {
             const { order } = data;
 
             const options = {
-                key: 'qjoi6iFSvnZJflDmBevBRUgC', // Use env or hardcode for test
+                key: process.env.REACT_APP_RZRPY_KEY,
                 amount: order.amount,
-                currency: "INR",
-                name: "ShowTime",
-                description: "Ticket Payment",
-                image: "/logo.png",
+                currency: 'INR',
+                name: 'ShowTime',
+                description: 'Pay to Watch',
                 order_id: order.id,
-                handler: async function (response) {
-                    // Handle success, send response.razorpay_payment_id to backend for verification
-                    toast.success("Payment Successful!", { position: 'top-right' });
-                    navigate('/dashboard/confirmation');
-                },
+                callback_url: `${url}/payment/verify`,
                 prefill: {
-                    name: "Customer",
-                    email: "customer@example.com",
-                    contact: "9999999999"
+                    name:user.name,
+                    email:user.email,
+
                 },
                 theme: {
-                    color: "#3399cc"
-                }
+                    color: '#54a9f3'
+                },
             };
 
-            const rzp = new window.Razorpay(options);
+            const rzp = new Razorpay(options);
             rzp.open();
-        } catch (error) {
+        }
+        catch (error) {
             console.error("Payment initiation error:", error);
             toast.error("Something went wrong", { position: 'top-right' });
         }

@@ -4,8 +4,8 @@ const crypto = require('crypto');
 const PaymentRouter = express.Router();
 
 const instance = new Razorpay({
-    key_id: 'key_secret',
-    key_secret:'qjoi6iFSvnZJflDmBevBRUgC'
+    key_id: process.env.RZRPY_KEY,
+    key_secret:process.env.RZRPY_SECRET
 });
 
 PaymentRouter.post('/orders', async (req, res) => {
@@ -18,7 +18,7 @@ PaymentRouter.post('/orders', async (req, res) => {
         const options = {
             amount: amount * 100,
             currency: "INR",
-            receipt: `receipt_order_${Math.floor(Math.random() * 1000000)}`
+            receipt :`show_rcpt_${Math.floor(Math.random()*10000)}`
         };
 
         const order = await instance.orders.create(options);

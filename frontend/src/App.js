@@ -17,6 +17,7 @@ import Marketing from './pages/Marketing';
 import ExploreEvents from './pages/ExploreEvents';
 import StatsPage from './pages/StatsPage';
 import Checkout from './pages/Checkout';
+import SuccessPayment from './pages/SuccessPayment'
 
 function App() {
   const [isLoggedIn, setLoggedIn] = useState(false);
@@ -24,7 +25,7 @@ function App() {
   return (
 
     <BrowserRouter>
-      <RefreshHandler setLoggedIn={setLoggedIn} />
+      <RefreshHandler />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
@@ -32,15 +33,16 @@ function App() {
         <Route path="dashboard" element={<DashboardLayout />}>
           <Route path="home" element={<DashboardHome />} />
           <Route path="allEvents" element={<DashboardEvents />} />
-          <Route path="user/profile" element={<UserProfile />} /> 
+          <Route path="user/profile" element={<UserProfile />} />
           <Route path="newEvent" element={<NewEvent />} />
-          <Route path="allEvents/:eventId" element={<DashEvent />} /> 
+          <Route path="allEvents/:eventId" element={<DashEvent />} />
           <Route path="tickets/publish/:eventId" element={<PublishTicket />} />
-          <Route path="Published" element={<Marketing />} /> 
+          <Route path="Published" element={<Marketing />} />
           <Route path="Published/:eventId" element={<StatsPage />} />
-          <Route path="show/checkout/:showId" element={<Checkout />} /> 
+          <Route path="show/checkout/:showId" element={<Checkout />} />
         </Route>
         <Route path='/explore/events' element={<ExploreEvents />} />
+        <Route path='/payment/success' element={<SuccessPayment />} />
         <Route path='*' element={<NotFoundPage />} />
       </Routes>
     </BrowserRouter >

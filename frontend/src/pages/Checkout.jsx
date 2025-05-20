@@ -4,6 +4,8 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { HashLoader } from 'react-spinners';
 import api from '../Partials/api';
+import swal from 'sweetalert2'
+import withReactContent from 'sweetalert2-react-content'
 
 const Checkout = () => {
     const [classicQuantity, setClassicQuantity] = useState(1);
@@ -18,11 +20,22 @@ const Checkout = () => {
     const params = useParams();
     const url = api.production;
     const user = JSON.parse(localStorage.getItem('user'))
+    const showId = params.showId;
+
+    const showError = () => {
+        withReactContent(swal).fire({
+            icon: "error",
+            title: "Oops...",
+            text: "Sorry we don't have that much Left, Try Lowering the Number",
+        });
+    }
+
+
 
     const fetchShows = async () => {
         try {
             setLoading(true);
-            const response = await fetch(`${url}/dashboard/checkout/${params.showId}`, {
+            const response = await fetch(`${url}/dashboard/checkout/${showId}`, {
                 method: 'GET',
                 headers: {
                     'Authorization': localStorage.getItem('authToken')
@@ -52,7 +65,7 @@ const Checkout = () => {
     useEffect(() => {
         const gst = (classicQuantity * displayPrice + vipQuantity * vipPrice) * 0.18;
         const total = (classicQuantity * displayPrice + vipQuantity * vipPrice) + gst;
-        setTotalAmount(Math.floor(total + 1));
+        setTotalAmount(Math.round(total));
         setGstAmount(gst);
     }, [classicQuantity, vipQuantity, displayPrice, vipPrice]);
 
@@ -66,14 +79,23 @@ const Checkout = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
+        if (classicQuantity > ticketDetails.quantity || vipQuantity > ticketDetails.vipQuantity) {
+            showError();
+            return;
+        }
         try {
             const res = await fetch(`${url}/payment/orders`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization': localStorage.getItem('authToken')
                 },
-                body: JSON.stringify({ amount: totalAmount })
+                body: JSON.stringify({
+                     amount: totalAmount ,
+                     classicQuantity:classicQuantity,
+                     vipQuantity: vipQuantity,
+                     showId: showId
+                    })
             });
 
             const data = await res.json();
@@ -90,13 +112,12 @@ const Checkout = () => {
                 amount: order.amount,
                 currency: 'INR',
                 name: 'ShowTime',
-                description: 'Pay to Watch',
+                description: 'Enjoy the Show',
                 order_id: order.id,
                 callback_url: `${url}/payment/verify`,
                 prefill: {
-                    name:user.name,
-                    email:user.email,
-
+                    name: user.name,
+                    email: user.email,
                 },
                 theme: {
                     color: '#54a9f3'

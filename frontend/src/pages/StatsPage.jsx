@@ -61,7 +61,7 @@ const EventAnalytics = () => {
                     <div className="bg-white rounded-xl shadow p-4 bg-gradient-to-br from-white to-blue-50">
                         <h3 className="text-sm font-medium text-gray-600 mb-1">Total Revenue</h3>
                         <p className="text-2xl font-bold text-gray-800">₹{totalRevenue}</p>
-                        <p className="text-xs text-gray-500">Avg per ticket: ₹{totalRevenue > 0 ?(totalRevenue / (event?.sold + event?.vipSold)) : 0}</p>
+                        <p className="text-xs text-gray-500">Avg per ticket: ₹{totalRevenue > 0 ?Math.round((totalRevenue / (event?.sold + event?.vipSold))) : 0}</p>
                     </div>
 
                     <div className="bg-white rounded-xl shadow p-4 bg-gradient-to-br from-white to-green-50">

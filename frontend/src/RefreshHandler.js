@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 
-const RefreshHandler = ({ setLoggedIn }) => {
+const RefreshHandler = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [isToken, setIsToken] = useState(false)

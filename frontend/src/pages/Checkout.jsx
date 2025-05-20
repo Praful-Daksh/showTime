@@ -103,7 +103,7 @@ const Checkout = () => {
                 },
             };
 
-            const rzp = new Razorpay(options);
+            const rzp = new window.Razorpay(options);
             rzp.open();
         }
         catch (error) {

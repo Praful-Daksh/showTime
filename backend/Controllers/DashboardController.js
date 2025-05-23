@@ -2,6 +2,7 @@ const Event = require('../models/events')
 const mongoose = require('mongoose')
 const Tasks = require('../models/tasks')
 const Ticket = require('../models/tickets')
+const User = require('../models/Users')
 
 const createEvent = async (req, res) => {
     try {
@@ -21,10 +22,15 @@ const createEvent = async (req, res) => {
 
 const getUpcomingEvents = async (req, res) => {
     try {
-        const userId = req.user.id
+        const userId = req.user.id;
+        const user = await User.findById(userId);
         const upcomingEvents = await Event.find({ user: userId })
         if (upcomingEvents.length > 0) {
-            return res.status(200).json({ message: 'Upcoming Events', success: true, upcomingEvents })
+            return res.status(200).json({ message: 'Upcoming Events', success: true, upcomingEvents , userStats:{
+                revenueVip:user.revenueVip,
+                revenueClassic:user.revenueClassic,
+                ticketSold:user.ticketSold
+            } })
         } else {
             return res.status(200).json({ messge: 'No upcoming Events Found', success: true, upcomingEvents })
         }
@@ -216,6 +222,35 @@ const getTicket = async (req,res) => {
         return res.status(500).json({ message: "Some Internal Error Occured", success: false });
     }
 }
+
+
+const updateRevenue = async ({vip,classic}) =>{
+     try {
+        const id = req.user.id;
+        const { name, password } = req.body;
+
+
+        let updateData = { name };
+
+        if (password !== '') {
+            const hashedPassword = await bcrypt.hash(password, 10);
+            updateData.password = hashedPassword;
+        }
+
+        const updatedUser = await User.findByIdAndUpdate(id, updateData, { new: true });
+
+        if (!updatedUser) {
+            return res.status(404).json({ message: "User not found", success: false });
+        }
+
+        res.status(200).json({ message: "User updated successfully", success: true , user: { name: updatedUser.name, email: updatedUser.email } });
+    } catch (err) {
+        res.status(500).json({ message: "Internal Server Error", success: false });
+    }
+}
+
+
+
 
 
 module.exports = {

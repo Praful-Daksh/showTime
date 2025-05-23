@@ -8,6 +8,7 @@ const Dashboard = () => {
   const [loading, setLoading] = useState(false)
   const [userEdata, setuserEdata] = useState([])
   const [eventCount, setEventCount] = useState(0);
+  const [userStats,setuserStats] = useState(null);
   const navigate = useNavigate();
     const url = api.production;
     
@@ -30,6 +31,7 @@ const Dashboard = () => {
           return eventDate >= today;
         }))
         setEventCount(data.upcomingEvents.length);
+        setuserStats(data.userStats)
         localStorage.setItem('userEvents', JSON.stringify(data.upcomingEvents))
       } else {
         localStorage.removeItem('authToken')
@@ -72,7 +74,7 @@ const Dashboard = () => {
             <div className="w-full sm:w-1/2 lg:w-1/4 px-2 mb-4">
               <div className="bg-white shadow-sm rounded-lg border">
                 <div className="p-3 text-center">
-                  <h3 className="text-2xl font-semibold">0</h3>
+                  <h3 className="text-2xl font-semibold">₹{userStats?.ticketSold}</h3>
                   <p className="text-gray-600 text-sm">Tickets Sold</p>
                 </div>
               </div>
@@ -80,7 +82,7 @@ const Dashboard = () => {
             <div className="w-full sm:w-1/2 lg:w-1/4 px-2 mb-4">
               <div className="bg-white shadow-sm rounded-lg border">
                 <div className="p-3 text-center">
-                  <h3 className="text-2xl font-semibold">$0</h3>
+                  <h3 className="text-2xl font-semibold">₹{userStats?.revenueVip}</h3>
                   <p className="text-gray-600 text-sm">Total Revenue (VIP)</p>
                 </div>
               </div>
@@ -88,7 +90,7 @@ const Dashboard = () => {
             <div className="w-full sm:w-1/2 lg:w-1/4 px-2 mb-4">
               <div className="bg-white shadow-sm rounded-lg border">
                 <div className="p-3 text-center">
-                  <h3 className="text-2xl font-semibold">$0</h3>
+                  <h3 className="text-2xl font-semibold">{userStats?.revenueClassic}</h3>
                   <p className="text-gray-600 text-sm">Total Revenue (Standarad)</p>
                 </div>
               </div>

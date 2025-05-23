@@ -16,6 +16,18 @@ const UserSchema = new mongoose.Schema({
     date:{
         type:Date,
         default:Date.now
+    },
+    revenueClassic:{
+        type:Number,
+        default:0
+    },
+    revenueVip:{
+        type:Number,
+        default:0
+    },
+    ticketSold:{
+        type:Number,
+        default:0
     }
 });
 const User = mongoose.model('User', UserSchema);

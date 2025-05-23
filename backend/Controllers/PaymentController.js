@@ -59,7 +59,8 @@ const verifyOrder = async (req, res) => {
         if (!ticket) {
             return res.status(404).json({ success: false, message: "Show not found" });
         }
-
+        const ticketPrice = ticket.price;
+        const ticketVprice = ticket.vipPrice;
         ticket.quantity -= ticketOrder.classicQuantity;
         ticket.vipQuantity -= ticketOrder.vipQuantity;
         ticket.sold += ticketOrder.classicQuantity;
@@ -69,6 +70,11 @@ const verifyOrder = async (req, res) => {
 
         ticketOrder.paymentVerified = true;
         await ticketOrder.save();
+
+        // await updateRevenue({
+        //     classic: ticketPrice * ticketOrder.classicQuantity,
+        //     vip: ticketVprice * ticketOrder.vipQuantity
+        // });
 
         return res.redirect(`https://show-time-six.vercel.app/payment/success?ref=${razorpay_payment_id}`);
 

@@ -265,5 +265,6 @@ module.exports = {
     publishTicket,
     getPublishedEvents,
     getShow,
-    getTicket
+    getTicket,
+    updateRevenue
 };

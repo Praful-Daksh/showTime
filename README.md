@@ -2,6 +2,8 @@
 
 ShowTime is a full-stack web application for discovering, booking, and managing event tickets. It features user authentication, event exploration, ticket purchasing with payment integration, and a dashboard for event organizers to track sales and revenue.
 
+You can check it out [Here](http://show-time-six.vercel.app/).
+
 ---
 
 ## Features
@@ -34,17 +36,20 @@ ShowTime is a full-stack web application for discovering, booking, and managing 
 
 ### Installation
 
-1. **Clone the repository:**
+1. **Clone the repository:**\      
+    ```
     git clone https://github.com/Praful-Daksh/showTime.git
     cd showTime
     ```
 
 2. **Install backend dependencies:**
+    ```
     cd backend
     npm install
     ```
 
 3. **Install frontend dependencies:**
+    ```
     cd ../frontend
     npm install
     ```
@@ -65,11 +70,13 @@ ShowTime is a full-stack web application for discovering, booking, and managing 
 ---
 
 5. **Run the backend server:**
+    ```
     cd ../backend
     npm start
     ```
 
 6. **Run the frontend app:**
+    ```
     cd ../frontend
     npm start
     ```
@@ -104,7 +111,9 @@ Pull requests are welcome! For major changes, please open an issue first to disc
 
 ---
 ## NOTE: 
+```
 showTime is using React 19 so before adding any new package or dependency, please make sure that package supports react 19.
+```
 
 ## Acknowledgements
 

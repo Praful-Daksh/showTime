@@ -103,7 +103,8 @@ showTime/
 Pull requests are welcome! For major changes, please open an issue first to discuss what you would like to change.
 
 ---
-
+## NOTE: 
+showTime is using React 19 so before adding any new package or dependency, please make sure that package supports react 19.
 
 ## Acknowledgements
 

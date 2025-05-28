@@ -101,14 +101,14 @@ const verifyOrder = async (req, res) => {
 
         ticket.sold += ticketOrder.classicQuantity;
         ticket.vipSold += ticketOrder.vipQuantity;
-        await ticket.save();
+      
 
         const event = await Event.findById(eventId);
         if (event) {
             const organizer = await User.findById(event.user);
             if (organizer) {
-                organizer.revenueClassic += organizer.price * ticketOrder.classicQuantity;
-                organizer.revenueVip += organizer.vipPrice * ticketOrder.vipQuantity;
+                organizer.revenueClassic += ticket.price * ticketOrder.classicQuantity;
+                organizer.revenueVip += ticket.vipPrice * ticketOrder.vipQuantity;
                 organizer.ticketSold += ticketOrder.classicQuantity + ticketOrder.vipQuantity;
                 await organizer.save();
             }else{
@@ -117,6 +117,7 @@ const verifyOrder = async (req, res) => {
         }else{
             ticketOrder.messages.push('Event not found');
         }
+          await ticket.save();
         ticketOrder.paymentVerified = true;
         ticketOrder.razorpay_payment_id = razorpay_payment_id;
         await ticketOrder.save();

@@ -4,6 +4,7 @@ const Order = require('../models/Order.js');
 const mongoose = require('mongoose')
 const Ticket = require('../models/tickets.js');
 const User = require('../models/Users.js')
+const Event = require('../models/events.js')
 
 const createOrder = async (req, res) => {
     try {

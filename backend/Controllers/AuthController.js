@@ -43,7 +43,10 @@ const logIn = async (req, res) => {
                 success: true,
                 token,
                 email,
-                name: user.name
+                name: user.name,
+                ticketSold: user.ticketSold,
+                revenueVip: user.revenueVip,
+                revenueClassic: user.revenueClassic
             })
     } catch (err) {
         res.status(500)
@@ -59,7 +62,15 @@ const getUserData = async (req, res) => {
                 .json({ message: 'User not found', success: false })
         }
         res.status(200)
-            .json({ message: "User Data", success: true, "user": { "name": user.name, "email": user.email } })
+            .json({
+                message: "User Data", success: true, "user": {
+                    "name": user.name,
+                    "email": user.email,
+                    "ticketSold": user.ticketSold,
+                    "revenueVip": user.revenueVip,
+                    "revenueClassic": user.revenueClassic
+                }
+            })
     } catch (err) {
         res.status(500)
             .json({ message: "Internal Server Error", success: false })
@@ -85,7 +96,7 @@ const updateUser = async (req, res) => {
             return res.status(404).json({ message: "User not found", success: false });
         }
 
-        res.status(200).json({ message: "User updated successfully", success: true , user: { name: updatedUser.name, email: updatedUser.email } });
+        res.status(200).json({ message: "User updated successfully", success: true, user: { name: updatedUser.name, email: updatedUser.email } });
     } catch (err) {
         res.status(500).json({ message: "Internal Server Error", success: false });
     }

@@ -26,11 +26,7 @@ const getUpcomingEvents = async (req, res) => {
         const user = await User.findById(userId);
         const upcomingEvents = await Event.find({ user: userId })
         if (upcomingEvents.length > 0) {
-            return res.status(200).json({ message: 'Upcoming Events', success: true, upcomingEvents , userStats:{
-                revenueVip:user.revenueVip,
-                revenueClassic:user.revenueClassic,
-                ticketSold:user.ticketSold
-            } })
+            return res.status(200).json({ message: 'Upcoming Events', success: true, upcomingEvents })
         } else {
             return res.status(200).json({ messge: 'No upcoming Events Found', success: true, upcomingEvents })
         }

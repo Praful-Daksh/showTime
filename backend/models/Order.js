@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const Tickets = require('./tickets.js')
+const User = require('./Users.js')
 
 const TicketOrderSchema = new mongoose.Schema({
     razorpayOrderId: {
@@ -13,11 +14,11 @@ const TicketOrderSchema = new mongoose.Schema({
     },
     classicQuantity: {
         type: Number,
-        default: 0
+        required:true
     },
     vipQuantity: {
         type: Number,
-        default: 0
+        required:true
     },
     totalAmount: {
         type: Number,
@@ -30,6 +31,14 @@ const TicketOrderSchema = new mongoose.Schema({
     createdAt: {
         type: Date,
         default: Date.now,
+    },
+    user:{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:User
+    },
+    messages: {
+        type: [String],
+        default: []
     }
 });
 

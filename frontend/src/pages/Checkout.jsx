@@ -63,8 +63,8 @@ const Checkout = () => {
     }, []);
 
     useEffect(() => {
-        const gst = (classicQuantity * displayPrice + vipQuantity * vipPrice) * 0.18;
-        const total = (classicQuantity * displayPrice + vipQuantity * vipPrice) + gst;
+        let gst = (classicQuantity * displayPrice + vipQuantity * vipPrice) * 0.18;
+        let total = (classicQuantity * displayPrice + vipQuantity * vipPrice) + gst;
         setTotalAmount(Math.round(total));
         setGstAmount(gst);
     }, [classicQuantity, vipQuantity, displayPrice, vipPrice]);
@@ -79,6 +79,10 @@ const Checkout = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        if (!ticketDetails) {
+            toast.error('Ticket details not loaded', { position: 'top-right' });
+            return;
+        }
         if (classicQuantity > ticketDetails.quantity || vipQuantity > ticketDetails.vipQuantity) {
             showError();
             return;
@@ -91,11 +95,11 @@ const Checkout = () => {
                     'Authorization': localStorage.getItem('authToken')
                 },
                 body: JSON.stringify({
-                     amount: totalAmount ,
-                     classicQuantity:classicQuantity,
-                     vipQuantity: vipQuantity,
-                     showId: showId
-                    })
+                    amount: totalAmount,
+                    classicQuantity: classicQuantity,
+                    vipQuantity: vipQuantity,
+                    showId: showId
+                })
             });
 
             const data = await res.json();
@@ -106,7 +110,6 @@ const Checkout = () => {
             }
 
             const { order } = data;
-
             const options = {
                 key: process.env.REACT_APP_RZRPY_KEY,
                 amount: order.amount,
@@ -114,7 +117,6 @@ const Checkout = () => {
                 name: 'ShowTime',
                 description: 'Enjoy the Show',
                 order_id: order.id,
-                callback_url: `${url}/payment/verify`,
                 prefill: {
                     name: user.name,
                     email: user.email,
@@ -122,8 +124,39 @@ const Checkout = () => {
                 theme: {
                     color: '#54a9f3'
                 },
-            };
+                handler: async function (response) {
+                    try {
+                        const verifyRes = await fetch(`${url}/payment/verify`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Authorization': localStorage.getItem('authToken')
+                            },
+                            body: JSON.stringify({
+                                razorpay_order_id: response.razorpay_order_id,
+                                razorpay_payment_id: response.razorpay_payment_id,
+                                razorpay_signature: response.razorpay_signature
+                            })
+                        });
 
+                        const verifyData = await verifyRes.json();
+
+                        if (verifyData.success) {
+                            navigate(`/dashboard/payment/success?orderId=${response.razorpay_order_id}`);
+                        } else {
+                            toast.error("Payment verification failed", { position: 'top-right' });
+                        }
+                    } catch (error) {
+                        console.error("Verification error:", error);
+                        toast.error("Payment verification failed", { position: 'top-right' });
+                    }
+                },
+                modal: {
+                    ondismiss: function () {
+                        toast.error("Payment cancelled", { position: 'top-right' });
+                    }
+                }
+            };
             const rzp = new window.Razorpay(options);
             rzp.open();
         }
@@ -134,6 +167,9 @@ const Checkout = () => {
     };
 
     const isCheckoutDisabled = classicQuantity === 0 && vipQuantity === 0;
+
+    const remainingClassic = (ticketDetails?.quantity - ticketDetails?.sold) || 0;
+    const remainingvip = (ticketDetails?.vipQuantity - ticketDetails?.vipSold) || 0;
 
     return (
         <>
@@ -159,10 +195,12 @@ const Checkout = () => {
                                                     id="classicQuantity"
                                                     value={classicQuantity}
                                                     onChange={handleClassicChange}
+                                                    disabled={!ticketDetails}
                                                     className="w-24 p-2 border border-gray-300 rounded-md"
                                                 >
-                                                    {[...Array(6).keys()].map(i => <option key={i} value={i}>{i}</option>)}
-                                                </select>
+                                                    {[...Array(Math.min(5, remainingClassic) + 1).keys()].map(i => (
+                                                        <option key={i} value={i}>{i}</option>
+                                                    ))}                                                </select>
                                             </div>
 
                                             {/* VIP Ticket */}
@@ -173,10 +211,12 @@ const Checkout = () => {
                                                     id="vipQuantity"
                                                     value={vipQuantity}
                                                     onChange={handleVipChange}
+                                                    disabled={!ticketDetails}
                                                     className="w-24 p-2 border border-gray-300 rounded-md"
                                                 >
-                                                    {[...Array(6).keys()].map(i => <option key={i} value={i}>{i}</option>)}
-                                                </select>
+                                                    {[...Array(Math.min(5, remainingvip) + 1).keys()].map(i => (
+                                                        <option key={i} value={i}>{i}</option>
+                                                    ))}                                                </select>
                                             </div>
                                         </>
                                     ) : (
@@ -214,7 +254,7 @@ const Checkout = () => {
                             <h4 className="font-medium text-lg mb-2">Order summary</h4>
                             {classicQuantity > 0 && <p className="text-gray-700">{classicQuantity} x Classic - ₹{classicQuantity * displayPrice}</p>}
                             {vipQuantity > 0 && <p className="text-gray-700">{vipQuantity} x VIP - ₹{vipQuantity * vipPrice}</p>}
-                            <p className="text-gray-700">+ GST 18% - {gstAmount}</p>
+                            <p className="text-gray-700">+ GST 18% - {Math.round(gstAmount)}</p>
                             <hr className="my-3 border-gray-200" />
                             <h4 className="font-medium text-lg">Total: ₹{totalAmount}</h4>
                         </div>

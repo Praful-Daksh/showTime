@@ -4,10 +4,7 @@ import { HashLoader } from 'react-spinners';
 import api from '../Partials/api';
 import { toast } from 'react-toastify';
 import { PieChart, Pie, Cell, Tooltip } from 'recharts';
-const data = [
-    { name: 'Standarad', value: 60 },
-    { name: 'Remaining', value: 40 },
-];
+
 
 const COLORS = ['#0088FE', '#FF8042'];
 
@@ -31,7 +28,9 @@ const EventAnalytics = () => {
             setLoading(false);
             if (data.success) {
                 setEvent(data.ticket);
-                setTotalRevenue((data.ticket.sold * data.ticket.price) + (data.ticket.vipSold * data.ticket.vipPrice));
+                let totalClassic = data.ticket.sold * data.ticket.price;
+                let totalVip = data.ticket.vipSold * data.ticket.vipPrice;
+                setTotalRevenue(totalClassic + totalVip);
             } else {
                 toast.error(data.message, { position: 'top-right' });
             }
@@ -46,6 +45,21 @@ const EventAnalytics = () => {
         fetchShowDetails();
     }, []);
 
+    const pieData = [
+        { name: 'Standarad', value: event?.quantity },
+        { name: 'VIP', value: event?.vipQuantity }
+    ];
+
+    const totalCapacity = (event?.quantity || 0) + (event?.vipQuantity || 0);
+    const totalSold = (event?.sold || 0) + (event?.vipSold || 0);
+    const remainingStandard = (event?.quantity || 0) - (event?.sold || 0);
+    const remainingVip = (event?.vipQuantity || 0) - (event?.vipSold || 0);
+    const totalRemaining = remainingStandard + remainingVip;
+    const potentialRevenue =
+        (remainingStandard * (event?.price || 0)) +
+        (remainingVip * (event?.vipPrice || 0));
+    const soldPercent = totalCapacity > 0 ? Math.round((totalSold / totalCapacity) * 100) : 0;
+    const avgPerTicket = totalSold > 0 ? Math.round(totalRevenue / totalSold) : 0;
 
     return (
         <>
@@ -53,7 +67,7 @@ const EventAnalytics = () => {
                 {/* Event Header */}
                 <div className="mb-6 text-center">
                     <h1 className="text-2xl font-bold text-gray-800">{event?.ticketName} - Analytics</h1>
-                    <p className="text-sm text-gray-600">{new Date(event?.showDate).toDateString()}| {event?.showVenue}, {event?.showCity}</p>
+                    <p className="text-sm text-gray-600">{new Date(event?.showDate).toDateString()} | {event?.showVenue}, {event?.showCity}</p>
                 </div>
 
                 {/* Stats Cards */}
@@ -61,19 +75,19 @@ const EventAnalytics = () => {
                     <div className="bg-white rounded-xl shadow p-4 bg-gradient-to-br from-white to-blue-50">
                         <h3 className="text-sm font-medium text-gray-600 mb-1">Total Revenue</h3>
                         <p className="text-2xl font-bold text-gray-800">₹{totalRevenue}</p>
-                        <p className="text-xs text-gray-500">Avg per ticket: ₹{totalRevenue > 0 ?Math.round((totalRevenue / (event?.sold + event?.vipSold))) : 0}</p>
+                        <p className="text-xs text-gray-500">Avg per ticket: ₹{avgPerTicket}</p>
                     </div>
 
                     <div className="bg-white rounded-xl shadow p-4 bg-gradient-to-br from-white to-green-50">
                         <h3 className="text-sm font-medium text-gray-600 mb-1">Tickets Sold</h3>
-                        <p className="text-2xl font-bold text-gray-800">{event?.sold + event?.vipSold}</p>
-                        <p className="text-xs text-gray-500">{Math.round(((event?.sold + event?.vipSold) / event?.quantity) * 100)}% of capacity</p>
+                        <p className="text-2xl font-bold text-gray-800">{totalSold}</p>
+                        <p className="text-xs text-gray-500">{soldPercent}% of capacity</p>
                     </div>
 
                     <div className="bg-white rounded-xl shadow p-4 bg-gradient-to-br from-white to-amber-50">
                         <h3 className="text-sm font-medium text-gray-600 mb-1">Remaining Tickets</h3>
-                        <p className="text-2xl font-bold text-gray-800">{(event?.vipQuantity + event?.quantity) - (event?.sold + event?.vipSold)}</p>
-                        <p className="text-xs text-gray-500">Potential revenue: ₹{(((event?.vipQuantity + event?.quantity) - (event?.sold + event?.vipSold)) * (event?.vipPrice + event?.price))}</p>
+                        <p className="text-2xl font-bold text-gray-800">{totalRemaining}</p>
+                        <p className="text-xs text-gray-500">Potential revenue: ₹{potentialRevenue}</p>
                     </div>
                 </div>
 
@@ -85,41 +99,38 @@ const EventAnalytics = () => {
 
                             <PieChart width={300} height={300}>
                                 <Pie
-                                    data={[
-                                        { name: 'Standarad', value: event?.quantity },
-                                        { name: 'VIP', value: event?.vipQuantity }
-                                    ]}
-                                cx="50%"
-                                cy="50%"
-                                outerRadius={80}
-                                dataKey="value"
-                                label
+                                    data={pieData}
+                                    cx="50%"
+                                    cy="50%"
+                                    outerRadius={80}
+                                    dataKey="value"
+                                    label
                                 >
-                                {data.map((entry, index) => (
-                                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                                ))}
-                            </Pie>
-                            <Tooltip />
-                        </PieChart>
+                                    {pieData.map((entry, index) => (
+                                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                                    ))}
+                                </Pie>
+                                <Tooltip />
+                            </PieChart>
 
-                        <div className="ml-2">
-                            <div className="flex items-center mb-2" >
-                                <div className="w-3 h-3 rounded mr-2" style={{ backgroundColor: COLORS[0 % COLORS.length] }}></div>
-                                <span className="text-xs text-gray-700">Standard: {event?.quantity}</span>
+                            <div className="ml-2">
+                                <div className="flex items-center mb-2" >
+                                    <div className="w-3 h-3 rounded mr-2" style={{ backgroundColor: COLORS[0 % COLORS.length] }}></div>
+                                    <span className="text-xs text-gray-700">Standard: {event?.quantity}</span>
+                                </div>
+                                <div className="flex items-center mb-2" >
+                                    <div className="w-3 h-3 rounded mr-2" style={{ backgroundColor: COLORS[1 % COLORS.length] }}></div>
+                                    <span className="text-xs text-gray-700">VIP: {event?.vipQuantity}</span>
+                                </div>
                             </div>
-                            <div className="flex items-center mb-2" >
-                                <div className="w-3 h-3 rounded mr-2" style={{ backgroundColor: COLORS[1 % COLORS.length] }}></div>
-                                <span className="text-xs text-gray-700">VIP: {event?.vipQuantity}</span>
-                            </div>
-                        </div>
 
 
+                        </div >
                     </div >
                 </div >
-            </div >
 
-            {/* Sales Table */}
-            {/* <div className="bg-white rounded-xl shadow p-4 mb-6">
+                {/* Sales Table */}
+                {/* <div className="bg-white rounded-xl shadow p-4 mb-6">
                 <h3 className="text-base font-medium text-gray-800 mb-4">Daily Sales Breakdown</h3>
                 <div className="overflow-x-auto">
                     <table className="min-w-full divide-y divide-gray-200">
@@ -148,8 +159,8 @@ const EventAnalytics = () => {
                 </div>
             </div> */}
 
-            {/* Action Buttons */}
-            {/* <div className="flex justify-center space-x-4">
+                {/* Action Buttons */}
+                {/* <div className="flex justify-center space-x-4">
                 <button className="bg-blue-500 hover:bg-blue-600 text-white px-5 py-2 rounded-full font-medium transition-colors">
                     Export Report
                 </button>
@@ -157,11 +168,11 @@ const EventAnalytics = () => {
                     Share Analysis
                 </button>
             </div> */}
-        </div >
-        {
-            loading?
-                <div className = 'overlay-loader'>
-                        < HashLoader color = '#000000' size = { 25} />
+            </div >
+            {
+                loading ?
+                    <div className='overlay-loader'>
+                        < HashLoader color='#000000' size={25} />
                     </div >
                     : null
             }

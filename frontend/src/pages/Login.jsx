@@ -47,7 +47,10 @@ const Login = () => {
                     localStorage.setItem('authToken', data.token)
                     const user = {
                         name: data.name,
-                        email: data.email
+                        email: data.email,
+                        revenueClassic : data.revenueClassic,
+                        revenueVip : data.revenueVip,
+                        ticketSold : data.ticketSold
                     }
                     localStorage.setItem('user', JSON.stringify(user))
                     toast.success('Login Successfull !', { position: 'top-center' })

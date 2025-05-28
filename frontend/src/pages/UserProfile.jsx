@@ -34,6 +34,7 @@ const UserProfile = () => {
     const handleLogout = () => {
         localStorage.removeItem('authToken');
         localStorage.removeItem('userEvents');
+        localStorage.removeItem('user')
         navigate('/login');
         toast.success('Logged out successfully', { position: 'top-center' });
     };

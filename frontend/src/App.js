@@ -40,9 +40,9 @@ function App() {
           <Route path="Published" element={<Marketing />} />
           <Route path="Published/:eventId" element={<StatsPage />} />
           <Route path="show/checkout/:showId" element={<Checkout />} />
+          <Route path='payment/success' element={<SuccessPayment/>} />
         </Route>
         <Route path='/explore/events' element={<ExploreEvents />} />
-        <Route path='/payment/success' element={<SuccessPayment />} />
         <Route path='*' element={<NotFoundPage />} />
       </Routes>
     </BrowserRouter >

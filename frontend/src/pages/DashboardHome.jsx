@@ -31,7 +31,26 @@ const Dashboard = () => {
           return eventDate >= today;
         }))
         setEventCount(data.upcomingEvents.length);
-        setUser(JSON.parse(localStorage.getItem('user')));
+        try {
+          const userRes = await fetch(`${url}/auth/user`, {
+            method: "GET",
+            headers: {
+              'Authorization': localStorage.getItem('authToken')
+            }
+          });
+          const userData = await userRes.json();
+          if (userData.success) {
+            setUser(userData.user);
+            localStorage.setItem('user', JSON.stringify(userData.user));
+          } else {
+            setUser(null);
+            localStorage.removeItem('user');
+          }
+        } catch (err) {
+          setUser(null);
+          localStorage.removeItem('user');
+        }
+
         localStorage.setItem('userEvents', JSON.stringify(data.upcomingEvents))
       } else {
         localStorage.removeItem('authToken')
@@ -74,7 +93,7 @@ const Dashboard = () => {
             <div className="w-full sm:w-1/2 lg:w-1/4 px-2 mb-4">
               <div className="bg-white shadow-sm rounded-lg border">
                 <div className="p-3 text-center">
-                  <h3 className="text-2xl font-semibold">₹{user?.ticketSold}</h3>
+                  <h3 className="text-2xl font-semibold">{user?.ticketSold}</h3>
                   <p className="text-gray-600 text-sm">Tickets Sold</p>
                 </div>
               </div>

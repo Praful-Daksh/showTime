@@ -14,6 +14,7 @@ const EventAnalytics = () => {
     const eventId = useParams().eventId;
     const [event, setEvent] = useState(null);
     const [totalRevenue, setTotalRevenue] = useState(0);
+    const [deals, setDeals] = useState([]);
 
     const fetchShowDetails = async () => {
         try {
@@ -31,6 +32,7 @@ const EventAnalytics = () => {
                 let totalClassic = data.ticket.sold * data.ticket.price;
                 let totalVip = data.ticket.vipSold * data.ticket.vipPrice;
                 setTotalRevenue(totalClassic + totalVip);
+                setDeals(data.transactions);
             } else {
                 toast.error(data.message, { position: 'top-right' });
             }
@@ -129,35 +131,43 @@ const EventAnalytics = () => {
                     </div >
                 </div >
 
-                {/* Sales Table */}
-                {/* <div className="bg-white rounded-xl shadow p-4 mb-6">
-                <h3 className="text-base font-medium text-gray-800 mb-4">Daily Sales Breakdown</h3>
-                <div className="overflow-x-auto">
-                    <table className="min-w-full divide-y divide-gray-200">
-                        <thead className="bg-gray-50">
-                            <tr>
-                                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
-                                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tickets Sold</th>
-                                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Revenue (₹)</th>
-                            </tr>
-                        </thead>
-                        <tbody className="bg-white divide-y divide-gray-200">
-                            {eventData.salesByDay.map((day, index) => (
-                                <tr key={index} className={index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
-                                    <td className="px-4 py-3 text-sm text-gray-900">{day.day}</td>
-                                    <td className="px-4 py-3 text-sm text-gray-900">{day.sales}</td>
-                                    <td className="px-4 py-3 text-sm text-gray-900">₹{day.revenue.toLocaleString()}</td>
-                                </tr>
-                            ))}
-                            <tr className="bg-gray-100">
-                                <td className="px-4 py-3 text-sm font-bold text-gray-900">Total</td>
-                                <td className="px-4 py-3 text-sm font-bold text-gray-900">{eventData.ticketsSold}</td>
-                                <td className="px-4 py-3 text-sm font-bold text-gray-900">₹{eventData.totalRevenue.toLocaleString()}</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div> */}
+                {deals.length > 0 && (
+                    <div className="bg-white rounded-xl shadow p-4 mb-6">
+                        <h3 className="text-base font-medium text-gray-800 mb-4">Total Sales Breakdown</h3>
+                        <div className="overflow-x-auto">
+                            <table className="min-w-full divide-y divide-gray-200">
+                                <thead className="bg-gray-50">
+                                    <tr>
+                                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tickets Sold</th>
+                                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Revenue (₹) + gst</th>
+                                    </tr>
+                                </thead>
+                                <tbody className="bg-white divide-y divide-gray-200">
+                                    {deals.map((deal, index) => (
+                                        <>
+                                            <tr key={index} className={index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
+                                                <td className="px-4 py-3 text-sm text-gray-900">{new Date(deal.date).toDateString()}</td>
+                                                <td className="px-4 py-3 text-sm text-gray-900">{deal.classic + deal.vip}</td>
+                                                <td className="px-4 py-3 text-sm text-gray-900">₹{deal.amount}</td>
+                                            </tr>
+                                            {deal.messages.length > 0 && (
+                                                <tr key={index} className={index % 2 === 0 ? 'bg-white' : 'bg-gray-50'} >
+                                                   <td colSpan='3'  className="px-4 py-1 text-sm text-red-900">We're having some trouble to confirm this transaction.</td>
+                                                </tr>
+                                            )}
+                                        </>
+                                    ))}
+                                    <tr className="bg-gray-100">
+                                        <td className="px-4 py-3 text-sm font-bold text-gray-900">Total</td>
+                                        <td className="px-4 py-3 text-sm font-bold text-gray-900">{totalSold}</td>
+                                        <td className="px-4 py-3 text-sm font-bold text-gray-900">₹{totalRevenue} ( you'll get )</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                )}
 
                 {/* Action Buttons */}
                 {/* <div className="flex justify-center space-x-4">

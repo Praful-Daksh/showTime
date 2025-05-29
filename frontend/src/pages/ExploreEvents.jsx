@@ -42,8 +42,6 @@ const ExploreEvents = () => {
       setLoading(false);
       if (data.success) {
         setShows(data.shows);
-      } else {
-        toast.error('No shows found', { position: 'top-right' });
       }
     } catch (err) {
       setLoading(false);

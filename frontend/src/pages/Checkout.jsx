@@ -16,6 +16,8 @@ const Checkout = () => {
     const [gstAmount, setGstAmount] = useState(0);
     const [ticketDetails, setTicketDetails] = useState(null);
     const [loading, setLoading] = useState(false);
+    const [remainingClassic,setremainClassic] = useState(0)
+    const [remainingVip,setremainVip] = useState(0)
     const navigate = useNavigate();
     const params = useParams();
     const url = api.production;
@@ -47,6 +49,8 @@ const Checkout = () => {
                 setTicketDetails(data.show);
                 setdisplayPrice(data.show.price);
                 setVipPrice(data.show.vipPrice);
+                setremainClassic(data.show.available);
+                setremainVip(data.show.vipAvailable)
             } else {
                 navigate('/dashboard/home');
             }
@@ -83,7 +87,7 @@ const Checkout = () => {
             toast.error('Ticket details not loaded', { position: 'top-right' });
             return;
         }
-        if (classicQuantity > ticketDetails.quantity || vipQuantity > ticketDetails.vipQuantity) {
+        if (classicQuantity > remainingClassic || vipQuantity > remainingVip) {
             showError();
             return;
         }
@@ -168,8 +172,8 @@ const Checkout = () => {
 
     const isCheckoutDisabled = classicQuantity === 0 && vipQuantity === 0;
 
-    const remainingClassic = (ticketDetails?.quantity - ticketDetails?.sold) || 0;
-    const remainingvip = (ticketDetails?.vipQuantity - ticketDetails?.vipSold) || 0;
+    // const remainingClassic = (ticketDetails?.quantity - ticketDetails?.sold);
+    // const remainingvip = (ticketDetails?.vipQuantity - ticketDetails?.vipSold);
 
     return (
         <>
@@ -214,7 +218,7 @@ const Checkout = () => {
                                                     disabled={!ticketDetails}
                                                     className="w-24 p-2 border border-gray-300 rounded-md"
                                                 >
-                                                    {[...Array(Math.min(5, remainingvip) + 1).keys()].map(i => (
+                                                    {[...Array(Math.min(5, remainingVip) + 1).keys()].map(i => (
                                                         <option key={i} value={i}>{i}</option>
                                                     ))}                                                </select>
                                             </div>

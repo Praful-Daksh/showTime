@@ -223,7 +223,7 @@ const DashEvent = () => {
               </div>
             </div>
 
-            {!eventDetails.publish && (
+            {!eventDetails.publish && eventDetails.access === "Public" && (
               <>
                 <h3 className="text-xl font-semibold text-gray-800 mb-2">🎟️ Publish Tickets</h3>
                 <p className="text-sm text-gray-600 mb-4">Set up ticket types, pricing, and availability for this event.</p>

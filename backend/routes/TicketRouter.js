@@ -21,7 +21,7 @@ TicketRouter.get('/allTickets', async (req, res) => {
                 })
                 return res.status(200).json({ message: 'All tickets fetched', success: true, shows })
         } else {
-            return res.status(204).json({ message: 'No tickets', success: false });
+            return res.status(200).json({ message: 'No tickets', success: false });
         }
     } catch (err) {
         console.error(err);

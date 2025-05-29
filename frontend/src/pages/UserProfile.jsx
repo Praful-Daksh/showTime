@@ -139,7 +139,7 @@ const UserProfile = () => {
                         onClick={() => setShowSettings(!showSettings)}
                         className="w-full text-left px-4 py-3 bg-gray-100 rounded-md hover:bg-gray-200 text-gray-800"
                     >
-                        ⚙️ Settings
+                         Settings
                     </button>
 
                     {showSettings && (
@@ -182,12 +182,17 @@ const UserProfile = () => {
 
                         </div>
                     )}
+                    <button
+                        className="w-full text-left px-4 py-3 bg-gray-100 rounded-md hover:bg-gray-200 text-gray-800"
+                    >
+                        Purchase History
+                    </button>
 
                     <button
                         onClick={handleLogout}
                         className="w-full text-left px-4 py-3 bg-gray-100 rounded-md hover:bg-gray-200 text-red-600"
                     >
-                        🚪 Logout
+                        Logout
                     </button>
                 </div>
             </div>

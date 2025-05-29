@@ -3,7 +3,9 @@ const mongoose = require('mongoose')
 const Tasks = require('../models/tasks')
 const Ticket = require('../models/tickets')
 const User = require('../models/Users')
+const Order = require('../models/Order')
 
+// create a new event
 const createEvent = async (req, res) => {
     try {
         const user = req.user.id
@@ -19,7 +21,7 @@ const createEvent = async (req, res) => {
     }
 }
 
-
+//fetching events for dashboard home
 const getUpcomingEvents = async (req, res) => {
     try {
         const userId = req.user.id;
@@ -37,6 +39,7 @@ const getUpcomingEvents = async (req, res) => {
     }
 }
 
+//update event details
 const updateEvent = async (req, res) => {
     const { id } = req.params;
     const { title, description, venue, city, access, date, user, category } = req.body;
@@ -52,7 +55,7 @@ const updateEvent = async (req, res) => {
     }
 }
 
-
+// deleting event , and all connected data
 const deleteEvent = async (req, res) => {
     try {
         const eventId = req.params.id;
@@ -74,6 +77,7 @@ const deleteEvent = async (req, res) => {
     }
 }
 
+// for fetching all tasks for a event
 const getTasks = async (req, res) => {
     try {
         const eventId = req.params.id;
@@ -85,6 +89,7 @@ const getTasks = async (req, res) => {
     }
 }
 
+// adding task 
 const addTask = async (req, res) => {
     try {
         const eventId = req.params.id;
@@ -100,6 +105,7 @@ const addTask = async (req, res) => {
     }
 }
 
+//delete specific task
 const deleteTask = async (req, res) => {
     try {
         const taskId = req.params.id;
@@ -111,6 +117,7 @@ const deleteTask = async (req, res) => {
     }
 }
 
+// check for event id exists or not
 const validateEventId = async (req, res) => {
     try {
         const eventId = req.params.id;
@@ -125,6 +132,7 @@ const validateEventId = async (req, res) => {
     }
 }
 
+// publish ticket
 const publishTicket = async (req, res) => {
     try {
         const eventId = req.params.id;
@@ -146,6 +154,7 @@ const publishTicket = async (req, res) => {
     }
 }
 
+// getting all events that are published of a user
 const getPublishedEvents = async (req, res) => {
     try {
         const userId = req.user.id;
@@ -178,7 +187,7 @@ const getPublishedEvents = async (req, res) => {
     }
 }
 
-
+//for stats page
 const getShow = async (req, res) => {
     const eventId = req.params.eventId;
     try {
@@ -186,7 +195,20 @@ const getShow = async (req, res) => {
         if (!ticket) {
             return res.status(400).json({ message: 'No event Found', success: false });
         }
-        return res.status(200).json({ message: 'Event fetched successfully', success: true, ticket })
+        const orders = await Order.find({ showId: ticket._id, paymentVerified: true });
+        if (orders && orders.length > 0) {
+            const transactions = orders.map(order => {
+                return {
+                    classic: order.classicQuantity,
+                    vip: order.vipQuantity,
+                    amount : order.totalAmount,
+                    date : order.createdAt,
+                    messages: order.messages,
+                }
+            });
+        return res.status(200).json({ message: 'Event fetched successfully', success: true, ticket , transactions })
+        }
+        return res.status(200).json({ message: 'Event fetched successfully', success: true, ticket , transactions: [] })
     }
     catch (err) {
         console.log(err)
@@ -194,57 +216,32 @@ const getShow = async (req, res) => {
     }
 }
 
-
-const getTicket = async (req,res) => {
+// for checkout
+const getTicket = async (req, res) => {
     const showId = req.params.showId;
     try {
         const ticket = await Ticket.findById(showId);
         if (!ticket) {
             return res.status(400).json({ message: 'No events Found', success: false });
         }
-        return res.status(200).json({ message: 'Show fetched successfully', success: true, show:{
-            id: ticket._id,
-            name: ticket.ticketName,
-            date: ticket.showDate,
-            available: ticket.quantity,
-            vipAvailable: ticket.vipQuantity,
-            price: ticket.price,
-            vipPrice: ticket.vipPrice,
-            types: ticket.ticketTypes
-        } })
+        return res.status(200).json({
+            message: 'Show fetched successfully', success: true, show: {
+                id: ticket._id,
+                name: ticket.ticketName,
+                date: ticket.showDate,
+                available: ticket.quantity - ticket.sold,
+                vipAvailable: ticket.vipQuantity - ticket.vipSold,
+                price: ticket.price,
+                vipPrice: ticket.vipPrice,
+                types: ticket.ticketTypes
+            }
+        })
     }
     catch (err) {
         console.log(err)
         return res.status(500).json({ message: "Some Internal Error Occured", success: false });
     }
 }
-
-
-const updateRevenue = async ({vip,classic}) =>{
-     try {
-        const id = req.user.id;
-        const { name, password } = req.body;
-
-
-        let updateData = { name };
-
-        if (password !== '') {
-            const hashedPassword = await bcrypt.hash(password, 10);
-            updateData.password = hashedPassword;
-        }
-
-        const updatedUser = await User.findByIdAndUpdate(id, updateData, { new: true });
-
-        if (!updatedUser) {
-            return res.status(404).json({ message: "User not found", success: false });
-        }
-
-        res.status(200).json({ message: "User updated successfully", success: true , user: { name: updatedUser.name, email: updatedUser.email } });
-    } catch (err) {
-        res.status(500).json({ message: "Internal Server Error", success: false });
-    }
-}
-
 
 
 
@@ -261,6 +258,5 @@ module.exports = {
     publishTicket,
     getPublishedEvents,
     getShow,
-    getTicket,
-    updateRevenue
+    getTicket
 };

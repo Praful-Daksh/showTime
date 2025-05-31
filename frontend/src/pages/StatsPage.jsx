@@ -49,13 +49,13 @@ const EventAnalytics = () => {
 
     const pieData = [
         { name: 'Standarad', value: event?.quantity },
-        { name: 'VIP', value: event?.vipQuantity }
+        { name: 'VIP', value: event?.vipQuantity },
     ];
 
     const totalCapacity = (event?.quantity || 0) + (event?.vipQuantity || 0);
     const totalSold = (event?.sold || 0) + (event?.vipSold || 0);
-    const remainingStandard = (event?.quantity || 0) - (event?.sold || 0);
-    const remainingVip = (event?.vipQuantity || 0) - (event?.vipSold || 0);
+    const remainingStandard = event?.available || 0;
+    const remainingVip = event?.vipAvailable || 0;
     const totalRemaining = remainingStandard + remainingVip;
     const potentialRevenue =
         (remainingStandard * (event?.price || 0)) +
@@ -153,7 +153,7 @@ const EventAnalytics = () => {
                                             </tr>
                                             {deal.messages.length > 0 && (
                                                 <tr key={index} className={index % 2 === 0 ? 'bg-white' : 'bg-gray-50'} >
-                                                   <td colSpan='3'  className="px-4 py-1 text-sm text-red-900">We're having some trouble to confirm this transaction.</td>
+                                                    <td colSpan='3' className="px-4 py-1 text-sm text-red-900">We're having some trouble to confirm this transaction.</td>
                                                 </tr>
                                             )}
                                         </>
@@ -168,8 +168,6 @@ const EventAnalytics = () => {
                         </div>
                     </div>
                 )}
-
-                {/* Action Buttons */}
                 {/* <div className="flex justify-center space-x-4">
                 <button className="bg-blue-500 hover:bg-blue-600 text-white px-5 py-2 rounded-full font-medium transition-colors">
                     Export Report

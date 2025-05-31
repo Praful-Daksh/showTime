@@ -15,7 +15,6 @@ const SearchBar = () => {
                         <SearchIcon className="w-5 h-5" />
                     </button>
                 </div>
-                {/* Filter options */}
             </div>
         </div>
     )

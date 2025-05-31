@@ -144,7 +144,7 @@ const publishTicket = async (req, res) => {
         if (event.publish) {
             return res.status(400).json({ message: 'Ticket already published', success: false });
         }
-        const ticket = new Ticket({ ...ticketData, eId: eventId, showCity: eventData.city, showVenue: eventData.venue, showDate: eventData.date, description: eventData.description, category: eventData.category });
+        const ticket = new Ticket({ ...ticketData, eId: eventId, showCity: eventData.city, showVenue: eventData.venue, showDate: eventData.date, description: eventData.description, category: eventData.category , available: ticketData.quantity, vipAvailable: ticketData.vipQuantity });
         await ticket.save();
         await Event.updateOne({ _id: eventId }, { $set: { publish: true } });
         return res.status(200).json({ message: 'Ticket Published', success: true })
@@ -229,8 +229,8 @@ const getTicket = async (req, res) => {
                 id: ticket._id,
                 name: ticket.ticketName,
                 date: ticket.showDate,
-                available: ticket.quantity - ticket.sold,
-                vipAvailable: ticket.vipQuantity - ticket.vipSold,
+                available: ticket.available,
+                vipAvailable: ticket.vipAvailable,
                 price: ticket.price,
                 vipPrice: ticket.vipPrice,
                 types: ticket.ticketTypes

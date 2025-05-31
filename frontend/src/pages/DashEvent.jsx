@@ -104,7 +104,7 @@ const DashEvent = () => {
     }
   };
 
-  //get tasks at page loads
+  //get tasks on page mount
   const getTasks = async () => {
     try {
       const response = await fetch(`${url}/dashboard/allEvents/tasks/${eventId}`, {

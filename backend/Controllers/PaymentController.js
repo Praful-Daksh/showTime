@@ -9,7 +9,29 @@ const Event = require('../models/events.js')
 const createOrder = async (req, res) => {
     try {
         const { amount, classicQuantity, vipQuantity, showId } = req.body;
+        const ticket = await Ticket.findOneAndUpdate(
+            {
+                _id: showId,
+                available: { $gte: classicQuantity },
+                vipAvailable: { $gte: vipQuantity }
+            },
+            {
+                $inc: {
+                    available: -classicQuantity,
+                    reserved: +classicQuantity,
+                    vipAvailable: -vipQuantity,
+                    vipReserved: +vipQuantity
+                }
+            },
+            { new: true }
+        );
 
+        if (!ticket) {
+            return res.status(400).json({
+                success: false,
+                message: "Insufficient tickets available"
+            });
+        }
         const options = {
             amount: amount * 100,
             currency: "INR"
@@ -55,17 +77,6 @@ const verifyOrder = async (req, res) => {
         hmac.update(razorpay_order_id + "|" + razorpay_payment_id);
         const generated_signature = hmac.digest('hex');
 
-        if (generated_signature !== razorpay_signature) {
-            console.log('Signature mismatch:', {
-                generated: generated_signature,
-                received: razorpay_signature
-            });
-            return res.status(400).json({
-                success: false,
-                message: "Invalid payment signature"
-            });
-        }
-
         const ticketOrder = await Order.findOne({ razorpayOrderId: razorpay_order_id });
 
         if (!ticketOrder) {
@@ -75,35 +86,59 @@ const verifyOrder = async (req, res) => {
             });
         }
 
+        if (generated_signature !== razorpay_signature) {
+            await Ticket.findOneAndUpdate(
+                { _id: ticketOrder.showId },
+                {
+                    $inc: {
+                        reserved: -ticketOrder.classicQuantity,
+                        available: ticketOrder.classicQuantity,
+                        vipReserved: -ticketOrder.vipQuantity,
+                        vipAvailable: ticketOrder.vipQuantity
+                    }
+                }
+            );
+            console.log('Signature mismatch:', {
+                generated: generated_signature,
+                received: razorpay_signature
+            });
+            return res.status(400).json({
+                success: false,
+                message: "Invalid payment signature. Reserved tickets released."
+            });
+        }
+
         if (ticketOrder.paymentVerified) {
             return res.status(200).json({
                 success: true,
                 message: "Payment already verified"
             });
         }
+        const ticket = await Ticket.findOneAndUpdate(
+            {
+                _id: ticketOrder.showId,
+                reserved: { $gte: ticketOrder.classicQuantity },
+                vipReserved: { $gte: ticketOrder.vipQuantity }
+            },
+            {
+                $inc: {
+                    reserved: -ticketOrder.classicQuantity,
+                    sold: ticketOrder.classicQuantity,
+                    vipReserved: -ticketOrder.vipQuantity,
+                    vipSold: ticketOrder.vipQuantity
+                }
+            },
+            { new: true }
+        );
 
-        const ticket = await Ticket.findById(ticketOrder.showId);
-        const eventId = ticket.eId;
         if (!ticket) {
-            return res.status(404).json({
-                success: false,
-                message: "Show not found"
-            });
-        }
-
-        if (ticket.quantity < ticketOrder.classicQuantity ||
-            ticket.vipQuantity < ticketOrder.vipQuantity) {
             return res.status(400).json({
                 success: false,
-                message: "Insufficient tickets available"
+                message: "Reserved tickets not found or insufficient"
             });
         }
 
-        ticket.sold += ticketOrder.classicQuantity;
-        ticket.vipSold += ticketOrder.vipQuantity;
-      
-
-        const event = await Event.findById(eventId);
+        const event = await Event.findById(ticket.eId);
         if (event) {
             const organizer = await User.findById(event.user);
             if (organizer) {
@@ -111,13 +146,9 @@ const verifyOrder = async (req, res) => {
                 organizer.revenueVip += ticket.vipPrice * ticketOrder.vipQuantity;
                 organizer.ticketSold += ticketOrder.classicQuantity + ticketOrder.vipQuantity;
                 await organizer.save();
-            }else{
-            ticketOrder.messages.push('Organizer not found');
             }
-        }else{
-            ticketOrder.messages.push('Event not found');
         }
-          await ticket.save();
+
         ticketOrder.paymentVerified = true;
         ticketOrder.razorpay_payment_id = razorpay_payment_id;
         await ticketOrder.save();
@@ -129,12 +160,28 @@ const verifyOrder = async (req, res) => {
 
     } catch (error) {
         console.error("Payment verification error:", error);
+        const ticketOrder = await Order.findOne({ razorpayOrderId: razorpay_order_id });
+        await Ticket.findOneAndUpdate(
+            { _id: ticketOrder.showId },
+            {
+                $inc: {
+                    reserved: -ticketOrder.classicQuantity,
+                    available: ticketOrder.classicQuantity,
+                    vipReserved: -ticketOrder.vipQuantity,
+                    vipAvailable: ticketOrder.vipQuantity
+                }
+            }
+        );
         return res.status(500).json({
             success: false,
             message: "Payment verification failed"
         });
     }
 };
+
+
+
+
 
 const paymentStatus = async (req, res) => {
     const { orderId } = req.query;
@@ -154,8 +201,6 @@ const paymentStatus = async (req, res) => {
                 success: true,
                 message: "Payment verified",
                 orderDetails: {
-                    showName: ticketOrder.showId.title,
-                    showDate: ticketOrder.showId.date,
                     totalTickets: ticketOrder.classicQuantity + ticketOrder.vipQuantity,
                     totalAmount: ticketOrder.totalAmount,
                     classicTickets: ticketOrder.classicQuantity,

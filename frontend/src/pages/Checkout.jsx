@@ -109,7 +109,7 @@ const Checkout = () => {
             const data = await res.json();
 
             if (!data.success) {
-                toast.error("Failed to initiate payment", { position: 'top-right' });
+                showError();
                 return;
             }
 
@@ -172,8 +172,6 @@ const Checkout = () => {
 
     const isCheckoutDisabled = classicQuantity === 0 && vipQuantity === 0;
 
-    // const remainingClassic = (ticketDetails?.quantity - ticketDetails?.sold);
-    // const remainingvip = (ticketDetails?.vipQuantity - ticketDetails?.vipSold);
 
     return (
         <>

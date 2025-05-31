@@ -34,15 +34,14 @@ const PaymentSuccess = () => {
             if (data.success) {
                 setStatus('Payment Successful!');
                 setVerified(true);
-                setOrderDetails(data.orderDetails || null);
+                setOrderDetails(data.orderDetails);
                 setLoading(false);
             } else {
-                // Retry logic for pending verifications
                 if (retryCount < 3) {
                     setTimeout(() => {
                         setRetryCount(prev => prev + 1);
                         checkPaymentStatus();
-                    }, 2000); // Retry after 2 seconds
+                    }, 2000); 
                 } else {
                     setStatus('Payment verification pending. Please contact support if this persists.');
                     setVerified(false);
@@ -124,7 +123,6 @@ const PaymentSuccess = () => {
     return (
         <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 px-4">
             <div className="bg-white shadow-md rounded-lg p-6 max-w-md w-full text-center">
-                {/* Success/Failure Icon */}
                 <div className="mb-4">
                     {verified ? (
                         <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -151,8 +149,6 @@ const PaymentSuccess = () => {
                     </p>
                     {orderDetails && (
                         <div className="text-sm text-gray-600 mt-3 p-3 bg-gray-50 rounded">
-                            <p><span className="font-medium">Show:</span> {orderDetails.showName}</p>
-                            <p><span className="font-medium">Date:</span> {orderDetails.showDate}</p>
                             <p><span className="font-medium">Tickets:</span> {orderDetails.totalTickets}</p>
                             <p><span className="font-medium">Total Amount:</span> ₹{orderDetails.totalAmount}</p>
                         </div>

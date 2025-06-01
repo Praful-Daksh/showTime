@@ -160,18 +160,6 @@ const verifyOrder = async (req, res) => {
 
     } catch (error) {
         console.error("Payment verification error:", error);
-        const ticketOrder = await Order.findOne({ razorpayOrderId: razorpay_order_id });
-        await Ticket.findOneAndUpdate(
-            { _id: ticketOrder.showId },
-            {
-                $inc: {
-                    reserved: -ticketOrder.classicQuantity,
-                    available: ticketOrder.classicQuantity,
-                    vipReserved: -ticketOrder.vipQuantity,
-                    vipAvailable: ticketOrder.vipQuantity
-                }
-            }
-        );
         return res.status(500).json({
             success: false,
             message: "Payment verification failed"
@@ -222,8 +210,62 @@ const paymentStatus = async (req, res) => {
     }
 };
 
+
+
+const cancelOrder = async (req, res) => {
+    const { orderId } = req.body;
+    try {
+        const ticketOrder = await Order.findOne({ razorpayOrderId: orderId });
+
+        if (!ticketOrder) {
+            return res.status(404).json({
+                success: false,
+                message: "Order not found"
+            });
+        }
+
+        if (ticketOrder.paymentVerified) {
+            return res.status(400).json({
+                success: false,
+                message: "Cannot cancel a verified order"
+            });
+        }
+
+        await Ticket.findOneAndUpdate(
+            { _id: ticketOrder.showId },
+            {
+                $inc: {
+                    reserved: -ticketOrder.classicQuantity,
+                    available: ticketOrder.classicQuantity,
+                    vipReserved: -ticketOrder.vipQuantity,
+                    vipAvailable: ticketOrder.vipQuantity
+                }
+            }
+        );
+
+        await Order.deleteOne({ razorpayOrderId: orderId });
+
+        return res.status(200).json({
+            success: true,
+            message: "Order cancelled successfully"
+        });
+    } catch (error) {
+        console.error("Cancel order error:", error);
+        return res.status(500).json({
+            success: false,
+            message: "Server error"
+        });
+    }
+
+}
+
+
+
+
+
 module.exports = {
     createOrder,
     verifyOrder,
-    paymentStatus
+    paymentStatus,
+    cancelOrder
 }

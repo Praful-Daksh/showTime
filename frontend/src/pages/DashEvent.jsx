@@ -149,6 +149,8 @@ const DashEvent = () => {
         setLoading(false)
         if (data.success) {
           toast.success(data.message, { position: 'top-left' });
+          setNewTask('');
+          getTasks();
         }
       } catch (err) {
         setLoading(false);
@@ -164,8 +166,10 @@ const DashEvent = () => {
       const response = await fetch(`${url}/dashboard/allEvents/tasks/delete/${eventId}`, {
         method: "DELETE",
         headers: {
+          'Content-Type': 'application/json',
           'Authorization': localStorage.getItem('authToken')
-        }
+        },
+        body: JSON.stringify({ taskId })
       });
       const data = await response.json();
       setLoading(false);

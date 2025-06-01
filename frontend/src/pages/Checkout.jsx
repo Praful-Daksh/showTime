@@ -16,8 +16,8 @@ const Checkout = () => {
     const [gstAmount, setGstAmount] = useState(0);
     const [ticketDetails, setTicketDetails] = useState(null);
     const [loading, setLoading] = useState(false);
-    const [remainingClassic,setremainClassic] = useState(0)
-    const [remainingVip,setremainVip] = useState(0)
+    const [remainingClassic, setremainClassic] = useState(0)
+    const [remainingVip, setremainVip] = useState(0)
     const navigate = useNavigate();
     const params = useParams();
     const url = api.production;
@@ -89,6 +89,7 @@ const Checkout = () => {
         }
         if (classicQuantity > remainingClassic || vipQuantity > remainingVip) {
             showError();
+            fetchShows();
             return;
         }
         try {
@@ -156,8 +157,28 @@ const Checkout = () => {
                     }
                 },
                 modal: {
-                    ondismiss: function () {
-                        toast.error("Payment cancelled", { position: 'top-right' });
+                    ondismiss: async function () {
+                        try {
+                            const cancelPayment = await fetch(`${url}/payment/cancel`, {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                },
+                                body: JSON.stringify({
+                                    orderId: order.id
+                                })
+                            });
+                            const cancelData = await cancelPayment.json();
+                            if (cancelData.success) {
+                                toast.info("Payment cancelled", { position: 'top-right' });
+                                fetchShows();
+                            } else {
+                                toast.error("What the heck !!", { position: 'top-right' });
+                            }
+                        } catch (error) {
+                            console.error("Cancel error:", error);
+                            toast.error("Something went really wrong", { position: 'top-right' });
+                        }
                     }
                 }
             };
@@ -200,7 +221,7 @@ const Checkout = () => {
                                                     disabled={!ticketDetails}
                                                     className="w-24 p-2 border border-gray-300 rounded-md"
                                                 >
-                                                    {[...Array(Math.min(5, remainingClassic) + 1).keys()].map(i => (
+                                                    {[...Array(Math.min(5, ticketDetails.available) + 1).keys()].map(i => (
                                                         <option key={i} value={i}>{i}</option>
                                                     ))}                                                </select>
                                             </div>
@@ -216,7 +237,7 @@ const Checkout = () => {
                                                     disabled={!ticketDetails}
                                                     className="w-24 p-2 border border-gray-300 rounded-md"
                                                 >
-                                                    {[...Array(Math.min(5, remainingVip) + 1).keys()].map(i => (
+                                                    {[...Array(Math.min(5, ticketDetails.vipAvailable) + 1).keys()].map(i => (
                                                         <option key={i} value={i}>{i}</option>
                                                     ))}                                                </select>
                                             </div>

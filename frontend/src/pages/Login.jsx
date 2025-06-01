@@ -30,7 +30,7 @@ const Login = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (loginData.email === '' || loginData.password === '') {
-            toast.error('Please Fill both fields !');
+            toast.warn('Please Fill both fields !');
         } else {
             try {
                 setLoading(true)

@@ -108,7 +108,7 @@ const addTask = async (req, res) => {
 //delete specific task
 const deleteTask = async (req, res) => {
     try {
-        const taskId = req.params.id;
+        const { taskId } = req.body;
         await Tasks.deleteOne({ _id: taskId });
         return res.status(200).json({ message: 'Task Removed', success: true })
     } catch (err) {
@@ -144,7 +144,7 @@ const publishTicket = async (req, res) => {
         if (event.publish) {
             return res.status(400).json({ message: 'Ticket already published', success: false });
         }
-        const ticket = new Ticket({ ...ticketData, eId: eventId, showCity: eventData.city, showVenue: eventData.venue, showDate: eventData.date, description: eventData.description, category: eventData.category , available: ticketData.quantity, vipAvailable: ticketData.vipQuantity });
+        const ticket = new Ticket({ ...ticketData, eId: eventId, showCity: eventData.city, showVenue: eventData.venue, showDate: eventData.date, description: eventData.description, category: eventData.category, available: ticketData.quantity, vipAvailable: ticketData.vipQuantity });
         await ticket.save();
         await Event.updateOne({ _id: eventId }, { $set: { publish: true } });
         return res.status(200).json({ message: 'Ticket Published', success: true })
@@ -201,14 +201,14 @@ const getShow = async (req, res) => {
                 return {
                     classic: order.classicQuantity,
                     vip: order.vipQuantity,
-                    amount : order.totalAmount,
-                    date : order.createdAt,
+                    amount: order.totalAmount,
+                    date: order.createdAt,
                     messages: order.messages,
                 }
             });
-        return res.status(200).json({ message: 'Event fetched successfully', success: true, ticket , transactions })
+            return res.status(200).json({ message: 'Event fetched successfully', success: true, ticket, transactions })
         }
-        return res.status(200).json({ message: 'Event fetched successfully', success: true, ticket , transactions: [] })
+        return res.status(200).json({ message: 'Event fetched successfully', success: true, ticket, transactions: [] })
     }
     catch (err) {
         console.log(err)

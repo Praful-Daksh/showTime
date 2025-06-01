@@ -208,7 +208,7 @@ const PublishTicket = () => {
                         )}
 
                         <div>
-                            <label className="block text-sm font-medium text-gray-700">Ticket Buy Last Date</label>
+                            <label className="block text-sm font-medium text-gray-700">Last Date to Buy</label>
                             <input
                                 type="date"
                                 className="mt-1 block w-full border border-gray-300 rounded-md p-2"

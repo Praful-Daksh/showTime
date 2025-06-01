@@ -56,7 +56,7 @@ const Dashboard = () => {
         localStorage.removeItem('authToken')
         localStorage.removeItem('userEvents')
         localStorage.removeItem('user')
-        toast.warn('Login To Continue', { position: 'top-center' })
+        toast.info('Login To Continue', { position: 'top-center' })
         setuserEdata([]);
         setEventCount(0);
         navigate('/login')

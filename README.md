@@ -62,6 +62,8 @@ You can check it out [Here](http://show-time-six.vercel.app/).
         JWT_SECRET=your_jwt_secret
         RZRPY_KEY=your_razorpay_key
         RZRPY_SECRET=your_razorpay_secret
+        EMAIL_USER=your_email_account
+        EMAIL_PASS=your_email_account_app_code
         ```
     - Create a `.env` file in the `frontend` directory with:
         ```

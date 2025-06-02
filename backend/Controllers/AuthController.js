@@ -1,25 +1,61 @@
 const User = require('../models/Users.js')
+const OTP = require('../models/otp.js')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
+const { transporter, generateOTP, sendOTPEmail } = require('./Mailer.js')
 
 const signUp = async (req, res) => {
     try {
         const { name, email, password } = req.body;
-        const user = await User.findOne({ email })
+        const user = await User.findOne({ email: email })
         if (user) {
             return res.status(409)
                 .json({ message: 'User is already registered', success: false })
         }
-        const userModel = new User({ name, email, password })
-        userModel.password = await bcrypt.hash(password, 10);
-        await userModel.save();
-        res.status(201)
-            .json({ message: "Register Success", success: true })
+        const existingOtp = await OTP.findOne({ email: email });
+        if (existingOtp) {
+            existingOtp.createdAt = new Date();
+            await existingOtp.save();
+            return res.status(409).json({
+                message: 'OTP Already set to your email. Please verify to complete registration.',
+                success: true,
+            });
+        }
+
+        const otp = generateOTP();
+
+        const hashedPass = await bcrypt.hash(password, 10);
+
+        await OTP.deleteOne({ email: email });
+
+        const otpData = new OTP({
+            email: email,
+            otp: otp,
+            userData: {
+                name: name,
+                email: email,
+                password: hashedPass
+            }
+        });
+
+        await otpData.save();
+
+        await sendOTPEmail(email, otp);
+
+        return res.status(200).json({
+            message: 'OTP sent to your email. Please verify to complete registration.',
+            success: true,
+        });
+
     } catch (err) {
-        res.status(500)
+        return res.status(500)
             .json({ message: "Internal Server Error", success: false })
+        console.error(err);
     }
 }
+
+
+// Login function
 
 const logIn = async (req, res) => {
     try {
@@ -54,6 +90,8 @@ const logIn = async (req, res) => {
     }
 }
 
+
+// Get user data
 const getUserData = async (req, res) => {
     try {
         const user = await User.findById(req.user.id)
@@ -76,6 +114,8 @@ const getUserData = async (req, res) => {
             .json({ message: "Internal Server Error", success: false })
     }
 }
+
+// Update user data
 
 const updateUser = async (req, res) => {
     try {
@@ -102,4 +142,99 @@ const updateUser = async (req, res) => {
     }
 }
 
-module.exports = { logIn, signUp, getUserData, updateUser }
+
+// verify OTP and complete registration
+
+const verifyOtpAndCompleteRegistration = async (req, res) => {
+    try {
+        const { email, otp } = req.body;
+
+        const otpRecord = await OTP.findOne({ email: email })
+        if (!otpRecord) {
+            return res.status(400).json({
+                message: 'OTP expired or invalid email',
+                success: false
+            });
+        }
+
+        if (otpRecord.otp !== otp) {
+            return res.status(400).json({
+                message: 'Invalid OTP',
+                success: false
+            });
+        }
+
+        const { name, email: userEmail, password } = otpRecord.userData;
+
+        const newUser = new User({
+            name,
+            email: userEmail,
+            password
+        });
+
+        await newUser.save();
+
+        await OTP.deleteOne({ email });
+
+        res.status(201).json({
+            message: 'Account created successfully',
+            success: true
+        });
+
+    } catch (err) {
+        console.error('OTP verification error:', err);
+        res.status(500).json({
+            message: "Internal Server Error",
+            success: false
+        });
+    }
+};
+
+
+//resend otp 
+
+const resendOTP = async (req, res) => {
+    try {
+        const { email } = req.body;
+
+        const otpRecord = await OTP.findOne({ email });
+
+        if (!otpRecord) {
+            return res.status(400).json({
+                message: 'Request Timeout, try after some time',
+                success: false
+            });
+        }
+
+        const newOTP = generateOTP();
+
+        otpRecord.otp = newOTP;
+        otpRecord.createdAt = new Date();
+        await otpRecord.save();
+
+        await sendOTPEmail(email, newOTP);
+
+        res.status(200).json({
+            message: 'New OTP sent to your email',
+            success: true
+        });
+
+    } catch (err) {
+        console.error('Resend OTP error:', err);
+        res.status(500).json({
+            message: "Internal Server Error",
+            success: false
+        });
+    }
+};
+
+
+
+module.exports = {
+    logIn,
+    signUp,
+    getUserData,
+    updateUser,
+    verifyOtpAndCompleteRegistration,
+    resendOTP
+}

@@ -18,7 +18,7 @@ app.listen(PORT, () => {
 app.use(express.urlencoded({extended:true}))
 app.use(bodyParse.json())
 app.use(cors({
-    // origin:'https://show-time-six.vercel.app'
+    origin:'https://show-time-six.vercel.app'
 }))
 
 

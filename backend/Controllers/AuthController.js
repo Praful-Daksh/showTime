@@ -1,8 +1,9 @@
 const User = require('../models/Users.js')
 const OTP = require('../models/otp.js')
+const Order = require('../models/Order.js')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
-const { transporter, generateOTP, sendOTPEmail } = require('./Mailer.js')
+const { generateOTP, sendOTPEmail, sendWelcomemail } = require('./Mailer.js')
 
 const signUp = async (req, res) => {
     try {
@@ -48,9 +49,9 @@ const signUp = async (req, res) => {
         });
 
     } catch (err) {
+        console.error(err);
         return res.status(500)
             .json({ message: "Internal Server Error", success: false })
-        console.error(err);
     }
 }
 
@@ -99,17 +100,44 @@ const getUserData = async (req, res) => {
             return res.status(404)
                 .json({ message: 'User not found', success: false })
         }
+        const ticketPurchased = await Order.find({ user: user._id, paymentVerified: true })
+        if (ticketPurchased) {
+            const purchasedTickets = ticketPurchased.map(ticket => ({
+                orderId: ticket.razorpayOrderId,
+                totalPrice: ticket.totalAmount,
+                date: ticket.createdAt
+            }));
+            purchasedTickets.sort((a, b) => new Date(b.date) - new Date(a.date));
+            return res.status(200)
+                .json({
+                    message: "User Data",
+                    success: true,
+                    "user": {
+                        "name": user.name,
+                        "email": user.email,
+                        "ticketSold": user.ticketSold,
+                        "revenueVip": user.revenueVip,
+                        "revenueClassic": user.revenueClassic
+                    },
+                    "purchasedTickets": purchasedTickets
+                })
+        }
+
         res.status(200)
             .json({
-                message: "User Data", success: true, "user": {
+                message: "User Data",
+                success: true,
+                "user": {
                     "name": user.name,
                     "email": user.email,
                     "ticketSold": user.ticketSold,
                     "revenueVip": user.revenueVip,
                     "revenueClassic": user.revenueClassic
-                }
+                },
+                "purchasedTickets": []
             })
     } catch (err) {
+        console.error(err);
         res.status(500)
             .json({ message: "Internal Server Error", success: false })
     }
@@ -173,6 +201,8 @@ const verifyOtpAndCompleteRegistration = async (req, res) => {
         });
 
         await newUser.save();
+
+        await sendWelcomemail(userEmail, name);
 
         await OTP.deleteOne({ email });
 

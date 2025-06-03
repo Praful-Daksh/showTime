@@ -3,11 +3,14 @@ import Avatar from '@mui/material/Avatar';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { HashLoader } from 'react-spinners'
+import { Download } from 'lucide-react'
 import api from '../Partials/api';
 
 const UserProfile = () => {
     const navigate = useNavigate();
     const [showSettings, setShowSettings] = useState(false);
+    const [showPurchaseHistory, setShowPurchaseHistory] = useState(false);
+    const [purchaseHistory, setPurchaseHistory] = useState([]);
     const [loading, setLoading] = useState(false);
     const [userData, setUserData] = useState(null);
     const [newPassword, setNewPassword] = useState('');
@@ -83,35 +86,30 @@ const UserProfile = () => {
 
     // Fetch user data
     const fetchUserData = async () => {
-        if (localStorage.getItem('user')) {
-            setUserData(JSON.parse(localStorage.getItem('user')))
-            setLoading(false)
-            return;
-        }
-        else {
-            setLoading(true);
-            try {
-                const response = await fetch(`${url}/auth/getUserData`, {
-                    method: "GET",
-                    headers: {
-                        'Authorization': localStorage.getItem('authToken')
-                    }
-                });
-                const data = await response.json();
-                setLoading(false);
-                if (data.success) {
-                    setUserData(data.user);
-                    localStorage.setItem('user', JSON.stringify(data.user))
-                } else {
-                    toast.error(data.message, { position: 'top-center' })
+        setLoading(true);
+        try {
+            const response = await fetch(`${url}/auth/user`, {
+                method: "GET",
+                headers: {
+                    'Authorization': localStorage.getItem('authToken')
                 }
-            } catch (error) {
-                setLoading(false);
-                toast.error('Failed to Fetch user data, Try again later', { position: 'top-center' })
-                navigate('/dashboard/home')
+            });
+            const data = await response.json();
+            setLoading(false);
+            if (data.success) {
+                setUserData(data.user);
+                setPurchaseHistory(data.purchasedTickets);
+                localStorage.setItem('user', JSON.stringify(data.user))
+            } else {
+                toast.error(data.message, { position: 'top-center' })
             }
+        } catch (error) {
+            setLoading(false);
+            toast.error('Failed to Fetch user data, Try again later', { position: 'top-center' })
+            navigate('/dashboard/home')
         }
-    };
+    }
+
     useEffect(() => {
         fetchUserData();
     }, [])
@@ -139,7 +137,7 @@ const UserProfile = () => {
                         onClick={() => setShowSettings(!showSettings)}
                         className="w-full text-left px-4 py-3 bg-gray-100 rounded-md hover:bg-gray-200 text-gray-800"
                     >
-                         Settings
+                        Settings
                     </button>
 
                     {showSettings && (
@@ -183,10 +181,40 @@ const UserProfile = () => {
                         </div>
                     )}
                     <button
+                        onClick={() => setShowPurchaseHistory(!showPurchaseHistory)}
                         className="w-full text-left px-4 py-3 bg-gray-100 rounded-md hover:bg-gray-200 text-gray-800"
                     >
                         Purchase History
                     </button>
+                    {showPurchaseHistory && (
+                        <div className="px-4 py-3 bg-gray-50 border rounded-md shadow-inner space-y-1">
+                            {purchaseHistory.length === 0 ? (
+                                <div className="text-gray-500 text-center py-2">
+                                    You haven't bought any show yet.
+                                </div>
+                            ) : (
+                                <div className="space-y-2">
+                                    {purchaseHistory.map((ticket, idx) => (
+                                        <div key={ticket.orderId} className="flex items-center justify-between bg-white border rounded px-3 py-2">
+                                            <button
+                                                className="text-blue-600 hover:text-blue-800"
+                                                title="Download Ticket"
+                                            >
+                                                <Download size={25} />
+                                            </button>
+                                            <span className="text-gray-700 text-sm">
+                                                {new Date(ticket.date).toLocaleDateString()}
+                                            </span>
+                                            <span className="font-semibold text-gray-900">
+                                                ₹{ticket.totalPrice}
+                                            </span>
+                                        </div>
+                                    ))}
+
+                                </div>
+                            )}
+                        </div>
+                    )}
 
                     <button
                         onClick={handleLogout}

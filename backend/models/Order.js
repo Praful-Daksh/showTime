@@ -42,4 +42,5 @@ const TicketOrderSchema = new mongoose.Schema({
     }
 });
 
-module.exports = mongoose.model('Order', TicketOrderSchema);
+const Order = mongoose.model('Order', TicketOrderSchema);
+module.exports = Order

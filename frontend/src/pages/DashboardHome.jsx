@@ -93,7 +93,7 @@ const Dashboard = () => {
             <div className="w-full sm:w-1/2 lg:w-1/4 px-2 mb-4">
               <div className="bg-white shadow-sm rounded-lg border">
                 <div className="p-3 text-center">
-                  <h3 className="text-2xl font-semibold">{user?.ticketSold}</h3>
+                  <h3 className="text-2xl font-semibold">{user?.ticketSold || 0}</h3>
                   <p className="text-gray-600 text-sm">Tickets Sold</p>
                 </div>
               </div>

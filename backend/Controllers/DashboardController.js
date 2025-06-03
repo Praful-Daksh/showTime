@@ -11,7 +11,8 @@ const createEvent = async (req, res) => {
         const user = req.user.id
         const { title, date, description, city, venue, access, publish, category } = req.body;
         const eventModel = new Event({ title, date, user, description, city, venue, access, publish, category })
-        const event = await eventModel.save()
+        await eventModel.save()
+
         res.status(201).json({ message: 'Event Recorded Successfully', success: true }
         )
     }
@@ -147,6 +148,7 @@ const publishTicket = async (req, res) => {
         const ticket = new Ticket({ ...ticketData, eId: eventId, showCity: eventData.city, showVenue: eventData.venue, showDate: eventData.date, description: eventData.description, category: eventData.category, available: ticketData.quantity, vipAvailable: ticketData.vipQuantity });
         await ticket.save();
         await Event.updateOne({ _id: eventId }, { $set: { publish: true } });
+        
         return res.status(200).json({ message: 'Ticket Published', success: true })
     } catch (err) {
         console.log(err)

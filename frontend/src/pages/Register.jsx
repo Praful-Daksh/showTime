@@ -32,6 +32,60 @@ const RegisterForm = () => {
     return () => clearInterval(interval);
   }, [resendTimer]);
 
+  // Calculate password strength
+  const getPasswordStrength = (password) => {
+    let score = 0;
+    const criteria = {
+      length: password.length >= 8,
+      lowercase: /[a-z]/.test(password),
+      uppercase: /[A-Z]/.test(password),
+      numbers: /\d/.test(password),
+      special: /[!@#$%^&*(),.?":{}|<>]/.test(password)
+    };
+
+    // Calculate score based on criteria
+    Object.values(criteria).forEach(met => {
+      if (met) score++;
+    });
+
+    // Determine strength level
+    if (score === 0) return { level: 'none', text: '', color: '#e0e0e0' };
+    if (score <= 2) return { level: 'weak', text: 'Weak', color: '#f44336' };
+    if (score <= 3) return { level: 'fair', text: 'Fair', color: '#ff9800' };
+    if (score <= 4) return { level: 'good', text: 'Good', color: '#2196f3' };
+    return { level: 'strong', text: 'Strong', color: '#4caf50' };
+  };
+
+  const passwordStrength = getPasswordStrength(formData.password);
+
+  // Get password requirements
+  const getPasswordRequirements = (password) => {
+    return {
+      length: {
+        met: password.length >= 8,
+        text: 'At least 8 characters'
+      },
+      lowercase: {
+        met: /[a-z]/.test(password),
+        text: 'One lowercase letter'
+      },
+      uppercase: {
+        met: /[A-Z]/.test(password),
+        text: 'One uppercase letter'
+      },
+      numbers: {
+        met: /\d/.test(password),
+        text: 'One number'
+      },
+      special: {
+        met: /[!@#$%^&*(),.?":{}|<>]/.test(password),
+        text: 'One special character'
+      }
+    };
+  };
+
+  const requirements = getPasswordRequirements(formData.password);
+
   // handle form data change
   const handleChange = (e) => {
     setFormData({
@@ -228,6 +282,71 @@ const RegisterForm = () => {
                     autoComplete="off"
                   />
 
+                  {/* Password Strength Meter */}
+                  {formData.password && (
+                    <div className="password-strength-container" style={{ marginTop: '8px', marginBottom: '15px' }}>
+                      {/* Strength Bar */}
+                      <div className="password-strength-bar" style={{
+                        width: '100%',
+                        height: '4px',
+                        backgroundColor: '#e0e0e0',
+                        borderRadius: '2px',
+                        overflow: 'hidden'
+                      }}>
+                        <div 
+                          className="password-strength-fill"
+                          style={{
+                            height: '100%',
+                            backgroundColor: passwordStrength.color,
+                            width: passwordStrength.level === 'none' ? '0%' :
+                                   passwordStrength.level === 'weak' ? '25%' :
+                                   passwordStrength.level === 'fair' ? '50%' :
+                                   passwordStrength.level === 'good' ? '75%' : '100%',
+                            transition: 'all 0.3s ease'
+                          }}
+                        />
+                      </div>
+                      
+                      {/* Strength Text */}
+                      <div style={{ 
+                        display: 'flex', 
+                        justifyContent: 'space-between', 
+                        alignItems: 'center',
+                        marginTop: '5px'
+                      }}>
+                        <span style={{ 
+                          fontSize: '12px', 
+                          color: passwordStrength.color,
+                          fontWeight: '500'
+                        }}>
+                          {passwordStrength.text && `Password Strength: ${passwordStrength.text}`}
+                        </span>
+                      </div>
+
+                      {/* Password Requirements */}
+                      <div className="password-requirements" style={{ 
+                        marginTop: '10px',
+                        fontSize: '11px',
+                        color: '#666'
+                      }}>
+                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2px' }}>
+                          {Object.entries(requirements).map(([key, req]) => (
+                            <div key={key} style={{ 
+                              display: 'flex', 
+                              alignItems: 'center',
+                              color: req.met ? '#4caf50' : '#999'
+                            }}>
+                              <span style={{ marginRight: '4px' }}>
+                                {req.met ? '✓' : '○'}
+                              </span>
+                              <span>{req.text}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
                   <label htmlFor="password2">Confirm Password</label>
                   <input
                     type={showPassword ? 'text' : 'password'}
@@ -238,6 +357,17 @@ const RegisterForm = () => {
                     onChange={handlePassword2}
                     autoComplete="off"
                   />
+
+                  {/* Password Match Indicator */}
+                  {password2 && (
+                    <div style={{ 
+                      marginTop: '5px', 
+                      fontSize: '12px',
+                      color: formData.password === password2 ? '#4caf50' : '#f44336'
+                    }}>
+                      {formData.password === password2 ? '✓ Passwords match' : '✗ Passwords do not match'}
+                    </div>
+                  )}
 
                   <div className="auth-showPassword">
                     <input

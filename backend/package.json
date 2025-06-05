@@ -15,6 +15,7 @@
     "bcryptjs": "^3.0.2",
     "body-parser": "^2.2.0",
     "cors": "^2.8.5",
+    "date-fns": "^4.1.0",
     "dotenv": "^16.5.0",
     "express": "^5.1.0",
     "joi": "^17.13.3",
@@ -22,6 +23,7 @@
     "mongoose": "^8.15.1",
     "nodemailer": "^7.0.3",
     "nodemon": "^3.1.10",
+    "pdf-creator-node": "^2.3.5",
     "razorpay": "^2.9.6"
   }
 }

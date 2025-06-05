@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Show Ticket Invoice</title>
+    <style>
+        /* Internal CSS */
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 20px;
+            /* background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); */
+            min-height: 100vh;
+        }
+
+        .invoice-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            /* box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1); */
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+            color: white;
+            text-align: center;
+            padding: 30px 20px;
+            position: relative;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="2" fill="rgba(255,255,255,0.1)"/></svg>') repeat;
+            background-size: 20px 20px;
+        }
+
+        .show-title {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin: 0;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            position: relative;
+            z-index: 1;
+        }
+
+        .invoice-details {
+            padding: 40px;
+        }
+
+        .invoice-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #f1f2f6;
+        }
+
+        .invoice-title {
+            font-size: 1.8rem;
+            color: #2c2c54;
+            margin: 0;
+        }
+
+        .invoice-date {
+            color: #57606f;
+            font-size: 0.9rem;
+        }
+
+        .ticket-section {
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            font-size: 1.3rem;
+            color: #2c2c54;
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .ticket-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            margin-bottom: 10px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+
+        .ticket-type {
+            font-weight: 600;
+            color: #2c2c54;
+        }
+
+        .ticket-quantity {
+            background: #667eea;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-weight: bold;
+            min-width: 30px;
+            text-align: center;
+        }
+
+        .ticket-price {
+            font-weight: bold;
+            color: #ee5a24;
+            font-size: 1.1rem;
+        }
+
+        .total-section {
+            background: linear-gradient(135deg, #2c2c54, #40407a);
+            color: white;
+            padding: 25px;
+            border-radius: 10px;
+            margin-top: 30px;
+        }
+
+        .total-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .total-label {
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .total-amount {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #ffd700;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 20px;
+            background: #f8f9fa;
+            color: #57606f;
+            font-size: 0.9rem;
+        }
+
+        .thank-you {
+            font-size: 1.1rem;
+            color: #2c2c54;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="invoice-container">
+        <!-- Header Section -->
+        <div class="header">
+            <h1 class="show-title">{{ticketName}}</h1>
+        </div>
+
+        <!-- Invoice Details -->
+        <div class="invoice-details">
+            <div class="invoice-header">
+                <h2 class="invoice-title">TICKET INVOICE</h2>
+                <div class="invoice-date">
+                    <div style="font-weight: bold;">Invoice:  {{orderId}}</div>
+                    <div>{{createdAt}}</div>
+                </div>
+            </div>
+
+            <!-- Ticket Breakdown -->
+            <div class="ticket-section">
+                <h3 class="section-title">Ticket Details</h3>
+
+                <div class="ticket-row">
+                    <div class="ticket-type">VIP Tickets</div>
+                    <div class="ticket-quantity">{{vipQuantity}}</div>
+                    <div class="ticket-price">₹{{vipPrice}} each</div>
+                </div>
+
+                <div class="ticket-row" style="border-left-color: #ee5a24;">
+                    <div class="ticket-type">Classic Tickets</div>
+                    <div class="ticket-quantity" style="background: #ee5a24;">{{classicQuantity}}</div>
+                    <div class="ticket-price">₹{{price}} each</div>
+                </div>
+            </div>
+
+            <!-- Total Section -->
+            <div class="total-section">
+                <div class="total-row">
+                    <span>VIP Tickets ({{vipQuantity}} × {{vipPrice}})</span>
+                </div>
+                <div class="total-row">
+                    <span>Classic Tickets ({{classicQuantity}} × {{price}})</span>
+                </div>
+                <div class="total-row" style="border-top: 2px solid #ffd700; margin-top: 15px; padding-top: 15px;">
+                    <span class="total-label">TOTAL AMOUNT- </span>
+                    <span class="total-amount">₹{{totalAmount}} (GST Included)</span>
+                </div>
+                <div style="margin-top: 20px; text-align: center; font-size: 0.9rem; opacity: 0.8;">
+                    Total Tickets: <span style="font-weight: bold; color: #ffd700;">{{totalTickets}}</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <div class="thank-you">Thank you for your purchase!</div>
+            <div>Please present this invoice at the venue entrance</div>
+            <div style="margin-top: 10px; font-size: 0.8rem;">
+                Show Date: {{showDate}} | Venue: {{showVenue}}
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

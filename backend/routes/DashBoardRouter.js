@@ -1,4 +1,5 @@
 const ensureAuthenticated = require('../Middleware/Auth')
+
 const {
     createEvent,
     getUpcomingEvents,
@@ -13,10 +14,14 @@ const {
     getShow,
     getTicket
 } = require('../Controllers/DashboardController')
+
 const {
     createEventValidation,
     publishEventValidation
 } = require('../Middleware/DashboardValidation')
+
+const { generateInvoice } = require('../Controllers/invoice')
+
 const router = require('express').Router();
 
 router.get('/home', ensureAuthenticated, getUpcomingEvents)
@@ -25,6 +30,7 @@ router.get('/allEvents/verify/:id', ensureAuthenticated, validateEventId)
 router.get('/published/events', ensureAuthenticated, getPublishedEvents)
 router.get('/published/events/:eventId', ensureAuthenticated, getShow)
 router.get('/checkout/:showId', ensureAuthenticated, getTicket)
+
 router.get('/', ensureAuthenticated, (req, res) => {
     return res.json({ message: 'User Authentication Successfull', success: true });
 })
@@ -33,6 +39,7 @@ router.get('/', ensureAuthenticated, (req, res) => {
 router.post('/allEvents/tasks/add/:id', ensureAuthenticated, addTask)
 router.post('/publishTicket/:id', ensureAuthenticated, publishEventValidation, publishTicket)
 router.post('/newEvent', ensureAuthenticated, createEventValidation, createEvent)
+router.post('/download/ticket', ensureAuthenticated, generateInvoice)
 
 
 router.delete('/allEvents/delete/:id', ensureAuthenticated, deleteEvent)

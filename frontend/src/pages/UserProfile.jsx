@@ -115,6 +115,45 @@ const UserProfile = () => {
     }, [])
 
 
+    const donwloadPdf = (orderId) => async () => {
+        setLoading(true);
+        try {
+            const response = await fetch(`${api.production}/dashboard/download/ticket`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': localStorage.getItem('authToken')
+                },
+                body: JSON.stringify({ orderId })
+            });
+
+            if (response.status === 404) {
+                setLoading(false);
+                toast.error('This show no longer exists.', { position: 'top-center' });
+                return;
+            }
+            if (!response.ok) {
+                setLoading(false);
+                toast.error('Failed to download ticket, Try again later', { position: 'top-center' });
+                return;
+            }
+            console.log(response)
+            const blob = await response.blob();
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `ticket-${orderId}.pdf`;
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            window.URL.revokeObjectURL(url);
+            setLoading(false);
+        } catch (error) {
+            setLoading(false);
+            toast.error('Failed to download ticket, Try again later', { position: 'top-center' });
+        }
+    }
+
 
 
     return (
@@ -199,6 +238,7 @@ const UserProfile = () => {
                                             <button
                                                 className="text-blue-600 hover:text-blue-800"
                                                 title="Download Ticket"
+                                                onClick={donwloadPdf(ticket.orderId)}
                                             >
                                                 <Download size={25} />
                                             </button>

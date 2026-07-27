@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useLocation } from 'react-router-dom';
 import Navbar from '../Components/Navbar';
 import Navigation from '../Components/Navigation';
@@ -32,7 +32,7 @@ const ExploreEvents = () => {
 
 
   // fetch shows at page load
-  const fetchShows = async () => {
+  const fetchShows = useCallback(async () => {
     try {
       setLoading(true);
       const response = await fetch(`${url}/Tickets/allTickets`, {
@@ -48,11 +48,11 @@ const ExploreEvents = () => {
       toast.error('Something went wrong', { position: 'top-right' });
       console.log(err);
     }
-  };
+  }, [url]);
 
   useEffect(() => {
     fetchShows();
-  }, []);
+  }, [fetchShows]);
 
   // Filter shows based on search term and selected category
   const filteredShows = shows.filter((show) => {

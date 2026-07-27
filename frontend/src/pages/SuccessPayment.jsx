@@ -64,8 +64,58 @@ const PaymentSuccess = () => {
     };
 
     useEffect(() => {
-        checkPaymentStatus();
-    }, []);
+        let isMounted = true;
+        const verifyPayment = async (attempt = 0) => {
+            if (!orderId) {
+                setStatus('No payment reference found.');
+                setVerified(false);
+                setLoading(false);
+                return;
+            }
+
+            try {
+                const response = await fetch(`${api.production}/payment/status?orderId=${orderId}`, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': localStorage.getItem('authToken')
+                    }
+                });
+
+                const data = await response.json();
+                if (!isMounted) return;
+
+                setRetryCount(attempt);
+                if (data.success) {
+                    setStatus('Payment Successful!');
+                    setVerified(true);
+                    setOrderDetails(data.orderDetails);
+                    setLoading(false);
+                } else if (attempt < 3) {
+                    setTimeout(() => verifyPayment(attempt + 1), 2000);
+                } else {
+                    setStatus('Payment verification pending. Please contact support if this persists.');
+                    setVerified(false);
+                    setLoading(false);
+                }
+            } catch (error) {
+                console.error('Payment status check error:', error);
+                if (!isMounted) return;
+
+                if (attempt < 3) {
+                    setTimeout(() => verifyPayment(attempt + 1), 2000);
+                } else {
+                    setStatus('Error checking payment status. Please contact support.');
+                    setVerified(false);
+                    setLoading(false);
+                }
+            }
+        };
+
+        verifyPayment();
+        return () => {
+            isMounted = false;
+        };
+    }, [orderId, navigate]);
 
     const handleDownload = async () => {
         try {

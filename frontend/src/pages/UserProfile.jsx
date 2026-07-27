@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import Avatar from '@mui/material/Avatar';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
@@ -85,7 +85,7 @@ const UserProfile = () => {
     };
 
     // Fetch user data
-    const fetchUserData = async () => {
+    const fetchUserData = useCallback(async () => {
         setLoading(true);
         try {
             const response = await fetch(`${url}/auth/user`, {
@@ -108,11 +108,11 @@ const UserProfile = () => {
             toast.error('Failed to Fetch user data, Try again later', { position: 'top-center' })
             navigate('/dashboard/home')
         }
-    }
+    }, [navigate, url])
 
     useEffect(() => {
         fetchUserData();
-    }, [])
+    }, [fetchUserData])
 
 
     const donwloadPdf = (orderId) => async () => {

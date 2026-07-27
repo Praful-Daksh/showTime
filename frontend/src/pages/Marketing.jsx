@@ -1,4 +1,4 @@
-    import { useState, useEffect } from 'react';
+    import { useState, useEffect, useCallback } from 'react';
     import { Link } from 'react-router-dom';
     import { toast } from 'react-toastify';
     import HashLoader from 'react-spinners/HashLoader';
@@ -10,7 +10,7 @@
         const [loading, setLoading] = useState(false);
         const navigate = useNavigate();
 
-        const fetchShowDetails = async () => {
+        const fetchShowDetails = useCallback(async () => {
             try {
                 setLoading(true);
                 const response = await fetch(`${api.production}/dashboard/published/events`, {
@@ -32,10 +32,10 @@
                 navigate('/dashboard/home');
                 console.log(err);
             }
-        };
+        }, [navigate]);
         useEffect(() => {
             fetchShowDetails();
-        }, []);
+        }, [fetchShowDetails]);
 
         return (
             <>

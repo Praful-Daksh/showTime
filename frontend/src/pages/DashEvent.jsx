@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { ScaleLoader } from "react-spinners";
 import { toast } from "react-toastify";
 import { useNavigate, useParams, Link } from "react-router-dom";
@@ -105,7 +105,7 @@ const DashEvent = () => {
   };
 
   //get tasks on page mount
-  const getTasks = async () => {
+  const getTasks = useCallback(async () => {
     try {
       const response = await fetch(`${url}/dashboard/allEvents/tasks/${eventId}`, {
         method: "GET",
@@ -127,10 +127,10 @@ const DashEvent = () => {
       toast.error("internal server error", { position: 'top-center' });
       setTasks([]);
     }
-  }
+  }, [url, eventId]);
   useEffect(() => {
     getTasks();
-  }, []);
+  }, [getTasks]);
 
   // add task to the list
   const addTask = async () => {

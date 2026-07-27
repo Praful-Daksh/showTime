@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { HashLoader } from 'react-spinners';
 import api from '../Partials/api';
@@ -16,7 +16,7 @@ const EventAnalytics = () => {
     const [totalRevenue, setTotalRevenue] = useState(0);
     const [deals, setDeals] = useState([]);
 
-    const fetchShowDetails = async () => {
+    const fetchShowDetails = useCallback(async () => {
         try {
             setLoading(true);
             const response = await fetch(`${api.production}/dashboard/published/events/${eventId}`, {
@@ -42,10 +42,10 @@ const EventAnalytics = () => {
             navigate('/dashboard/home');
             console.log(err);
         }
-    };
+    }, [eventId, navigate]);
     useEffect(() => {
         fetchShowDetails();
-    }, []);
+    }, [fetchShowDetails]);
 
     const pieData = [
         { name: 'Standarad', value: event?.quantity },

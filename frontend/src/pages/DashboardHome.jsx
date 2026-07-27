@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { HashLoader } from 'react-spinners'
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
@@ -12,7 +12,7 @@ const Dashboard = () => {
   const navigate = useNavigate();
   const url = api.production;
 
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     try {
       setLoading(true);
       const response = await fetch(`${url}/dashboard/home`, {
@@ -69,10 +69,10 @@ const Dashboard = () => {
       toast.error('Something went wrong, Try again later', { position: 'top-right' })
       navigate('/login')
     }
-  }
+  }, [navigate, url])
   useEffect(() => {
     fetchData();
-  }, [])
+  }, [fetchData])
 
 
 

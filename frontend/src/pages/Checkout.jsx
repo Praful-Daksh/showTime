@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import Navbar from '../Components/Navbar';
 import { useParams, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
@@ -34,7 +34,7 @@ const Checkout = () => {
 
 
 
-    const fetchShows = async () => {
+    const fetchShows = useCallback(async () => {
         try {
             setLoading(true);
             const response = await fetch(`${url}/dashboard/checkout/${showId}`, {
@@ -60,11 +60,11 @@ const Checkout = () => {
             navigate('/dashboard/home');
             console.log(err);
         }
-    };
+    }, [showId, url, navigate]);
 
     useEffect(() => {
         fetchShows();
-    }, []);
+    }, [fetchShows]);
 
     useEffect(() => {
         let gst = (classicQuantity * displayPrice + vipQuantity * vipPrice) * 0.18;

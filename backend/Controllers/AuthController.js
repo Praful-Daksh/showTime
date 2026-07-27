@@ -1,57 +1,40 @@
 const User = require('../models/Users.js')
-const OTP = require('../models/otp.js')
 const Order = require('../models/Order.js')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
-const { generateOTP, sendOTPEmail, sendWelcomemail } = require('./Mailer.js')
+const { sendWelcomemail } = require('./Mailer.js')
 
 const signUp = async (req, res) => {
     try {
         const { name, email, password } = req.body;
-        const user = await User.findOne({ email: email })
-        if (user) {
-            return res.status(409)
-                .json({ message: 'User is already registered', success: false })
+        const existingUser = await User.findOne({ email });
+        if (existingUser) {
+            return res.status(409).json({ message: 'User is already registered', success: false });
         }
-        const existingOtp = await OTP.findOne({ email: email });
-        if (existingOtp) {
-            existingOtp.createdAt = new Date();
-            await existingOtp.save();
-            return res.status(409).json({
-                message: 'OTP Already set to your email. Please verify to complete registration.',
-                success: true,
-            });
-        }
-
-        const otp = generateOTP();
 
         const hashedPass = await bcrypt.hash(password, 10);
 
-        await OTP.deleteOne({ email: email });
-
-        const otpData = new OTP({
-            email: email,
-            otp: otp,
-            userData: {
-                name: name,
-                email: email,
-                password: hashedPass
-            }
+        const newUser = new User({
+            name,
+            email,
+            password: hashedPass
         });
 
-        await otpData.save();
+        await newUser.save();
 
-        await sendOTPEmail(email, otp);
+        try {
+            await sendWelcomemail(email, name);
+        } catch (mailErr) {
+            console.error('Welcome email error:', mailErr);
+        }
 
-        return res.status(200).json({
-            message: 'OTP sent to your email. Please verify to complete registration.',
+        return res.status(201).json({
+            message: 'Account created successfully',
             success: true,
         });
-
     } catch (err) {
         console.error(err);
-        return res.status(500)
-            .json({ message: "Internal Server Error", success: false })
+        return res.status(500).json({ message: "Internal Server Error", success: false });
     }
 }
 
@@ -171,100 +154,9 @@ const updateUser = async (req, res) => {
 }
 
 
-// verify OTP and complete registration
-
-const verifyOtpAndCompleteRegistration = async (req, res) => {
-    try {
-        const { email, otp } = req.body;
-
-        const otpRecord = await OTP.findOne({ email: email })
-        if (!otpRecord) {
-            return res.status(400).json({
-                message: 'OTP expired or invalid email',
-                success: false
-            });
-        }
-
-        if (otpRecord.otp !== otp) {
-            return res.status(400).json({
-                message: 'Invalid OTP',
-                success: false
-            });
-        }
-
-        const { name, email: userEmail, password } = otpRecord.userData;
-
-        const newUser = new User({
-            name,
-            email: userEmail,
-            password
-        });
-
-        await newUser.save();
-
-        await sendWelcomemail(userEmail, name);
-
-        await OTP.deleteOne({ email });
-
-        res.status(201).json({
-            message: 'Account created successfully',
-            success: true
-        });
-
-    } catch (err) {
-        console.error('OTP verification error:', err);
-        res.status(500).json({
-            message: "Internal Server Error",
-            success: false
-        });
-    }
-};
-
-
-//resend otp 
-
-const resendOTP = async (req, res) => {
-    try {
-        const { email } = req.body;
-
-        const otpRecord = await OTP.findOne({ email });
-
-        if (!otpRecord) {
-            return res.status(400).json({
-                message: 'Request Timeout, try after some time',
-                success: false
-            });
-        }
-
-        const newOTP = generateOTP();
-
-        otpRecord.otp = newOTP;
-        otpRecord.createdAt = new Date();
-        await otpRecord.save();
-
-        await sendOTPEmail(email, newOTP);
-
-        res.status(200).json({
-            message: 'New OTP sent to your email',
-            success: true
-        });
-
-    } catch (err) {
-        console.error('Resend OTP error:', err);
-        res.status(500).json({
-            message: "Internal Server Error",
-            success: false
-        });
-    }
-};
-
-
-
 module.exports = {
     logIn,
     signUp,
     getUserData,
-    updateUser,
-    verifyOtpAndCompleteRegistration,
-    resendOTP
+    updateUser
 }

@@ -20,13 +20,10 @@ app.use(bodyParse.json())
 app.use(cors({
     origin:'https://show-time-six.vercel.app'
 }))
-
-
 app.use('/payment',PaymentRouter)
 app.use('/auth', Authrouter)
 app.use('/dashboard', DashBoardRouter)
 app.use('/tickets', TicketRouter)
-
 
 const mongoUri = process.env.mongoURI
 mongoose.connect(mongoUri)
